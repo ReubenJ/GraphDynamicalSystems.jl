@@ -1,4 +1,6 @@
-# Go to https://citation-file-format.github.io/cff-initializer-javascript/#/ to finish this
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
 cff-version: 1.2.0
 title: GraphDynamicalSystems.jl
 message: >-
@@ -6,5 +8,13 @@ message: >-
   metadata from this file.
 type: software
 authors:
-  - given-names: Reuben Gardos Reid
+  - given-names: Reuben
+    family-names: Gardos Reid
     email: 5456207+ReubenJ@users.noreply.github.com
+    affiliation: Delft University of Technology
+    orcid: 'https://orcid.org/0000-0002-3491-9686'
+repository-code: 'https://github.com/ReubenJ/GraphDynamicalSystems.jl'
+keywords:
+  - dynamical systems
+  - discrete systems
+license: MIT
