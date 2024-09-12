@@ -1,2 +1,3 @@
 [deps]
+MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

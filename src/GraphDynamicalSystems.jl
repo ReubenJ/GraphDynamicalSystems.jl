@@ -1,11 +1,10 @@
 module GraphDynamicalSystems
 
-"""
-    hi = hello_world()
-A simple function to return "Hello, World!"
-"""
-function hello_world()
-    return "Hello, World!"
-end
+using SoleLogics
+using MetaGraphsNext
+
+include("BooleanNetworks.jl")
+
+export BooleanNetworks
 
 end
