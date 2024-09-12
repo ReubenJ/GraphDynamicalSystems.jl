@@ -1,0 +1,13 @@
+# Changes here will be overwritten by Copier
+AnswerStrategy: recommended
+Authors: Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>
+CodeOfConductContact: 5456207+ReubenJ@users.noreply.github.com
+Indentation: 4
+JuliaMinVersion: '1.6'
+License: MIT
+LicenseCopyrightHolders: Reuben Gardos Reid
+PackageName: GraphDynamicalSystems
+PackageOwner: ReubenJ
+PackageUUID: 13529e2e-ed53-56b1-bd6f-420b01fca819
+_commit: v0.10.1
+_src_path: https://github.com/abelsiqueira/BestieTemplate.jl
