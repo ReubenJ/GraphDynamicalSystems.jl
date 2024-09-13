@@ -1,8 +1,21 @@
 module BooleanNetworks
 
-using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph
+using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv
+using DynamicalSystems: ArbitrarySteppable
 using SoleLogics:
-    Formula, Atom, ExplicitAlphabet, randformula, normalize, subformulas, ∧, ∨, ¬
+    Formula,
+    Atom,
+    ExplicitAlphabet,
+    randformula,
+    normalize,
+    subformulas,
+    ∧,
+    ∨,
+    ¬,
+    interpret,
+    TruthDict,
+    BooleanTruth
+
 
 """
     sample_boolean_network(n::Int)
@@ -11,28 +24,76 @@ Return a random Boolean network with `n` nodes.
 """
 function sample_boolean_network(n::Int, depth::Int = 2, seed::Int = 0)
     # Create a SoleLogics Atom for each node
-    alphabet = ExplicitAlphabet([Atom("x$i") for i = 1:n])
+    alphabet = ExplicitAlphabet(Atom.(1:n))
     operators = [∧, ∨, ¬]
     formulas =
         [normalize(randformula(depth, alphabet, operators; rng = seed + i)) for i = 1:n]
 
-    # Create a meta graph
-    bn = MetaGraph(SimpleDiGraph(); label_type = Int, vertex_data_type = Formula)
-
-    for i = 1:n
-        bn[i] = formulas[i]
-    end
-
-    # Add edges to the graph based on the formulas
-    for i = 1:n
-        atoms = filter(x -> isa(x, Atom), subformulas(formulas[i]))
-        for atom in atoms
-            j = parse(Int, split(atom.value, "x")[2])
-            add_edge!(bn, i, j)
-        end
-    end
+    bn = update_functions_to_network(formulas)
 
     return bn
 end
 
+function update_functions_to_network(update_functions::AbstractVector{<:Formula})
+    network = MetaGraph(SimpleDiGraph(); label_type = Int, vertex_data_type = Formula)
+
+    for (i, f) in enumerate(update_functions)
+        network[i] = f
+    end
+
+    for (i, f) in enumerate(update_functions)
+        atoms = filter(x -> isa(x, Atom), subformulas(f))
+        for atom in atoms
+            j = atom.value
+            add_edge!(network, i, j)
+        end
+    end
+
+    return network
+end
+
+mutable struct BooleanNetwork
+    graph::MetaGraph
+    state::AbstractVector{Int}
+end
+
+function truth_dict_from_state(state::AbstractVector{Int})
+    return TruthDict(Dict(i => state[i] for i in eachindex(state)))
+end
+
+function abn_step!(model::BooleanNetwork)
+    i = rand(1:nv(model.graph))
+    fᵢ = model.graph[i]
+    td = truth_dict_from_state(model.state)
+    u₍ᵢ₊₁₎ = interpret(fᵢ, td)
+    model.state[i] = u₍ᵢ₊₁₎.flag
+end
+
+extract_state(model::BooleanNetwork) = model.state
+extract_parameters(model::BooleanNetwork) = model.graph
+
+function reset_model!(model::BooleanNetwork, u, _)
+    model.state .= u
+end
+
+"""
+    abn(network, initial_state)
+
+Create an asynchronous Boolean network (ABN) with the given `network`,
+`initial_state`. The update scheme for an asynchronous Boolean network
+is to choose a random node and update its state, one node at a time.
+The random choice is uniform over all nodes.
+"""
+function abn(network::MetaGraph, initial_state::AbstractVector{Int})
+    model = BooleanNetwork(network, initial_state)
+
+    return ArbitrarySteppable(
+        model,
+        abn_step!,
+        extract_state,
+        extract_parameters,
+        reset_model!,
+        isdeterministic = false,
+    )
+end
 end
