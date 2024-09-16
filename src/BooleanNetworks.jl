@@ -96,4 +96,10 @@ function abn(network::MetaGraph, initial_state::AbstractVector{Int})
         isdeterministic = false,
     )
 end
+
+function abn(network::MetaGraph)
+    n = nv(network)
+    initial_state = rand(0:1, n)
+    return abn(network, initial_state)
+end
 end
