@@ -15,7 +15,7 @@ using SoleLogics:
     interpret,
     TruthDict,
     BooleanTruth
-
+using Random: seed!
 
 """
     sample_boolean_network(n::Int)
@@ -97,8 +97,9 @@ function abn(network::MetaGraph, initial_state::AbstractVector{Int})
     )
 end
 
-function abn(network::MetaGraph)
+function abn(network::MetaGraph; seed::Int = 42)
     n = nv(network)
+    seed!(seed)
     initial_state = rand(0:1, n)
     return abn(network, initial_state)
 end

@@ -1,0 +1,12 @@
+name = "SynthBN"
+
+[deps]
+DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
+GraphDynamicalSystems = "13529e2e-ed53-56b1-bd6f-420b01fca819"
+Herb = "c09c6b7f-4f63-49de-90d9-97a3563c0f4a"
+Pluto = "c3e4b0f8-55cb-11ea-2926-15256bba5781"
+
+[compat]
+DrWatson = "2.16.0"
+julia = "1.10.4"
