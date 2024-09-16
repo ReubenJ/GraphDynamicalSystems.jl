@@ -5,6 +5,7 @@
 .DS_Store
 .benchmarkci
 Manifest.toml
+!experiments/SynthBN/Manifest.toml
 benchmark/*.json
 coverage
 docs/build/
