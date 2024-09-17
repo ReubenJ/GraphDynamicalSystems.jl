@@ -15,6 +15,6 @@ dicts = dict_list(all_params)
 @show dicts
 
 for (i, d) in enumerate(dicts)
-    data, file = produce_or_load(get_split_state_space, d, datadir("sims", "specs"))
+    data, file = @produce_or_load(get_split_state_space, d, datadir("sims", "specs"))
     @show data, file
 end
