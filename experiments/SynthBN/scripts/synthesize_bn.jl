@@ -15,8 +15,6 @@ dicts = dict_list(all_params)
 @show dicts
 
 for (i, d) in enumerate(dicts)
-    bn_data = get_split_state_space(d)
-    name = savename(d)
-    savepath = datadir("simulations/specifications", savename(d, "sim_$i.jld2"))
-    wsave(savepath, bn_data)
+    data, file = produce_or_load(get_split_state_space, d, datadir("sims", "specs"))
+    @show data, file
 end
