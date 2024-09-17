@@ -1,6 +1,7 @@
 name = "SynthBN"
 
 [deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 GraphDynamicalSystems = "13529e2e-ed53-56b1-bd6f-420b01fca819"

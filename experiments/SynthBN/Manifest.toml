@@ -2,7 +2,7 @@
 
 julia_version = "1.10.4"
 manifest_format = "2.0"
-project_hash = "8317e2fc18cd14c39a1f9cc68a2a469bedc82133"
+project_hash = "bd547a9bedce5db544f1f49832c91b1a86a6fd29"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "99a6f5d0ce1c7c6afdb759daa30226f71c54f6b0"
@@ -402,6 +402,12 @@ version = "0.7.9"
 git-tree-sha1 = "abe83f3a2f1b857aac70ef8b269080af17764bbe"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
 version = "1.16.0"
+
+[[deps.DataFrames]]
+deps = ["Compat", "DataAPI", "DataStructures", "Future", "InlineStrings", "InvertedIndices", "IteratorInterfaceExtensions", "LinearAlgebra", "Markdown", "Missings", "PooledArrays", "PrecompileTools", "PrettyTables", "Printf", "REPL", "Random", "Reexport", "SentinelArrays", "SortingAlgorithms", "Statistics", "TableTraits", "Tables", "Unicode"]
+git-tree-sha1 = "04c738083f29f86e62c8afc341f0967d8717bdb8"
+uuid = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+version = "1.6.1"
 
 [[deps.DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -916,6 +922,19 @@ git-tree-sha1 = "d1b1b796e47d94588b3757fe84fbf65a5ec4a80d"
 uuid = "d25df0c9-e2be-5dd7-82c8-3ad0b3e990b9"
 version = "0.1.5"
 
+[[deps.InlineStrings]]
+git-tree-sha1 = "45521d31238e87ee9f9732561bfee12d4eebd52d"
+uuid = "842dd82b-1e85-43dc-bf29-5d0ee9dffc48"
+version = "1.4.2"
+
+    [deps.InlineStrings.extensions]
+    ArrowTypesExt = "ArrowTypes"
+    ParsersExt = "Parsers"
+
+    [deps.InlineStrings.weakdeps]
+    ArrowTypes = "31f734f8-188a-4ce0-8406-c8a06bd891cd"
+    Parsers = "69de0a69-1ddd-5017-9359-2bf0b02dc9f0"
+
 [[deps.IntelOpenMP_jll]]
 deps = ["Artifacts", "JLLWrappers", "LazyArtifacts", "Libdl"]
 git-tree-sha1 = "10bd689145d2c3b2a9844005d01087cc1194e79e"
@@ -959,6 +978,11 @@ weakdeps = ["Dates", "Test"]
     [deps.InverseFunctions.extensions]
     InverseFunctionsDatesExt = "Dates"
     InverseFunctionsTestExt = "Test"
+
+[[deps.InvertedIndices]]
+git-tree-sha1 = "0dc7b50b8d436461be01300fd8cd45aa0274b038"
+uuid = "41ab1584-1d38-5bbf-9106-f11c6c58b48f"
+version = "1.3.0"
 
 [[deps.IrrationalConstants]]
 git-tree-sha1 = "630b497eafcc20001bba38a4651b327dcfc491d2"
@@ -1753,6 +1777,12 @@ version = "3.2.13"
     MakieCore = "20f20a25-4f0e-4fdf-b5d1-57303727442b"
     MutableArithmetics = "d8a4904e-b15c-11e9-3269-09a3773c0cb0"
 
+[[deps.PooledArrays]]
+deps = ["DataAPI", "Future"]
+git-tree-sha1 = "36d8b4b899628fb92c2749eb488d884a926614d3"
+uuid = "2dfb63ee-cc39-5dd5-95bd-886bf059d720"
+version = "1.4.3"
+
 [[deps.Poppler_jll]]
 deps = ["Artifacts", "Cairo_jll", "Fontconfig_jll", "Glib_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "OpenJpeg_jll", "Pkg", "libpng_jll"]
 git-tree-sha1 = "02148a0cb2532f22c0589ceb75c110e168fb3d1f"
@@ -2029,6 +2059,12 @@ deps = ["Dates"]
 git-tree-sha1 = "3bac05bc7e74a75fd9cba4295cde4045d9fe2386"
 uuid = "6c6a2e73-6563-6170-7368-637461726353"
 version = "1.2.1"
+
+[[deps.SentinelArrays]]
+deps = ["Dates", "Random"]
+git-tree-sha1 = "ff11acffdb082493657550959d4feb4b6149e73a"
+uuid = "91c51154-3ec4-41a3-a24f-3f23e20d615c"
+version = "1.4.5"
 
 [[deps.Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
