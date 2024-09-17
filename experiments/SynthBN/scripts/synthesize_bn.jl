@@ -2,6 +2,8 @@ using DrWatson
 
 @quickactivate "SynthBN"
 
+using DataFrames
+
 include(srcdir("gather_bn_data.jl"))
 
 all_params = Dict(
@@ -14,7 +16,13 @@ dicts = dict_list(all_params)
 
 @show dicts
 
+data = Dict()
+
 for (i, d) in enumerate(dicts)
-    data, file = @produce_or_load(get_split_state_space, d, datadir("sims", "specs"))
-    @show data, file
+    per_iter_data, file =
+        @produce_or_load(get_split_state_space, d, datadir("sims", "specs"))
+    data[i] = per_iter_data
+    @show file
 end
+
+@show data
