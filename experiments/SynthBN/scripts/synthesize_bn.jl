@@ -58,14 +58,14 @@ for experiment in eachrow(res)
                 map(((in, out),) -> IOExample(Dict([:state => in]), out), collect(examples))
             problem = Problem("$node", io_examples)
 
-            iterator = BFSIterator(cnf_grammar, :CNF, max_depth = 5)
+            iterator = BFSIterator(grammar, :Start, max_depth = 5)
             found = []
             all_ex = []
             found_after = Inf
             for (i, ex) in enumerate(iterator)
-                expr = rulenode2expr(ex, cnf_grammar)
+                expr = rulenode2expr(ex, grammar)
 
-                symboltable = SymbolTable(cnf_grammar, Main)
+                symboltable = SymbolTable(grammar, Main)
                 score = evaluate(problem, expr, symboltable)
 
                 push!(all_ex, (eval(expr), score))
@@ -90,43 +90,6 @@ for experiment in eachrow(res)
                 "grammar_type" => grammar == cnf_grammar ? "cnf" : "dnf",
             ])
             @tagsave(datadir("exp_raw", "cnf_search", savename(d, "cnf_search.jld2")), d)
-
         end
-        # println("Node: ", node)
-
-        # io_examples =
-        #     map(((in, out),) -> IOExample(Dict([:state => in]), out), collect(examples))
-        # problem = Problem("$node", io_examples)
-
-        # iterator = BFSIterator(cnf_grammar, :CNF, max_depth = 5)
-        # found = []
-        # all_ex = []
-        # found_after = Inf
-        # for (i, ex) in enumerate(iterator)
-        #     expr = rulenode2expr(ex, cnf_grammar)
-
-        #     symboltable = SymbolTable(cnf_grammar, Main)
-        #     score = evaluate(problem, expr, symboltable)
-
-        #     push!(all_ex, (eval(expr), score))
-
-        #     if score == 1
-        #         push!(found, eval(expr))
-        #     end
-        #     if length(found) > break_after
-        #         found_after = i
-        #         break
-        #     end
-        # end
-
-        # d = Dict([
-        #     "seed" => experiment.seed,
-        #     "node" => node,
-        #     "found" => found,
-        #     "all_ex" => all_ex,
-        #     "break_after" => break_after,
-        #     "found_after" => found_after,
-        # ])
-        # experiment
     end
 end
