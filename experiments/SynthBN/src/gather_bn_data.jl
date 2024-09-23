@@ -54,8 +54,6 @@ function get_split_state_space(params::Dict{String,<:Any})
         end
         all_abns[r] = async_bn
     end
-    # trajectory = gather_bn_data(async_bn, iterations)
-    # divided_state_space = split_state_space(trajectory)
 
     fulld["specifications"] = all_divided_state_space
     fulld["bn"] = bn
