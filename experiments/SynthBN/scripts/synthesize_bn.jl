@@ -17,8 +17,6 @@ all_params = Dict(
 )
 dicts = dict_list(all_params)
 
-@show dicts
-
 data = Dict()
 
 for (i, d) in enumerate(dicts)
@@ -33,8 +31,7 @@ function evaluate(problem, expr, symboltable)
     sat_examples = 0
 
     for example ∈ problem.spec
-        @show Dict(enumerate(example.in[:state]))
-        res = interpret(eval(expr), TruthDict(Dict(enumerate(example.in[:state]))))
+        res = interpret(eval(expr), TruthDict(Dict(enumerate(example.in[:state][1]))))
         sat_examples += res.flag == example.out
     end
 
