@@ -26,7 +26,6 @@ function split_state_space(trajectory::StateSpaceSet)
             old_value = trajectory[i][changed]
             existing_pairs =
                 get(input_output_pairs_per_node, changed, Set{Tuple{Vector{Int},Int}}())
-            @show existing_pairs
             push!(
                 existing_pairs,
                 (trajectory[i], new_value),     # 1
