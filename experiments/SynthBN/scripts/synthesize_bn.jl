@@ -31,7 +31,8 @@ function evaluate(problem, expr, symboltable)
     sat_examples = 0
 
     for example ∈ problem.spec
-        res = interpret(eval(expr), TruthDict(Dict(enumerate(example.in[:state][1]))))
+        truth = TruthDict(Dict(enumerate(example.in[:state])))
+        res = interpret(eval(expr), truth)
         sat_examples += res.flag == example.out
     end
 
