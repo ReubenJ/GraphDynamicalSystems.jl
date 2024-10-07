@@ -40,7 +40,7 @@ results = collect_results(datadir("exp_raw", "cnf_search"));
 by_grammar = groupby(results, [:grammar_type, :seed]);
 
 # ╔═╡ b5528ba0-b48e-41c6-bdf2-55260a71e33e
-dnf = by_grammar[("dnf", 1)];
+dnf = by_grammar[("dnf", 1)]
 
 # ╔═╡ 5e95a352-d09b-4996-87af-1977ea02717e
 @df dnf bar(

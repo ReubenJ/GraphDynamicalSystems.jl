@@ -40,19 +40,18 @@ function evaluate(problem, expr, symboltable)
 end
 
 break_after = 10
+max_neighbors = 5
 
 cnf_grammar = build_cnf_grammar(all_params["network_size"])
 dnf_grammar = build_dnf_grammar(all_params["network_size"])
 
 
 for experiment in eachrow(res)
-    # experiment = deepcopy(experiment)
-    println("Experiment: ", experiment.seed)
+    @info "Experiment: $(experiment.seed)"
 
     for (node, examples) in experiment.specifications
+        # @info "Processing node $node"
         for grammar in [cnf_grammar, dnf_grammar]
-            @show node, grammar
-
             io_examples =
                 map(((in, out),) -> IOExample(Dict([:state => in]), out), collect(examples))
             problem = Problem("$node", io_examples)
@@ -77,6 +76,7 @@ for experiment in eachrow(res)
                     break
                 end
             end
+            @show length(found)
 
             d = Dict([
                 "seed" => experiment.seed,

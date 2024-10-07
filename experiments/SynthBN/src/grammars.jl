@@ -1,3 +1,5 @@
+using AbstractTrees: Leaves
+
 conjunctive = @cfgrammar begin
     Start = CNF
     CNF = Disj ∧ CNF
@@ -36,4 +38,11 @@ function build_dnf_grammar(num_vars::Int)
     _add_variables(grammar, num_vars)
 
     return grammar
+end
+
+function count_neighbors_in_expr(r::AbstractRuleNode, grammar::ContextSensitiveGrammar)
+    leaves_in_expr = Set(map(x -> x.ind, Leaves(r)))
+    terminal_indices = findall(grammar.isterminal)
+
+    return count(x -> x in terminal_indices, leaves_in_expr)
 end
