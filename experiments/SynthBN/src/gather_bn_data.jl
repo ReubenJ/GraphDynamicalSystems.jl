@@ -12,9 +12,26 @@ function split_state_space(trajectory::StateSpaceSet)
         changed = findfirst(trajectory[i+1] .!= trajectory[i])
         # only proceed if there was a change
         if !isnothing(changed)
+
+            # in real data we don't know the direction of the transition
+            # was it from i -> i+1 or i+1 -> i, we only know that two
+            # states are adjacent, so for gathering data, we add both
+            # directions as IO pairs
+            #   1. state `i` and the new value of the single variable in
+            #      the state that changed
+            #   2. state `i+1` and the previous value of the single variable
+            #      in the state that changed
+
             new_value = trajectory[i+1][changed]
-            existing_pairs = get(input_output_pairs_per_node, changed, Set())
-            push!(existing_pairs, (trajectory[i], new_value))
+            old_value = trajectory[i][changed]
+            existing_pairs =
+                get(input_output_pairs_per_node, changed, Set{Tuple{Vector{Int},Int}}())
+            @show existing_pairs
+            push!(
+                existing_pairs,
+                (trajectory[i], new_value),     # 1
+                (trajectory[i+1], old_value),   # 2
+            )
             input_output_pairs_per_node[changed] = existing_pairs
         end
     end
@@ -39,7 +56,7 @@ function get_split_state_space(params::Dict{String,<:Any})
 
     fulld::Dict{String,Any} = copy(params)
 
-    all_divided_state_space = Dict{Int,Set{Tuple{Vector{Int},Int}}}()
+    all_divided_state_space = Dict{Int,Set{Tuple{<:AbstractVector{Int},Int}}}()
     all_abns = Dict{Int,Any}()
 
     bn = sample_boolean_network(network_size, max_equation_depth, seed)
