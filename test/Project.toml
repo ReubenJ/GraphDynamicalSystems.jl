@@ -1,4 +1,5 @@
 [deps]
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
+SoleLogics = "b002da8f-3cb3-4d91-bbe3-2953433912b5"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

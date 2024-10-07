@@ -22,12 +22,11 @@ using Random: seed!
 
 Return a random Boolean network with `n` nodes.
 """
-function sample_boolean_network(n::Int, depth::Int = 2, seed::Int = 0)
+function sample_boolean_network(n::Int, depth::Int = 2, seed::Int = 0; tactic = normalize)
     # Create a SoleLogics Atom for each node
     alphabet = ExplicitAlphabet(Atom.(1:n))
     operators = [∧, ∨, ¬]
-    formulas =
-        [normalize(randformula(depth, alphabet, operators; rng = seed + i)) for i = 1:n]
+    formulas = [tactic(randformula(depth, alphabet, operators; rng = seed + i)) for i = 1:n]
 
     bn = update_functions_to_network(formulas)
 
