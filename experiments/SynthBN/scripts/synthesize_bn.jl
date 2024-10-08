@@ -43,57 +43,13 @@ for params in dict_list(synth_params)
         iterator = BFSIterator(grammar, :Start, max_depth = 5)
         exprs_and_scores = synth(problem, iterator, grammar, max_neighbors, max_iterations)
 
+        # Save output
         save_data = copy(params)
+        delete!(save_data, "specifications")
+        save_data["node"] = node
+        save_data["examples"] = examples
         save_data["exprs_and_scores"] = exprs_and_scores
         file_name = savename(save_data, "cnf_search.jld2")
         @tagsave(datadir("exp_raw", "cnf_search", file_name), save_data)
     end
 end
-
-
-# for experiment in eachrow(res)
-#     @info "Experiment: $(experiment.seed)"
-
-#     for (node, examples) in experiment.specifications
-#         # @info "Processing node $node"
-#         for grammar in [cnf_grammar, dnf_grammar]
-#             io_examples =
-#                 map(((in, out),) -> IOExample(Dict([:state => in]), out), collect(examples))
-#             problem = Problem("$node", io_examples)
-
-#             iterator = BFSIterator(grammar, :Start, max_depth = 5)
-#             found = []
-#             all_ex = []
-#             found_after = Inf
-#             for (i, ex) in enumerate(iterator)
-#                 expr = rulenode2expr(ex, grammar)
-
-#                 symboltable = SymbolTable(grammar, Main)
-#                 score = evaluate(problem, expr, symboltable)
-
-#                 push!(all_ex, (eval(expr), score))
-
-#                 if score == 1
-#                     push!(found, eval(expr))
-#                 end
-#                 if length(found) > break_after
-#                     found_after = i
-#                     break
-#                 end
-#             end
-#             @show length(found)
-
-#             d = Dict([
-#                 "seed" => experiment.seed,
-#                 "node" => node,
-#                 "found" => found,
-#                 "all_ex" => all_ex,
-#                 "break_after" => break_after,
-#                 "found_after" => found_after,
-#                 "grammar" => grammar,
-#                 "grammar_type" => grammar == cnf_grammar ? "cnf" : "dnf",
-#             ])
-#             @tagsave(datadir("exp_raw", "cnf_search", savename(d, "cnf_search.jld2")), d)
-#         end
-#     end
-# end
