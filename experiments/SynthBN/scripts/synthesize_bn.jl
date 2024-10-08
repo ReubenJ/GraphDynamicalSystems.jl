@@ -32,7 +32,7 @@ synth_params = Dict(
     "iterator_type" => BFSIterator,
 )
 
-for params in dict_list(synth_params)
+Threads.@threads for params in dict_list(synth_params)
     @unpack seed, grammar_type, specifications = params
     @info "Synthesizing for seed $seed, grammar $grammar_type"
 
