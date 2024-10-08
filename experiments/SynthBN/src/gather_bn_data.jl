@@ -53,27 +53,25 @@ end
 function get_split_state_space(params::Dict{String,<:Any})
     @unpack network_size, max_equation_depth, iterations, repetitions, seed = params
 
-    fulld::Dict{String,Any} = copy(params)
+    save_data::Dict{String,Any} = copy(params)
 
     all_divided_state_space = Dict{Int,Set{Tuple{<:AbstractVector{Int},Int}}}()
-    all_abns = Dict{Int,Any}()
-
     bn = sample_boolean_network(network_size, max_equation_depth, seed)
-    for r = 1:repetitions
-        async_bn = abn(bn; seed = seed * r)
-        trajectory = gather_bn_data(async_bn, iterations)
+    all_abns = [abn(bn; seed = seed * r) for r = 1:repetitions]
+
+    for a in all_abns
+        trajectory = gather_bn_data(a, iterations)
         divided_state_space = split_state_space(trajectory)
         for (node, pairs) in divided_state_space
             existing_pairs = get(all_divided_state_space, node, Set())
             push!(existing_pairs, pairs...)
             all_divided_state_space[node] = existing_pairs
         end
-        all_abns[r] = async_bn
     end
 
-    fulld["specifications"] = all_divided_state_space
-    fulld["bn"] = bn
-    fulld["abns"] = all_abns
+    save_data["specifications"] = all_divided_state_space
+    save_data["bn"] = bn
+    save_data["abns"] = all_abns
 
-    return fulld
+    return save_data
 end
