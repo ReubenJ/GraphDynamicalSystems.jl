@@ -1,6 +1,7 @@
 using AbstractTrees: Leaves
 using AbstractTrees
 using HerbConstraints: StateHole, freeze_state
+using HerbCore: get_rule
 
 conjunctive = @cfgrammar begin
     Start = CNF
@@ -42,19 +43,11 @@ function build_dnf_grammar(num_vars::Int)
     return grammar
 end
 
-function count_neighbors_in_expr(r::RuleNode, grammar::ContextSensitiveGrammar)
-    r = freeze_state(r)
-    leaves_in_expr = Set(map(x -> x.ind, Leaves(r)))
+function count_neighbors_in_expr(r::AbstractRuleNode, grammar::ContextSensitiveGrammar)
+    leaves_in_expr = Set(map(x -> get_rule(x), Leaves(r)))
     terminal_indices = findall(grammar.isterminal)
 
     return count(x -> x in terminal_indices, leaves_in_expr)
 end
 
 AbstractTrees.children(node::StateHole) = node.children
-
-function count_neighbors_in_expr(r::StateHole, grammar::ContextSensitiveGrammar)
-    leaves_in_expr = Set(map(x -> only(x.domain), Leaves(r)))
-    terminal_indices = findall(grammar.isterminal)
-
-    return count(x -> x in terminal_indices, leaves_in_expr)
-end

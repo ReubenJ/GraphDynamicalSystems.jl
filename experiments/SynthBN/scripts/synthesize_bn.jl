@@ -24,10 +24,12 @@ synth_params = Dict(
         seed -> filter(row -> row.seed == seed, res)[!, :specifications][1],
     ),
     "break_after" => Inf,
-    "max_neighbors" => 5,
+    "max_neighbors" => 3,
+    "max_depth" => 7,
     "max_iterations" => 100_000,
     "grammar" => [cnf_grammar, dnf_grammar],
     "grammar_type" => Derived("grammar", x -> x == cnf_grammar ? "cnf" : "dnf"),
+    "iterator_type" => BFSIterator,
 )
 
 for params in dict_list(synth_params)
@@ -40,7 +42,8 @@ for params in dict_list(synth_params)
 
         # Synthesize
         @unpack grammar, max_neighbors, max_iterations = params
-        iterator = BFSIterator(grammar, :Start, max_depth = 5)
+        @unpack max_depth, iterator_type = params
+        iterator = iterator_type(grammar, :Start, max_depth = max_depth)
         exprs_and_scores = synth(problem, iterator, grammar, max_neighbors, max_iterations)
 
         # Save output

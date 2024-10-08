@@ -1,8 +1,20 @@
 function synth(problem, iterator, grammar, max_neighbors, max_iterations)
     exprs_and_scores = []
 
+    largest_n_neighbors_explored = 0
+
     for (i, ex) in enumerate(iterator)
-        if count_neighbors_in_expr(ex, grammar) > max_neighbors
+        if i % 1000 == 0
+            @info "$i iterations, up to $largest_n_neighbors_explored neighbors explored"
+        end
+
+        n_neighbors = count_neighbors_in_expr(ex, grammar)
+
+        if n_neighbors > largest_n_neighbors_explored
+            largest_n_neighbors_explored = n_neighbors
+        end
+
+        if n_neighbors > max_neighbors
             @info "Explored up to $max_neighbors neighbors"
             break
         end
