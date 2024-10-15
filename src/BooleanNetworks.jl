@@ -16,6 +16,7 @@ using SoleLogics:
     TruthDict,
     BooleanTruth
 using Random: seed!
+using FileIO: load
 
 """
     sample_boolean_network(n::Int)
@@ -102,4 +103,6 @@ function abn(network::MetaGraph; seed::Int = 42)
     initial_state = rand(0:1, n)
     return abn(network, initial_state)
 end
+
+
 end
