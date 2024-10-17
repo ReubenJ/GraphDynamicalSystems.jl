@@ -1,3 +1,4 @@
+module AEONParser
 using ParserCombinator:
     Equal, Pattern, Drop, parse_one, parse_dbg, Trace, @with_names, set_name
 
@@ -94,4 +95,5 @@ function parse_aeon_file(filepath::AbstractString)
         push!(res, parse_one(l, each_line))
     end
     res
+end
 end
