@@ -24,7 +24,7 @@ function load_aeon()
     Progress.foreachprogress(
         df.path,
         pbar;
-        parallel = true,
+        parallel = false,
         transient = true,
         description = "Loading models...",
     ) do model
