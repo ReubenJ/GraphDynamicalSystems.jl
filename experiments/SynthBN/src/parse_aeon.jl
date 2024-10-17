@@ -4,7 +4,7 @@ using ParserCombinator:
 
 using SoleLogics: parseformula, Atom, ∨, ∧, ¬, AbstractSyntaxStructure
 
-using ProgressBars
+using Term: Progress, ProgressBar
 
 # See the following for source:
 # https://biodivine.fi.muni.cz/aeon/manual/v0.4.0/model_editor/import_export.html#aeon-format
@@ -88,12 +88,20 @@ end
     each_line = (fn_line | regulation_line)
 end
 
-function parse_aeon_file(filepath::AbstractString)
-    iter = ProgressBar(readlines(filepath))
-    res = []
-    for l in iter
-        push!(res, parse_one(l, each_line))
+function parse_aeon_file(
+    filepath::AbstractString,
+    pbar::ProgressBar = Progress.FOREACH_PROGRESS,
+)
+    model = []
+    Progress.foreachprogress(
+        readlines(filepath),
+        pbar;
+        parallel = true,
+        transient = true,
+        description = "Parsing $(basename(filepath))",
+    ) do l
+        push!(model, parse_one(l, each_line))
     end
-    res
+    model
 end
 end

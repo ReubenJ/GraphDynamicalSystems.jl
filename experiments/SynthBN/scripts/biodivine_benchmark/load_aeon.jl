@@ -19,15 +19,16 @@ function load_aeon()
     df = DataFrame(CSV.File(summary_csv_path; types = Dict([:ID => String])))
     df[!, :path] = [joinpath(models_path, id) * ".aeon" for id in df.ID]
 
-
+    pbar = ProgressBar()
     models = []
     Progress.foreachprogress(
         df.path,
-        ProgressBar();
-        parallel = true,
+        pbar;
+        parallel = false,
+        transient = true,
         description = "Loading models...",
     ) do model
-        push!(models, AEONParser.parse_aeon_file(model))
+        push!(models, AEONParser.parse_aeon_file(model, pbar))
     end
 
     df[!, :model] = models
