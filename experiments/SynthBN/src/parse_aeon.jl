@@ -40,8 +40,8 @@ get_reg_type =
 
 struct Regulation
     regulator::NetworkVar
-    type::RegulationType
-    observable::Bool
+    reg_type::RegulationType
+    is_observable::Bool
     target::NetworkVar
 end
 
@@ -50,8 +50,8 @@ struct UpdateFunction
     fn::AbstractSyntaxStructure
 end
 
-Regulation(reg::NetworkVar, type::RegulationType, target::NetworkVar) =
-    Regulation(reg, type, true, target)
+Regulation(reg::NetworkVar, reg_type::RegulationType, target::NetworkVar) =
+    Regulation(reg, reg_type, true, target)
 
 function parse_aeon_function_as_sole_function(formula::AbstractString)
     symbols_swapped = replace(formula, "&" => ∧, "|" => ∨, "!" => ¬)
@@ -68,9 +68,9 @@ end
     # Matches '>' or '|' or '?' and maps it to an activation type
     reg_type = (Equal(">") | Equal("|") | Equal("?")) > get_reg_type
     # Matches 0 or 1 '?' characters, then maps to false if 1, true if 0
-    observable = Equal("?")[0:1] |> isempty
+    is_observable = Equal("?")[0:1] |> isempty
 
-    regulation = spaces + edge + reg_type + observable + spaces
+    regulation = spaces + edge + reg_type + is_observable + spaces
 
     regulation_line = (network_var + regulation + network_var) > Regulation
 
