@@ -28,11 +28,14 @@ function load_aeon()
         transient = true,
         description = "Loading models...",
     ) do model
-        parsed_model = AEONParser.parse_aeon_file(model, pbar)
-        @tagsave(
-            datadir("src_parsed", "parsed_biodivine_benchmarks", "$(basename(model)).jld2"),
+        produce_or_load(
+            model,
+            path = datadir("src_parsed", "biodivine_benchmark");
+            filename = basename(model),
+        ) do model
+            parsed_model = AEONParser.parse_aeon_file(model, pbar)
             @strdict parsed_model
-        )
+        end
     end
 end
 
