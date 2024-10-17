@@ -28,12 +28,12 @@ function load_aeon()
         transient = true,
         description = "Loading models...",
     ) do model
-        push!(models, AEONParser.parse_aeon_file(model, pbar))
+        parsed_model = AEONParser.parse_aeon_file(model, pbar)
+        @tagsave(
+            datadir("src_parsed", "parsed_biodivine_benchmarks", "$(basename(model)).jld2"),
+            @strdict parsed_model
+        )
     end
-
-    df[!, :model] = models
-
-    @tagsave(datadir("src_raw", "parsed_biodivine_benchmarks.jld2"), @strdict(df))
 end
 
 load_aeon()
