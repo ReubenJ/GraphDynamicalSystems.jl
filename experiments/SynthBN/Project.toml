@@ -27,6 +27,7 @@ PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
 SBML = "e5567a89-2604-4b09-9718-f5f78e97c3bb"
 SoleLogics = "b002da8f-3cb3-4d91-bbe3-2953433912b5"
 StatsPlots = "f3b207a7-027a-5e70-b257-86293d7955fd"
+Term = "22787eb5-b846-44ae-b979-8e399b8463ab"
 XML = "72c71f33-b9b6-44de-8c94-c961784809e2"
 
 [compat]

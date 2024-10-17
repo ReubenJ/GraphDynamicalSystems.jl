@@ -2,7 +2,9 @@ using DrWatson
 
 @quickactivate :SynthBN
 
-using DataFrames, CSV, ProgressBars
+using DataFrames, CSV
+
+using Term: Progress, ProgressBar
 
 function load_aeon()
     repo = datadir("src_raw", "biodivine-boolean-models")
@@ -18,14 +20,17 @@ function load_aeon()
     df[!, :path] = [joinpath(models_path, id) * ".aeon" for id in df.ID]
 
 
-    iter = ProgressBar(df.path)
-    res = []
-    for model in iter
-        @show model, filesize(model)
-        push!(res, AEONParser.parse_aeon_file(model))
+    models = []
+    Progress.foreachprogress(
+        df.path,
+        ProgressBar();
+        parallel = true,
+        description = "Loading models...",
+    ) do model
+        push!(models, AEONParser.parse_aeon_file(model))
     end
 
-    df[!, :model] = res
+    df[!, :model] = models
 
     @tagsave(datadir("src_raw", "parsed_biodivine_benchmarks.jld2"), @strdict(df))
 end
