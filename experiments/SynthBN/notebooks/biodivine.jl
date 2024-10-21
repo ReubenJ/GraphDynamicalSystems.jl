@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.9
+# v0.20.0
 
 using Markdown
 using InteractiveUtils
@@ -10,11 +10,20 @@ using DrWatson
 # ╔═╡ 6d4d6baa-d160-47f3-bf7c-a9e0fabdf3c2
 @quickactivate
 
+# ╔═╡ 0a6d4236-f1ac-474d-be98-3c2a53dd9a46
+using Graphs
+
+# ╔═╡ 95417510-36db-451e-ba87-9faa23f7d412
+using SoleLogics: Atom, subformulas, Formula
+
+# ╔═╡ 4a7c619f-6ad6-43d6-b8e8-bddf4255bf17
+using MetaGraphsNext: MetaGraph
+
 # ╔═╡ 4aced393-1873-4fbf-b582-65a20346c64a
 using Plots
 
 # ╔═╡ 3ab50cf5-da53-440c-9796-c9ee73b7ad86
-using SynthBN: AEONParser, update_functions_to_network
+using SynthBN: AEONParser
 
 # ╔═╡ 8a5e88c4-b0a6-4848-b6d2-74bdbd960e7c
 using DataFrames
@@ -191,9 +200,6 @@ $(length(excluded_files) > 0 ? "We currently drop two (#079, and #041) because 7
 The models have a varying number of `variables`, `inputs` (nodes with no incoming `regulations`/`edges`), and `regulations` (`edges`).
 """
 
-# ╔═╡ 1f27228e-eba1-49d8-a00c-8bc98a9eb19c
-df
-
 # ╔═╡ ca807ea7-1980-4800-91f8-7b446923127a
 components_df = let UpdateFunction = AEONParser.UpdateFunction
     @chain df begin
@@ -211,15 +217,38 @@ end;
 just_update_functions = components_df[(ComponentType = AEONParser.UpdateFunction,)];
 
 # ╔═╡ a0f79b65-31d0-4faa-b87a-28335501ed61
-@chain just_update_functions begin
+update_functions = @chain just_update_functions begin
     @group_by ID
+    @select Component
+end;
+
+# ╔═╡ 022aad38-22e5-4d4d-a29a-3c4b900ab974
+function update_functions_to_network(
+    update_functions::AbstractVector{<:AEONParser.UpdateFunction},
+)
+    network = MetaGraph(SimpleDiGraph(); label_type = String, vertex_data_type = Formula)
+
+    for up in update_functions
+        network[up.target.name] = up.fn
+    end
+
+    for up in update_functions
+        atoms = filter(x -> isa(x, Atom), subformulas(up.fn))
+        for atom in atoms
+            source = atom.value
+            add_edge!(network, up.target.name, source)
+        end
+    end
+
+    return network
 end
 
-# ╔═╡ 667ad14a-e202-480b-96b4-429c13d721ef
-update_functions_to_network
-
-# ╔═╡ 16aa806a-1666-4b1b-bdcc-1789b0e502f7
-just_update_functions.Component[1].target.name
+# ╔═╡ baff69b5-5af7-4aaf-a1eb-846216deffc5
+combine(
+    update_functions[1:20],
+    :Component =>
+        x -> update_functions_to_network(Vector{AEONParser.UpdateFunction}(x)) => :Network,
+)
 
 # ╔═╡ 4d26800f-12b6-4ffe-b6e1-8db8834a8da9
 with_fn_arity_df = let UpdateFunction = AEONParser.UpdateFunction
@@ -336,7 +365,6 @@ plotly()
 # ╟─ff760751-c7e6-4085-b96e-45e2732f6b5f
 # ╟─7f4d4333-d66e-4ddb-8448-21db9bdc6c6d
 # ╟─21d9f3cd-d68d-4f9d-9b3c-d31d7383c872
-# ╠═1f27228e-eba1-49d8-a00c-8bc98a9eb19c
 # ╟─6f40fcb3-d8d1-4ade-a9ea-12fc58975f60
 # ╠═cc79a481-8bc9-442d-a129-a7f804ba0ccd
 # ╟─6989f31e-2256-4532-b885-e5354ed9e99a
@@ -358,8 +386,11 @@ plotly()
 # ╠═ca807ea7-1980-4800-91f8-7b446923127a
 # ╠═ed381482-fc40-4378-90b0-df86a474c864
 # ╠═a0f79b65-31d0-4faa-b87a-28335501ed61
-# ╠═667ad14a-e202-480b-96b4-429c13d721ef
-# ╠═16aa806a-1666-4b1b-bdcc-1789b0e502f7
+# ╠═baff69b5-5af7-4aaf-a1eb-846216deffc5
+# ╠═0a6d4236-f1ac-474d-be98-3c2a53dd9a46
+# ╠═95417510-36db-451e-ba87-9faa23f7d412
+# ╠═4a7c619f-6ad6-43d6-b8e8-bddf4255bf17
+# ╠═022aad38-22e5-4d4d-a29a-3c4b900ab974
 # ╠═4d26800f-12b6-4ffe-b6e1-8db8834a8da9
 # ╠═c30f1640-42f4-4538-a5e0-ede64784bed1
 # ╠═e4f087f0-4c83-408d-a9a1-5bb1447a1da7

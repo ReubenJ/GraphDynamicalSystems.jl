@@ -1,6 +1,9 @@
 using DataFrames, CSV
 
 import GraphDynamicalSystems.BooleanNetworks: update_functions_to_network
+using MetaGraphsNext: MetaGraph
+using Graphs: SimpleDiGraph
+using SoleLogics: Atom, subformulas, Formula
 
 using Term: Progress, ProgressBar
 
@@ -46,14 +49,14 @@ function update_functions_to_network(
     network = MetaGraph(SimpleDiGraph(); label_type = String, vertex_data_type = Formula)
 
     for up in update_functions
-        network[up.target] = up.fn
+        network[up.target.name] = up.fn
     end
 
-    for up in enumerate(update_functions)
+    for up in update_functions
         atoms = filter(x -> isa(x, Atom), subformulas(up.fn))
         for atom in atoms
             source = atom.value
-            add_edge!(network, up.target, source)
+            add_edge!(network, up.target.name, source)
         end
     end
 
