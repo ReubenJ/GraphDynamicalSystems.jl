@@ -5,7 +5,7 @@ using Git
 function fetch_biodivine_benchmark()
     raw_src_dir = datadir("src_raw", "biodivine-boolean-models")
     remote = "git@github.com:ReubenJ/biodivine-boolean-models.git"
-    commit_hash = "d89c97f7ba233999acbb2e8b1442631d685b5b22"
+    commit_hash = "f785e571308122378664d0ad4168969cb70cdcc2"
     checkout_cmd = `$(git()) checkout $commit_hash`
 
     if ispath(raw_src_dir)
