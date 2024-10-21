@@ -6,7 +6,7 @@ using DataFrames, CSV
 
 using Term: Progress, ProgressBar
 
-function load_aeon()
+function load_aeon_biodivine()
     repo = datadir("src_raw", "biodivine-boolean-models")
 
     if !ispath(repo)
@@ -28,16 +28,16 @@ function load_aeon()
         transient = true,
         description = "Loading models...",
     ) do model
-        @produce_or_load(
-            @dict(model), # produce_or_load needs this to be a dict
-            path = datadir("src_parsed", "biodivine_benchmark"),
-            filename = basename(model),
-        ) do config
-            @unpack model = config
-            parsed_model = AEONParser.parse_aeon_file(model, pbar)
-            @strdict parsed_model
+        if basename(model) != "079.aeon" # 79 is massive and seems to cause a stackoverflow error
+            @produce_or_load(
+                @dict(model), # produce_or_load needs this to be a dict
+                path = datadir("src_parsed", "biodivine_benchmark"),
+                filename = basename(model),
+            ) do config
+                @unpack model = config
+                parsed_model = AEONParser.parse_aeon_file(model, pbar)
+                @strdict parsed_model
+            end
         end
     end
 end
-
-load_aeon()

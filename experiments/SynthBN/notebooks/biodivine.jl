@@ -31,15 +31,11 @@ using TidierData
 # ╔═╡ 1dd2589a-baad-415a-a842-9f3701812f8e
 using PlutoUI
 
+# ╔═╡ d202a3b0-913d-4a63-a81c-cfb64f2e5176
+using PlutoTeachingTools
+
 # ╔═╡ 7cb5d22d-4a2e-483e-a567-77c09fda306b
 using AbstractTrees
-
-# ╔═╡ f1a1afae-a944-4cc8-8684-de76e8eb7922
-md"""
-# BN Synthesis with Biodivine Benchmarks
-
-🧑‍💻 [github.com/sybila/biodivine-boolean-models](https://github.com/sybila/biodivine-boolean-models)
-"""
 
 # ╔═╡ 016ede63-6f1c-4d38-81bf-77b4538c4705
 md"""
@@ -170,6 +166,19 @@ begin
     df.ID = map((x -> x[1]) ∘ splitext ∘ (x -> x[1]) ∘ splitext ∘ basename, df.path)
 end
 
+# ╔═╡ f1a1afae-a944-4cc8-8684-de76e8eb7922
+md"""
+# BN Synthesis with Biodivine Benchmarks
+
+🧑‍💻 [github.com/sybila/biodivine-boolean-models](https://github.com/sybila/biodivine-boolean-models)
+
+$((!isdefined(@__MODULE__, :df) || nrow(df) == 0) ? danger(md"It seems that the dataframe with the benchmark information failed to load, or it was empty. Try running the script:
+
+`julia experiments/SynthBN/scripts/biodivine_benchmark/load_aeon.jl`
+
+to load/parse the benchmark.") : md"")
+"""
+
 # ╔═╡ 94df90c5-8431-4fca-a611-4a0ebcd14e80
 md"""
 ## Benchmark Overview
@@ -183,8 +192,7 @@ The models have a varying number of `variables`, `inputs` (nodes with no incomin
 """
 
 # ╔═╡ ca807ea7-1980-4800-91f8-7b446923127a
-components_df = begin
-    UpdateFunction = AEONParser.UpdateFunction
+components_df = let UpdateFunction = AEONParser.UpdateFunction
     @chain df begin
         @select parsed_model ID
         flatten(:parsed_model)
@@ -197,7 +205,7 @@ components_df = begin
 end;
 
 # ╔═╡ 4d26800f-12b6-4ffe-b6e1-8db8834a8da9
-with_fn_arity_df = begin
+with_fn_arity_df = let UpdateFunction = AEONParser.UpdateFunction
     just_update_functions = components_df[(ComponentType = UpdateFunction,)]
     with_fn_arity_df = deepcopy(just_update_functions)
     with_fn_arity_df[!, :Arity] .=
@@ -338,7 +346,7 @@ plotly()
 # ╠═9f2c259a-479d-483a-9cf5-c249b6049dd6
 # ╠═28a1addd-059c-419c-ba7b-1564b875f0e6
 # ╠═813cd252-659f-4ee5-89ad-d78a183928f3
-# ╠═76ec0b17-05ad-40bd-b922-6ad14e619013
+# ╟─76ec0b17-05ad-40bd-b922-6ad14e619013
 # ╟─9481ea51-b479-42a4-a5e8-03e0c4ea7387
 # ╠═1a97f1a6-8a0d-11ef-3a8e-8da68a63985b
 # ╠═6d4d6baa-d160-47f3-bf7c-a9e0fabdf3c2
@@ -350,4 +358,5 @@ plotly()
 # ╠═6ef6f82a-5869-42c6-9111-ae125414ab1c
 # ╠═0f49994b-f5fe-4083-b06e-2a4b99ed9200
 # ╠═1dd2589a-baad-415a-a842-9f3701812f8e
+# ╠═d202a3b0-913d-4a63-a81c-cfb64f2e5176
 # ╠═7cb5d22d-4a2e-483e-a567-77c09fda306b

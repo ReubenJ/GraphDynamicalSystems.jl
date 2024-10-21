@@ -1,1 +1,4 @@
-channels = ["bioconda", "bioconda"]
+channels = ["bioconda"]
+
+[pip.deps]
+biodivine-aeon = ""
