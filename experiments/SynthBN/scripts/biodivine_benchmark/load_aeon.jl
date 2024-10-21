@@ -18,9 +18,9 @@ function load_aeon()
     summary_csv_path = joinpath(models_path, "summary.csv")
     df = DataFrame(CSV.File(summary_csv_path; types = Dict([:ID => String])))
     df[!, :path] = [joinpath(models_path, id) * ".aeon" for id in df.ID]
+    @tagsave(datadir("src_parsed", "summary_biodivine_benchmark.jld2"), @strdict(df))
 
     pbar = ProgressBar()
-    models = []
     Progress.foreachprogress(
         df.path,
         pbar;
@@ -28,11 +28,12 @@ function load_aeon()
         transient = true,
         description = "Loading models...",
     ) do model
-        produce_or_load(
-            model,
-            path = datadir("src_parsed", "biodivine_benchmark");
+        @produce_or_load(
+            @dict(model), # produce_or_load needs this to be a dict
+            path = datadir("src_parsed", "biodivine_benchmark"),
             filename = basename(model),
-        ) do model
+        ) do config
+            @unpack model = config
             parsed_model = AEONParser.parse_aeon_file(model, pbar)
             @strdict parsed_model
         end
