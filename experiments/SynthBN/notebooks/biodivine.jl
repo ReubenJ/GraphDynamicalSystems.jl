@@ -14,7 +14,7 @@ using DrWatson
 using Plots
 
 # ╔═╡ 3ab50cf5-da53-440c-9796-c9ee73b7ad86
-using SynthBN: AEONParser
+using SynthBN: AEONParser, update_functions_to_network
 
 # ╔═╡ 8a5e88c4-b0a6-4848-b6d2-74bdbd960e7c
 using DataFrames
@@ -191,6 +191,9 @@ $(length(excluded_files) > 0 ? "We currently drop two (#079, and #041) because 7
 The models have a varying number of `variables`, `inputs` (nodes with no incoming `regulations`/`edges`), and `regulations` (`edges`).
 """
 
+# ╔═╡ 1f27228e-eba1-49d8-a00c-8bc98a9eb19c
+df
+
 # ╔═╡ ca807ea7-1980-4800-91f8-7b446923127a
 components_df = let UpdateFunction = AEONParser.UpdateFunction
     @chain df begin
@@ -204,9 +207,22 @@ components_df = let UpdateFunction = AEONParser.UpdateFunction
     end
 end;
 
+# ╔═╡ ed381482-fc40-4378-90b0-df86a474c864
+just_update_functions = components_df[(ComponentType = AEONParser.UpdateFunction,)];
+
+# ╔═╡ a0f79b65-31d0-4faa-b87a-28335501ed61
+@chain just_update_functions begin
+    @group_by ID
+end
+
+# ╔═╡ 667ad14a-e202-480b-96b4-429c13d721ef
+update_functions_to_network
+
+# ╔═╡ 16aa806a-1666-4b1b-bdcc-1789b0e502f7
+just_update_functions.Component[1].target.name
+
 # ╔═╡ 4d26800f-12b6-4ffe-b6e1-8db8834a8da9
 with_fn_arity_df = let UpdateFunction = AEONParser.UpdateFunction
-    just_update_functions = components_df[(ComponentType = UpdateFunction,)]
     with_fn_arity_df = deepcopy(just_update_functions)
     with_fn_arity_df[!, :Arity] .=
         length.(collect.(Leaves.(map(x -> x.fn, just_update_functions[!, :Component]))))
@@ -320,6 +336,7 @@ plotly()
 # ╟─ff760751-c7e6-4085-b96e-45e2732f6b5f
 # ╟─7f4d4333-d66e-4ddb-8448-21db9bdc6c6d
 # ╟─21d9f3cd-d68d-4f9d-9b3c-d31d7383c872
+# ╠═1f27228e-eba1-49d8-a00c-8bc98a9eb19c
 # ╟─6f40fcb3-d8d1-4ade-a9ea-12fc58975f60
 # ╠═cc79a481-8bc9-442d-a129-a7f804ba0ccd
 # ╟─6989f31e-2256-4532-b885-e5354ed9e99a
@@ -339,6 +356,10 @@ plotly()
 # ╠═a2e21a23-3fc0-492a-9b27-cb7f307fcb1d
 # ╠═decf04d3-3ce0-4d3d-a046-1989994ad874
 # ╠═ca807ea7-1980-4800-91f8-7b446923127a
+# ╠═ed381482-fc40-4378-90b0-df86a474c864
+# ╠═a0f79b65-31d0-4faa-b87a-28335501ed61
+# ╠═667ad14a-e202-480b-96b4-429c13d721ef
+# ╠═16aa806a-1666-4b1b-bdcc-1789b0e502f7
 # ╠═4d26800f-12b6-4ffe-b6e1-8db8834a8da9
 # ╠═c30f1640-42f4-4538-a5e0-ede64784bed1
 # ╠═e4f087f0-4c83-408d-a9a1-5bb1447a1da7

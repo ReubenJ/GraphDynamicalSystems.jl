@@ -1,7 +1,3 @@
-using DrWatson
-
-@quickactivate
-
 using CondaPkg
 using PythonCall
 using Git

@@ -1,11 +1,8 @@
 using DrWatson, Test
-@quickactivate "SynthBN"
+@quickactivate :SynthBN
 
 using HerbGrammar, HerbConstraints
-
-# Here you include files using `srcdir`
-include(srcdir("gather_bn_data.jl"))
-include(srcdir("grammars.jl"))
+using GraphDynamicalSystems: BooleanNetworks
 
 # Run test suite
 println("Starting tests")
@@ -18,8 +15,8 @@ ti = time()
         seed = 42
         iterations = 1000
 
-        bn = sample_boolean_network(network_size, max_equation_depth, seed)
-        async_bn = abn(bn; seed = seed)
+        bn = BooleanNetworks.sample_boolean_network(network_size, max_equation_depth, seed)
+        async_bn = BooleanNetworks.abn(bn; seed = seed)
         trajectory = gather_bn_data(async_bn, iterations)
         divided_state_space = split_state_space(trajectory)
     end

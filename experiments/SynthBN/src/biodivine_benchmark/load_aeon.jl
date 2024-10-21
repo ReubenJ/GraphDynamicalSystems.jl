@@ -1,8 +1,6 @@
-using DrWatson
-
-@quickactivate :SynthBN
-
 using DataFrames, CSV
+
+import GraphDynamicalSystems.BooleanNetworks: update_functions_to_network
 
 using Term: Progress, ProgressBar
 
@@ -40,4 +38,24 @@ function load_aeon_biodivine()
             end
         end
     end
+end
+
+function update_functions_to_network(
+    update_functions::AbstractVector{<:AEONParser.UpdateFunction},
+)
+    network = MetaGraph(SimpleDiGraph(); label_type = String, vertex_data_type = Formula)
+
+    for up in update_functions
+        network[up.target] = up.fn
+    end
+
+    for up in enumerate(update_functions)
+        atoms = filter(x -> isa(x, Atom), subformulas(up.fn))
+        for atom in atoms
+            source = atom.value
+            add_edge!(network, up.target, source)
+        end
+    end
+
+    return network
 end
