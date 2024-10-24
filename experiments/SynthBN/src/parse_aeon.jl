@@ -88,20 +88,11 @@ end
     each_line = (fn_line | regulation_line)
 end
 
-function parse_aeon_file(
-    filepath::AbstractString,
-    pbar::ProgressBar = Progress.FOREACH_PROGRESS,
-)
+function parse_aeon_file(filepath::AbstractString)
     model = []
-    Progress.foreachprogress(
-        readlines(filepath),
-        pbar;
-        parallel = true,
-        transient = true,
-        description = "Parsing $(basename(filepath))",
-    ) do l
+    for l in readlines(filepath)
         push!(model, parse_one(l, each_line))
     end
-    model
+    return model
 end
 end

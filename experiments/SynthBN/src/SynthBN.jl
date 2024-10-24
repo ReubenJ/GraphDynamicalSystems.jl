@@ -4,15 +4,17 @@ using DrWatson
 using HerbGrammar
 using GraphDynamicalSystems
 
-include("biodivine_benchmark/parse_aeon.jl")
-include("biodivine_benchmark/load_aeon.jl")
-include("biodivine_benchmark/fetch_repo.jl")
+include("parse_aeon.jl")
 
-export AEONParser,
-    load_aeon_biodivine,
-    fetch_biodivine_benchmark,
+export AEONParser
+
+include("biodivine_benchmark.jl")
+
+export load_aeon_biodivine,
+    get_biodivine_repo,
     bundle_biodivine_benchmark,
-    update_functions_to_network
+    update_functions_to_network,
+    convert_aeon_models_to_metagraphs
 
 include("grammars.jl")
 

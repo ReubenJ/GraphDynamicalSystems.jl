@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.0
+# v0.19.46
 
 using Markdown
 using InteractiveUtils
@@ -244,11 +244,16 @@ function update_functions_to_network(
 end
 
 # ╔═╡ baff69b5-5af7-4aaf-a1eb-846216deffc5
-combine(
+metagraph_models = combine(
     update_functions[1:20],
     :Component =>
-        x -> update_functions_to_network(Vector{AEONParser.UpdateFunction}(x)) => :Network,
-)
+        x ->
+            update_functions_to_network(Vector{AEONParser.UpdateFunction}(x)) =>
+                :Network,
+);
+
+# ╔═╡ e7ad15ac-8976-4100-83ce-e964a6489605
+Dict(names(metagraph_models[1, :]) .=> values(metagraph_models[1, :]))
 
 # ╔═╡ 4d26800f-12b6-4ffe-b6e1-8db8834a8da9
 with_fn_arity_df = let UpdateFunction = AEONParser.UpdateFunction
@@ -387,6 +392,7 @@ plotly()
 # ╠═ed381482-fc40-4378-90b0-df86a474c864
 # ╠═a0f79b65-31d0-4faa-b87a-28335501ed61
 # ╠═baff69b5-5af7-4aaf-a1eb-846216deffc5
+# ╠═e7ad15ac-8976-4100-83ce-e964a6489605
 # ╠═0a6d4236-f1ac-474d-be98-3c2a53dd9a46
 # ╠═95417510-36db-451e-ba87-9faa23f7d412
 # ╠═4a7c619f-6ad6-43d6-b8e8-bddf4255bf17
