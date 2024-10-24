@@ -14,7 +14,8 @@ using SoleLogics:
     ¬,
     interpret,
     TruthDict,
-    BooleanTruth
+    BooleanTruth,
+    ⊤
 using Random: seed!
 using FileIO: load
 
@@ -68,7 +69,7 @@ function abn_step!(model::BooleanNetwork)
     td = truth_dict_from_state(model.state, vertex_labels)
     u₍ᵢ₊₁₎ = interpret(fᵢ, td)
     state_index = findfirst(isequal(i), vertex_labels)
-    model.state[state_index] = u₍ᵢ₊₁₎.flag
+    model.state[state_index] = Int(u₍ᵢ₊₁₎.flag)
 end
 
 extract_state(model::BooleanNetwork) = model.state
