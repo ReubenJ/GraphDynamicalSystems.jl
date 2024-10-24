@@ -1,6 +1,6 @@
 module BooleanNetworks
 
-using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv
+using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv, labels
 using DynamicalSystems: ArbitrarySteppable
 using SoleLogics:
     Formula,
@@ -62,7 +62,7 @@ function truth_dict_from_state(state::AbstractVector{Int})
 end
 
 function abn_step!(model::BooleanNetwork)
-    i = rand(1:nv(model.graph))
+    i = rand(collect(labels(model.graph)))
     fᵢ = model.graph[i]
     td = truth_dict_from_state(model.state)
     u₍ᵢ₊₁₎ = interpret(fᵢ, td)
