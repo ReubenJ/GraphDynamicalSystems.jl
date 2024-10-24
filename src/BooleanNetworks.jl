@@ -57,14 +57,15 @@ mutable struct BooleanNetwork
     state::AbstractVector{Int}
 end
 
-function truth_dict_from_state(state::AbstractVector{Int})
-    return TruthDict(Dict(i => state[i] for i in eachindex(state)))
+function truth_dict_from_state(state::AbstractVector{Int}, labels::AbstractVector)
+    return TruthDict(Dict(l => s for (l, s) in zip(labels, state)))
 end
 
 function abn_step!(model::BooleanNetwork)
-    i = rand(collect(labels(model.graph)))
+    vertex_labels = collect(labels(model.graph))
+    i = rand(vertex_labels)
     fᵢ = model.graph[i]
-    td = truth_dict_from_state(model.state)
+    td = truth_dict_from_state(model.state, vertex_labels)
     u₍ᵢ₊₁₎ = interpret(fᵢ, td)
     model.state[i] = u₍ᵢ₊₁₎.flag
 end
