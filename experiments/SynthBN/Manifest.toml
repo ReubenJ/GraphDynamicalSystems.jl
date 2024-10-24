@@ -935,7 +935,7 @@ version = "2.80.5+0"
 
 [[deps.GraphDynamicalSystems]]
 deps = ["DynamicalSystems", "FileIO", "MetaGraphsNext", "Random", "SoleLogics"]
-git-tree-sha1 = "8cfe6c1c83f986acae03a6c8eb80e38a51555301"
+git-tree-sha1 = "89caf81c7f5214de923f499b2f9fcca66bdab93b"
 repo-rev = "main"
 repo-url = "../.."
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
