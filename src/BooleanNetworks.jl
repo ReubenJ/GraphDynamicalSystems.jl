@@ -67,7 +67,8 @@ function abn_step!(model::BooleanNetwork)
     fᵢ = model.graph[i]
     td = truth_dict_from_state(model.state, vertex_labels)
     u₍ᵢ₊₁₎ = interpret(fᵢ, td)
-    model.state[i] = u₍ᵢ₊₁₎.flag
+    state_index = findfirst(isequal(i), vertex_labels)
+    model.state[state_index] = u₍ᵢ₊₁₎.flag
 end
 
 extract_state(model::BooleanNetwork) = model.state
