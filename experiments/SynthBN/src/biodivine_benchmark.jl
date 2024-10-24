@@ -80,10 +80,10 @@ end
 function update_functions_to_network(
     update_functions::AbstractVector{<:AEONParser.UpdateFunction},
 )
-    network = MetaGraph(SimpleDiGraph(); label_type = String, vertex_data_type = Formula)
+    network = MetaGraph(SimpleDiGraph(); label_type = Atom, vertex_data_type = Formula)
 
     for up in update_functions
-        network[up.target.name] = up.fn
+        network[Atom(up.target.name)] = up.fn
     end
 
     for up in update_functions

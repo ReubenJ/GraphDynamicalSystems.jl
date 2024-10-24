@@ -934,9 +934,9 @@ uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
 version = "2.80.5+0"
 
 [[deps.GraphDynamicalSystems]]
-deps = ["DynamicalSystems", "MetaGraphsNext", "Random", "SoleLogics"]
-git-tree-sha1 = "520f52843f39793ed76eb708d1304d937d652885"
-repo-rev = "feat/bn-networks-with-dynsys"
+deps = ["DynamicalSystems", "FileIO", "MetaGraphsNext", "Random", "SoleLogics"]
+git-tree-sha1 = "8cfe6c1c83f986acae03a6c8eb80e38a51555301"
+repo-rev = "main"
 repo-url = "../.."
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
 version = "0.1.0"
