@@ -1,51 +1,51 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "julia-bin@latest": {
-      "last_modified": "2024-09-10T15:01:03Z",
-      "resolved": "github:NixOS/nixpkgs/5ed627539ac84809c78b2dd6d26a5cebeb5ae269#julia-bin",
+    "julia-bin@1.10.2": {
+      "last_modified": "2024-05-03T15:42:32Z",
+      "resolved": "github:NixOS/nixpkgs/5fd8536a9a5932d4ae8de52b7dc08d92041237fc#julia-bin",
       "source": "devbox-search",
-      "version": "1.10.4",
+      "version": "1.10.2",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/myispwsvb1cgnjnz18aj5zln0zh24rja-julia-bin-1.10.4",
+              "path": "/nix/store/1f6bj0krcl5c1yi24mlr42jp0j85b3ca-julia-bin-1.10.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/myispwsvb1cgnjnz18aj5zln0zh24rja-julia-bin-1.10.4"
+          "store_path": "/nix/store/1f6bj0krcl5c1yi24mlr42jp0j85b3ca-julia-bin-1.10.2"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/xv85i39hyw2kngfc9igkwg9f0hjbgbp7-julia-bin-1.10.4",
+              "path": "/nix/store/q4sbir6aj7wb1mwp9mk3iix78br7c9cc-julia-bin-1.10.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/xv85i39hyw2kngfc9igkwg9f0hjbgbp7-julia-bin-1.10.4"
+          "store_path": "/nix/store/q4sbir6aj7wb1mwp9mk3iix78br7c9cc-julia-bin-1.10.2"
         },
         "x86_64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/n0lzg1dkdvgrvwabv7a8pm7jmlb2yg0f-julia-bin-1.10.4",
+              "path": "/nix/store/b0gs6cp0wb3gw60pfrsyx9x9x7gzxssp-julia-bin-1.10.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/n0lzg1dkdvgrvwabv7a8pm7jmlb2yg0f-julia-bin-1.10.4"
+          "store_path": "/nix/store/b0gs6cp0wb3gw60pfrsyx9x9x7gzxssp-julia-bin-1.10.2"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/06qnp46ihg0vzsbg1hiqcs58pjyph135-julia-bin-1.10.4",
+              "path": "/nix/store/nmfj6saliahdp6id9j51qaqjrwwaj30r-julia-bin-1.10.2",
               "default": true
             }
           ],
-          "store_path": "/nix/store/06qnp46ihg0vzsbg1hiqcs58pjyph135-julia-bin-1.10.4"
+          "store_path": "/nix/store/nmfj6saliahdp6id9j51qaqjrwwaj30r-julia-bin-1.10.2"
         }
       }
     }
