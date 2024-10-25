@@ -19,7 +19,7 @@ Progress.foreachprogress(
     all_params,
     pbar;
     parallel = true,
-    description = "Collecting trajectories",
+    # description = "Collecting trajectories",
 ) do params
     @produce_or_load(params, path = datadir("sims", "biodivine_trajectories"),) do params
         @unpack id, n_trajectories, iterations = params
