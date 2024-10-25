@@ -70,7 +70,7 @@ function load_aeon_biodivine()
                 filename = basename(model),
             ) do config
                 @unpack model = config
-                parsed_model = AEONParser.parse_aeon_file(model, pbar)
+                parsed_model = AEONParser.parse_aeon_file(model)
                 @strdict parsed_model
             end
         end
