@@ -935,8 +935,8 @@ version = "2.80.5+0"
 
 [[deps.GraphDynamicalSystems]]
 deps = ["DynamicalSystems", "FileIO", "MetaGraphsNext", "Random", "SoleLogics"]
-git-tree-sha1 = "2fb05ab698fd7ab462ce21bf734676beb6478f1a"
-repo-rev = "bug/atom-has-no-field-flag"
+git-tree-sha1 = "7bea9200ea26b6f57d09abf2b876188bc8642661"
+repo-rev = "main"
 repo-url = "../.."
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
 version = "0.1.0"
