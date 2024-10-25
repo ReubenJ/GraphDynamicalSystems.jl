@@ -79,11 +79,22 @@ end
 
 function update_functions_to_network(
     update_functions::AbstractVector{<:AEONParser.UpdateFunction},
+    regulations::AbstractVector{<:AEONParser.Regulation},
 )
     network = MetaGraph(SimpleDiGraph(); label_type = Atom, vertex_data_type = Formula)
 
+    # By default let every node's update function equal itself
+    # This means applying an update won't do anything
+    for reg in regulations
+        network[Atom(reg.regulator.name)] = Atom(reg.regulator.name)
+        network[Atom(reg.target.name)] = Atom(reg.target.name)
+    end
+
+    network[Atom("v_External_Activator")] = Atom("v_External_Activator")
+
+    # Then for any node that does have an update function, we assign it here
     for up in update_functions
-        network[Atom(up.target.name)] = up.fn
+        network[Atom(String(up.target.name))] = up.fn
     end
 
     for up in update_functions
@@ -118,15 +129,21 @@ function convert_aeon_models_to_metagraphs()
     end
 
     just_update_functions = components_df[(ComponentType = AEONParser.UpdateFunction,)]
+    just_regulations = components_df[(ComponentType = AEONParser.Regulation,)]
 
     update_functions_by_id = @chain just_update_functions begin
         @group_by ID
         @select Component
     end
 
+    regulations_by_id = @chain just_regulations begin
+        @group_by ID
+        @select Component
+    end
+
     pbar = ProgressBar(; columns = :detailed)
     Progress.foreachprogress(
-        update_functions_by_id,
+        collect(zip(update_functions_by_id, regulations_by_id)),
         pbar;
         parallel = true,
         transient = false,
@@ -135,11 +152,13 @@ function convert_aeon_models_to_metagraphs()
         @produce_or_load(
             @dict(model), # produce_or_load needs this to be a dict
             path = datadir("src_parsed", "biodivine_benchmark_as_metagraphs"),
-            filename = model.ID[1],
+            filename = model[1].ID[1],
         ) do config
             @unpack model = config
+            (update_functions, regulations) = model
             metagraph_model = update_functions_to_network(
-                Vector{AEONParser.UpdateFunction}(model.Component),
+                Vector{AEONParser.UpdateFunction}(update_functions.Component),
+                Vector{AEONParser.Regulation}(regulations.Component),
             )
             @strdict metagraph_model
         end
