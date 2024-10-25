@@ -13,7 +13,7 @@ using Term: Progress, ProgressBar
 using TidierData
 
 function get_biodivine_repo(raw_src_dir)
-    remote = "git@github.com:ReubenJ/biodivine-boolean-models.git"
+    remote = "https://github.com/ReubenJ/biodivine-boolean-models.git"
     commit_hash = "f785e571308122378664d0ad4168969cb70cdcc2"
     checkout_cmd = `$(git()) checkout $commit_hash`
 
