@@ -8,12 +8,12 @@ using DrWatson
 
 using JLD2
 
-trajectories = datadir("sims", "biodivine_trajectories")
-split_trajectories = datadir("sims", "biodivine_split")
+trajectories_dir = datadir("sims", "biodivine_trajectories")
+split_trajectories_dir = datadir("sims", "biodivine_split")
 
 for traj_file in readdir(datadir("sims", "biodivine_trajectories"))
-    traj_path = joinpath(trajectories, traj_file)
-    split_path = joinpath(split_trajectories, traj_file)
+    traj_path = joinpath(trajectories_dir, traj_file)
+    split_path = joinpath(split_trajectories_dir, traj_file)
 
     if !isfile(split_path)
         @info "Splitting $traj_file..."
