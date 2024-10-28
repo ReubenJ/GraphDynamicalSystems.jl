@@ -9,7 +9,7 @@ using DrWatson
 using JLD2
 
 trajectories = datadir("sims", "biodivine_trajectories")
-split_trajectories = datadir("sim", "biodivine_split")
+split_trajectories = datadir("sims", "biodivine_split")
 
 for traj_file in readdir(datadir("sims", "biodivine_trajectories"); join = true)
     traj_path = joinpath(trajectories, traj_file)
@@ -22,5 +22,7 @@ for traj_file in readdir(datadir("sims", "biodivine_trajectories"); join = true)
             split_traj = split_state_space.(trajectories)
             @tagsave(split_path, @strdict split_traj)
         end
+    else
+        @info "$split_path already exists"
     end
 end
