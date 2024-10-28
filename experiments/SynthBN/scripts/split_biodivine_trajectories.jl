@@ -17,11 +17,12 @@ for traj_file in readdir(datadir("sims", "biodivine_trajectories"))
 
     if !isfile(split_path)
         @info "Splitting $traj_file..."
-        load(traj_file) do traj_file_contents
-            trajectories = traj_file_contents["trajectories"] # also includes git tag, etc.
-            split_traj = split_state_space.(trajectories)
-            @tagsave(split_path, @strdict split_traj)
-        end
+        traj_file_contents = load(traj_file)
+        trajectories = traj_file_contents["trajectories"] # also includes git tag, etc.
+
+        split_traj = split_state_space.(trajectories)
+        @tagsave(split_path, @strdict split_traj)
+
     else
         @info "$split_path already exists"
     end
