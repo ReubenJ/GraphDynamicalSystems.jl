@@ -17,7 +17,7 @@ for traj_file in readdir(datadir("sims", "biodivine_trajectories"))
 
     if !isfile(split_path)
         @info "Splitting $traj_file..."
-        traj_file_contents = load(traj_file)
+        traj_file_contents = load(traj_path)
         trajectories = traj_file_contents["trajectories"] # also includes git tag, etc.
 
         split_traj = split_state_space.(trajectories)
