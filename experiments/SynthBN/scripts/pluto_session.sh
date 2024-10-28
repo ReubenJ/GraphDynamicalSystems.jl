@@ -12,4 +12,4 @@
 module load 2024r1
 module load julia
 
-julia --project=. -e 'using Pluto; Pluto.run(launch_browser=false)'
+julia --project=. -e 'using Pluto; Pluto.run(host="0.0.0.0", port=1234, launch_browser=false)'
