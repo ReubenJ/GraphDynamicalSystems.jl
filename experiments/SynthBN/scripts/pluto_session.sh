@@ -12,4 +12,6 @@
 module load 2024r1
 module load julia
 
-julia --project=. -e 'using Pluto; Pluto.run(host="0.0.0.0", port=1234, launch_browser=false)' > pluto_output.txt
+echo Starting Pluto 🎈
+
+srun julia --project=. -e 'using Pluto; Pluto.run(host="0.0.0.0", port=1234, launch_browser=false)' > pluto_output.txt
