@@ -11,7 +11,7 @@ using JLD2
 trajectories = datadir("sims", "biodivine_trajectories")
 split_trajectories = datadir("sims", "biodivine_split")
 
-for traj_file in readdir(datadir("sims", "biodivine_trajectories"); join = true)
+for traj_file in readdir(datadir("sims", "biodivine_trajectories"))
     traj_path = joinpath(trajectories, traj_file)
     split_path = joinpath(split_trajectories, traj_file)
 
