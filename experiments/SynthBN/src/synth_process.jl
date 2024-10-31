@@ -33,3 +33,26 @@ function synth(problem, iterator, grammar, max_neighbors, max_iterations)
 
     return exprs_and_scores
 end
+
+function synth_biodivine(problem, iterator, grammar, max_iterations)
+    exprs_and_scores = []
+
+    for (i, ex) in enumerate(iterator)
+        if i % 1000 == 0
+            @info "$i iterations, problem $(problem.name)"
+        end
+
+        expr = rulenode2expr(ex, grammar)
+
+        score = evaluate_bn(problem, expr)
+
+        push!(exprs_and_scores, (eval(expr), score))
+
+        if i > max_iterations
+            @warn "Maximum iterations reached"
+            break
+        end
+    end
+
+    return exprs_and_scores
+end
