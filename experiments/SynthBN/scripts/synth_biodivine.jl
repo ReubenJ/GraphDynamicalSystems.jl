@@ -5,7 +5,7 @@ using DrWatson
 using DataFrames
 using Herb, HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
 using Random
-using Graphs
+using Graphs: nv
 
 include(srcdir("grammars.jl"))
 include(srcdir("synth_process.jl"))
