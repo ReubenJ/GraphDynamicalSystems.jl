@@ -37,22 +37,26 @@ end
 
 function benchmark()
     exprs = [
-        :(Atom(0) ∨ Atom(1)),
+        :(
+            Atom(0) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1) ∨ Atom(1)
+        ),
+        :(Atom("a") ∨ Atom("b")),
         :(
             (¬Atom("v_cGSH_GSSG_b1") ∧ Atom("v_cGR_b1")) ∨
             (Atom("v_cGSH_GSSG_b1") ∧ ¬Atom("v_cGSH_GSSG_b2") ∧ Atom("v_cGR_b1")) ∨
             (Atom("v_cGSH_GSSG_b1") ∧ Atom("v_cGSH_GSSG_b2"))
         ),
+        :((¬Atom(1) ∧ Atom(2)) ∨ (Atom(3) ∧ ¬Atom(4) ∧ Atom(5)) ∨ (Atom(6) ∧ Atom(7))),
     ]
 
-    for e in exprs
+    for expr in exprs
         syntax_branch = eval(expr)
 
         td = TruthDict([0 => ⊤, 1 => ⊤])
 
-        eval_version = @benchmarkable interpret(eval(expr), td)
-        custom_eval_version = @benchmarkable interpret(expr, td)
-        no_eval_version = @benchmarkable interpret(syntax_branch, td)
+        eval_version = @benchmarkable interpret(eval($expr), $td)
+        custom_eval_version = @benchmarkable interpret($expr, $td)
+        no_eval_version = @benchmarkable interpret($syntax_branch, $td)
 
         @info "Tuning"
         tune!(eval_version)
