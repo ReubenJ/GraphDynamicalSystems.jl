@@ -85,12 +85,11 @@ function update_functions_to_network(
 
     # By default let every node's update function equal itself
     # This means applying an update won't do anything
+    # Should've chosen `identity` for inputs when bundling the benchmark
     for reg in regulations
         network[Atom(reg.regulator.name)] = Atom(reg.regulator.name)
         network[Atom(reg.target.name)] = Atom(reg.target.name)
     end
-
-    network[Atom("v_External_Activator")] = Atom("v_External_Activator")
 
     # Then for any node that does have an update function, we assign it here
     for up in update_functions

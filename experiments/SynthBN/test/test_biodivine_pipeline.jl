@@ -47,7 +47,7 @@ using Graphs: nv
                     async_bn = BooleanNetworks.abn(mg, seed = i)
                     push!(trajectories, gather_bn_data(async_bn, trajectory_length))
                 end
-                # @infiltrate
+
                 @test length(trajectories) == n_trajectories
                 @test all(length.(trajectories) .== trajectory_length + 1)
                 @test dimension(trajectories[1]) == nv(mg)
