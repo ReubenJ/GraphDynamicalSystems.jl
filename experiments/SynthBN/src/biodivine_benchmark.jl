@@ -121,8 +121,6 @@ function convert_aeon_models_to_metagraphs()
     components_df = @chain df begin
         @select parsed_model ID
         flatten(:parsed_model)
-        # Twice because I've accidentally added each component as a vector of length 1
-        flatten(:parsed_model)
         @rename Component = parsed_model  # new = old
         @mutate ComponentType = typeof(Component)
         @group_by ComponentType

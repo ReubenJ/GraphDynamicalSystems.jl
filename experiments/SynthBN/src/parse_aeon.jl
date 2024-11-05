@@ -91,7 +91,7 @@ end
 function parse_aeon_file(filepath::AbstractString)
     model = []
     for l in readlines(filepath)
-        push!(model, parse_one(l, each_line))
+        push!(model, parse_one(l, each_line)...)
     end
     return model
 end
