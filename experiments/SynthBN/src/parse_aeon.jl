@@ -53,9 +53,14 @@ end
 Regulation(reg::NetworkVar, reg_type::RegulationType, target::NetworkVar) =
     Regulation(reg, reg_type, true, target)
 
-function parse_aeon_function_as_sole_function(formula::AbstractString)
-    symbols_swapped = replace(formula, "&" => ∧, "|" => ∨, "!" => ¬)
-    return parseformula(symbols_swapped)
+"""
+    aeon2sole(formula::AbstractString)
+
+Replaces the connectives in an AEON-style formula (!(A | B) & C)
+with a SoleLogics.jl-style formula (¬(A ∨ B) ∧ C).
+"""
+function aeon2sole(formula::AbstractString)
+    return replace(formula, "&" => "∧", "|" => "∨", "!" => "¬")
 end
 
 @with_names begin
@@ -82,8 +87,7 @@ end
         Drop(Equal(":")) +
         spaces +
         # Convert the rest into a SoleLogics function
-        (Pattern(".")[0:end] |> join > parse_aeon_function_as_sole_function) >
-        UpdateFunction
+        ((Pattern(".")[0:end] |> join > aeon2sole) > parseformula) > UpdateFunction
 
     each_line = (fn_line | regulation_line)
 end
