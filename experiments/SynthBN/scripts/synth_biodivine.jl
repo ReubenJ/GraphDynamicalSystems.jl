@@ -50,7 +50,7 @@ function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFr
     Random.seed!(seed)
 
     @unpack n_trajectories = params
-    selected_trajs = rand(res.split_traj[1], n_trajectories)
+    selected_trajs = rand(res.split_traj, n_trajectories)
 
     merged_selected_trajs = reduce(mergewith(union), selected_trajs)
 
