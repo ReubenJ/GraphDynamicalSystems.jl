@@ -39,19 +39,25 @@ using DynamicalSystems: dimension
                 @test nv(mg) == exp_vals.variables + exp_vals.inputs
             end
 
+            trajectories = []
+            n_trajectories = 3
+            trajectory_length = 25
+
+            for i = 1:n_trajectories  # 3 trajectories
+                async_bn = BooleanNetworks.abn(mg, seed = i)
+                push!(trajectories, gather_bn_data(async_bn, trajectory_length))
+            end
+
             @testset "Sample Trajectories" begin
-                trajectories = []
-                n_trajectories = 3
-                trajectory_length = 25
-
-                for i = 1:n_trajectories  # 3 trajectories
-                    async_bn = BooleanNetworks.abn(mg, seed = i)
-                    push!(trajectories, gather_bn_data(async_bn, trajectory_length))
-                end
-
                 @test length(trajectories) == n_trajectories
                 @test all(length.(trajectories) .== trajectory_length + 1)
                 @test dimension(trajectories[1]) == nv(mg)
+            end
+
+            split = split_state_space.(trajectories)
+
+            @testset "Split Trajectories" begin
+                @test all((!isempty).(split))
             end
         end
     end
