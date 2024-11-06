@@ -1,4 +1,5 @@
 using Graphs: nv
+using DynamicalSystems: dimension
 
 @testset "Biodivine Pipeline" begin
     @kwdef struct ModelExpectedVals
