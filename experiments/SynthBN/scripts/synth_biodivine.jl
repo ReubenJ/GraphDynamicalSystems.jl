@@ -12,18 +12,11 @@ include(srcdir("synth_process.jl"))
 include(srcdir("evaluator.jl"))
 include(srcdir("create_problem.jl"))
 
-to_include = ["001", "002", "003"]
 
-res = collect_results(
-    datadir("sims", "biodivine_split");
-    rinclude = [Regex("id=$n") for n in to_include],
-)
+res = collect_results(datadir("sims", "biodivine_split");)
 res.ID = ((x -> x[end-1]["id"]) ∘ parse_savename).(res.path)
 rename!(res, :path => "Trajectory Path")
-mg_df = collect_results(
-    datadir("src_parsed", "biodivine_benchmark_as_metagraphs");
-    rinclude = [Regex("$n") for n in to_include],
-)
+mg_df = collect_results(datadir("src_parsed", "biodivine_benchmark_as_metagraphs");)
 mg_df.ID = ((x -> parse(Int, x)) ∘ (x -> x[1]) ∘ splitext ∘ basename).(mg_df.path)
 rename!(mg_df, :path => "Model Path")
 
@@ -33,10 +26,10 @@ synth_params = Dict(
     "seed" => 42,
     "max_depth" => 6,
     "id" => res.ID,
-    "n_trajectories" => collect(10:10:100),
+    "n_trajectories" => collect(10:20:110),
     "iterator_type" => [BFSIterator],
     "grammar_builder" => [build_dnf_grammar],
-    "max_iterations" => 5_000_000,
+    "max_iterations" => 1_000_000,
 )
 
 function synth_one_vertex(save_data)
