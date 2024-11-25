@@ -4,8 +4,12 @@ authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
 version = "0.1.0"
 
 [deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 DynamicalSystems = "61744808-ddfa-5f27-97ff-6e42cc95d634"
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
+HerbCore = "2b23ba43-8213-43cb-b5ea-38c12b45bd45"
+HerbGrammar = "4ef9e186-2fe5-4b24-8de7-9f7291f24af7"
+HerbSearch = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
 MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SoleLogics = "b002da8f-3cb3-4d91-bbe3-2953433912b5"
