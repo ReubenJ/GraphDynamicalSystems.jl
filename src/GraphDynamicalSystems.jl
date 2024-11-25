@@ -4,9 +4,11 @@ using SoleLogics
 using MetaGraphsNext
 using DynamicalSystems
 
-include("BooleanNetworks.jl")
-
+include("boolean_networks.jl")
 export BooleanNetworks
+
+include("qualitative_networks.jl")
+export QualitativeNetworks
 
 # """
 #     gds(bn::MetaGraph)
