@@ -7,12 +7,12 @@ using HerbSearch
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!
 
 const base_qn_grammar = @csgrammar begin
-    Vals = Pos() | Neg()
+    ManyVals = Pos() | Neg()
     Val =
         (Val + Val) |
         (Val - Val) |
         Val / Val |
-        Avg(Vals) |
+        Avg(ManyVals) |
         Min(Val, Val) |
         Max(Val, Val) |
         Ceil(Val) |
