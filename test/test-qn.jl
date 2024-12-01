@@ -7,6 +7,11 @@ using Graphs: ne, nv
 
     @test issubset(Set(entities), Set(g.rules))
     @test issubset(Set(constants), Set(g.rules))
+
+    g2 = QualitativeNetworks.build_qn_grammar(Symbol[], Integer[])
+
+    @test isempty(setdiff(Set(g2.rules), Set(entities)))
+    @test isempty(setdiff(Set(g2.rules), Set(constants)))
 end
 
 @testset "QN Sampling" begin

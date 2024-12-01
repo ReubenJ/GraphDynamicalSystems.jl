@@ -23,7 +23,7 @@ const default_qn_constants = [2]
 
 function build_qn_grammar(
     entity_names::AbstractVector{Symbol},
-    constants::AbstractVector{Int},
+    constants::AbstractVector{<:Integer},
 )
     g = deepcopy(base_qn_grammar)
 
