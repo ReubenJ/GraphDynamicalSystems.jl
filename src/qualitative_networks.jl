@@ -8,12 +8,12 @@ using MLStyle: @match
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, nv
 
 const base_qn_grammar = @csgrammar begin
-    ManyVals = Pos() | Neg()
+    # ManyVals = Pos() | Neg()
     Val =
         (Val + Val) |
         (Val - Val) |
         Val / Val |
-        Avg(ManyVals) |
+        # Avg(ManyVals) |
         Min(Val, Val) |
         Max(Val, Val) |
         Ceil(Val) |
