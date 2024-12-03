@@ -1,14 +1,29 @@
 module GraphDynamicalSystems
 
-using SoleLogics
-using MetaGraphsNext
+using DocStringExtensions
 using DynamicalSystems
+using MetaGraphsNext
+using SoleLogics
+
 
 include("boolean_networks.jl")
 export BooleanNetworks
 
 include("qualitative_networks.jl")
-export QualitativeNetworks
+export QualitativeNetwork,
+    build_qn_grammar,
+    update_functions_to_network,
+    sample_qualitative_network,
+    max_level,
+    components,
+    C,
+    get_state,
+    S,
+    target_functions,
+    T,
+    set_state!,
+    interpret,
+    aqn
 
 # """
 #     gds(bn::MetaGraph)
