@@ -16,25 +16,22 @@ using HerbCore
     @test isempty(intersect(Set(g2.rules), Set(constants)))
 end
 
+size = 3
+max_eq_depth = 3
+N = 5
+network = sample_qualitative_network(size, max_eq_depth)
+initial_state = ones(size)
+qn = QualitativeNetwork(network, initial_state, N)
+
 @testset "QN Sampling" begin
-    size = 3
-    max_eq_depth = 3
-    qn = sample_qualitative_network(size, max_eq_depth)
-    @test nv(qn.graph) == size
-    @test ne(qn.graph) > 0
+    @test nv(network) == size
+    @test ne(network) > 0
     for (component, (index, target_fn)) in T(qn)
         @test depth(target_fn) <= max_eq_depth
     end
 end
 
 @testset "QN properties, fields" begin
-    size = 3
-    max_eq_depth = 3
-    N = 5
-    network = sample_qualitative_network(size, max_eq_depth)
-    initial_state = ones(size)
-    qn = QualitativeNetwork(network, initial_state, N)
-
     @test length(components(qn)) == size
     @test length(C(qn)) == size
 
