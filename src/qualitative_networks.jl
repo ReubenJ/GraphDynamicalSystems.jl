@@ -158,11 +158,11 @@ end
 function limit_change(prev_value, next_value, N::Int)
     limited_value = 1
     if next_value > prev_value
-        return min(prev_value + 1, N + 1)
+        limited_value = min(prev_value + 1, N + 1)
     elseif next_value < prev_value
-        return max(prev_value - 1, 0)
+        limited_value = max(prev_value - 1, 0)
     elseif next_value == prev_value
-        return next_value
+        limited_value = next_value
     end
 
     return round(Int, limited_value)
