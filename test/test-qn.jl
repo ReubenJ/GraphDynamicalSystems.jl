@@ -22,6 +22,9 @@ end
     qn = sample_qualitative_network(size, max_eq_depth)
     @test nv(qn.graph) == size
     @test ne(qn.graph) > 0
+    for (component, (index, target_fn)) in T(qn)
+        @test depth(target_fn) <= max_eq_depth
+    end
 end
 
 @testset "QN properties, fields" begin
@@ -37,9 +40,12 @@ end
 
     @test length(target_functions(qn)) == size
     @test length(T(qn)) == size
-    @test all(depth(T(qn)) .<= max_eq_depth)
 
     @test all(get_state(qn) .<= max_level(qn))
 
     @test_throws r"max" set_state!(qn, Symbol(1), 6)
+end
+
+@testset "Target Function" begin
+
 end
