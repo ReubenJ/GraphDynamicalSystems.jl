@@ -10,8 +10,8 @@ using Graphs: ne, nv
 
     g2 = QualitativeNetworks.build_qn_grammar(Symbol[], Integer[])
 
-    @test isempty(setdiff(Set(g2.rules), Set(entities)))
-    @test isempty(setdiff(Set(g2.rules), Set(constants)))
+    @test isempty(intersect(Set(g2.rules), Set(entities)))
+    @test isempty(intersect(Set(g2.rules), Set(constants)))
 end
 
 @testset "QN Sampling" begin
