@@ -1,9 +1,11 @@
+import DynamicalSystems: get_state, set_state!
+
 using AbstractTrees: Leaves
-using HerbCore: AbstractGrammar, AbstractRuleNode, RuleNode, get_rule
-using HerbGrammar: @csgrammar, add_rule!
+using HerbCore: AbstractGrammar, RuleNode, get_rule
+using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
 using HerbSearch
-using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!
 using MLStyle: @match
+using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, nv
 
 const base_qn_grammar = @csgrammar begin
     ManyVals = Pos() | Neg()
@@ -38,13 +40,13 @@ function build_qn_grammar(
 end
 
 function update_functions_to_network(
-    update_functions::AbstractDict{Symbol,<:AbstractRuleNode},
+    update_functions::AbstractDict{Symbol,Union{Symbol,Expr,Int}},
     grammar::AbstractGrammar,
 )
     network = MetaGraph(
         SimpleDiGraph();
         label_type = Symbol,
-        vertex_data_type = AbstractRuleNode,
+        vertex_data_type = Union{Symbol,Expr,Int},
         graph_data = grammar,
     )
 
@@ -53,8 +55,7 @@ function update_functions_to_network(
     end
 
     for (e1, f) in update_functions
-        leaves = get_rule.(collect(Leaves(f)))
-        input_variables = grammar.rules[leaves]
+        input_variables = collect(Leaves(f))
         for e2 in input_variables
             add_edge!(network, e1, e2)
         end
@@ -65,14 +66,16 @@ end
 
 function sample_qualitative_network(entities::AbstractVector{Symbol}, max_eq_depth::Int)
     g = build_qn_grammar(entities, default_qn_constants)
-    update_fns = Dict([e => rand(RuleNode, g, :Val, max_eq_depth) for e in entities])
+    update_fns = Dict{Symbol,Union{Symbol,Expr,Int}}([
+        e => rulenode2expr(rand(RuleNode, g, :Val, max_eq_depth), g) for e in entities
+    ])
     graph = update_functions_to_network(update_fns, g)
 
     return graph
 end
 
 function sample_qualitative_network(size::Int, max_eq_depth::Int)
-    entities = [Symbol(e) for e = 1:size]
+    entities = [Symbol("c$e") for e = 1:size]
     sample_qualitative_network(entities, max_eq_depth)
 end
 
@@ -84,9 +87,9 @@ struct QualitativeNetwork
     function QualitativeNetwork(g, s, N)
         if any(s .> N)
             error("All values in state must be <= N (N=$N)")
-        else
-            return new(g, s, N)
         end
+
+        return new(g, s, N)
     end
 end
 
@@ -101,13 +104,13 @@ function _get_component_index(qn::QN, component::Symbol)
 end
 
 function components(qn::QN)
-    return labels(qn.graph)
+    return collect(labels(qn.graph))
 end
 
 C(qn::QN) = components(qn)
 
 function target_functions(qn::QN)
-    return qn.graph.vertex_properties
+    return Dict([c => fn for (c, (_, fn)) in qn.graph.vertex_properties])
 end
 
 T(qn::QN) = target_functions(qn)
@@ -137,9 +140,66 @@ function set_state!(qn::QN, component::Symbol, value::Integer)
     _set_state!(qn, component, value)
 end
 
+function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
+    @match e begin
+        ::Symbol => get_state(qn, e)
+        ::Int => e
+        :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
+        :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
+        :($v1 / $v2) => interpret(v1, qn) / interpret(v2, qn)
+        :(Min($v1, $v2)) => min(interpret(v1, qn), interpret(v2, qn))
+        :(Max($v1, $v2)) => max(interpret(v1, qn), interpret(v2, qn))
+        :(Ceil($v)) => ceil(interpret(v, qn))
+        :(Floor($v)) => floor(interpret(v, qn))
+        _ => error("Unhandled Expr in `interpret`: $e")
+    end
+end
+
+function limit_change(prev_value, next_value, N::Int)
+    limited_value = 1
+    if next_value > prev_value
+        return min(prev_value + 1, N + 1)
+    elseif next_value < prev_value
+        return max(prev_value - 1, 0)
+    elseif next_value == prev_value
+        return next_value
+    end
+
+    return round(Int, limited_value)
+end
+
+function async_qn_step!(qn::QN)
+    vertex_labels = collect(labels(qn.graph))
+    c_i = rand(vertex_labels)
+    t = target_functions(qn)[c_i]
+    old_state = get_state(qn, c_i)
+    new_state = interpret(t, qn)
+    limited_state = limit_change(old_state, new_state, max_level(qn))
+    set_state!(qn, c_i, limited_state)
+end
+
 extract_state(model::QN) = model.state
 extract_parameters(model::QN) = model.graph
 
 function reset_model!(model::QN, u, _)
     model.state .= u
+end
+
+function aqn(network::MetaGraph, initial_state::AbstractVector{Int}, max_level::Int)
+    model = QualitativeNetwork(network, initial_state, max_level)
+
+    return ArbitrarySteppable(
+        model,
+        async_qn_step!,
+        extract_state,
+        extract_parameters,
+        reset_model!,
+        isdeterministic = false,
+    )
+end
+
+function aqn(network::MetaGraph, max_level::Int)
+    n_components = nv(network)
+    initial_state = rand(0:max_level, n_components)
+    return aqn(network, initial_state, max_level)
 end
