@@ -1,10 +1,9 @@
-module QualitativeNetworks
-
 using AbstractTrees: Leaves
 using HerbCore: AbstractGrammar, AbstractRuleNode, RuleNode, get_rule
 using HerbGrammar: @csgrammar, add_rule!
 using HerbSearch
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!
+using MLStyle: @match
 
 const base_qn_grammar = @csgrammar begin
     ManyVals = Pos() | Neg()
@@ -77,20 +76,70 @@ function sample_qualitative_network(size::Int, max_eq_depth::Int)
     sample_qualitative_network(entities, max_eq_depth)
 end
 
-mutable struct QualitativeNetwork
+struct QualitativeNetwork
     graph::MetaGraph
     state::AbstractVector{Int}
+    N::Int
+
+    function QualitativeNetwork(g, s, N)
+        if any(s .> N)
+            error("All values in state must be <= N (N=$N)")
+        else
+            return new(g, s, N)
+        end
+    end
 end
 
 const QN = QualitativeNetwork
 
-function qn_step!(model::QN) end
+function max_level(qn::QN)
+    return qn.N
+end
+
+function _get_component_index(qn::QN, component::Symbol)
+    return findfirst(isequal(component), components(qn))
+end
+
+function components(qn::QN)
+    return labels(qn.graph)
+end
+
+C(qn::QN) = components(qn)
+
+function target_functions(qn::QN)
+    return qn.graph.vertex_properties
+end
+
+T(qn::QN) = target_functions(qn)
+
+get_state(qn::QN) = qn.state
+
+function get_state(qn::QN, component::Symbol)
+    i = _get_component_index(qn, component)
+    return qn.state[i]
+end
+
+S(qn::QN) = qn.state
+S(qn::QN, component::Symbol) = get_state(qn, component)
+
+function _set_state!(qn::QN, component::Symbol, value::Integer)
+    i = _get_component_index(qn::QN, component::Symbol)
+    qn.state[i] = value
+end
+
+function set_state!(qn::QN, component::Symbol, value::Integer)
+    if value > max_level(qn)
+        error(
+            "Value ($value) cannot be larger than the QN's maximum level (N=$(max_level(qn)))",
+        )
+    end
+
+    _set_state!(qn, component, value)
+end
 
 extract_state(model::QN) = model.state
 extract_parameters(model::QN) = model.graph
 
 function reset_model!(model::QN, u, _)
     model.state .= u
-end
-
 end
