@@ -148,16 +148,12 @@ function components(qn::QN)
     return collect(labels(qn.graph))
 end
 
-C(qn::QN) = components(qn)
-
 """
     $(TYPEDSIGNATURES)
 """
 function target_functions(qn::QN)
     return Dict([c => fn for (c, (_, fn)) in qn.graph.vertex_properties])
 end
-
-T(qn::QN) = target_functions(qn)
 
 """
     $(TYPEDSIGNATURES)
@@ -171,9 +167,6 @@ function get_state(qn::QN, component::Symbol)
     i = _get_component_index(qn, component)
     return qn.state[i]
 end
-
-S(qn::QN) = qn.state
-S(qn::QN, component::Symbol) = get_state(qn, component)
 
 function _set_state!(qn::QN, component::Symbol, value::Integer)
     i = _get_component_index(qn::QN, component::Symbol)
