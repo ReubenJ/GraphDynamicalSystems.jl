@@ -30,16 +30,12 @@ end
 
 @testset "QN properties, fields" begin
     @test length(components(qn)) == size
-    @test length(C(qn)) == size
 
     @test length(target_functions(qn)) == size
-    @test length(T(qn)) == size
 
     @test all(get_state(qn) .<= max_level(qn))
-    @test all(S(qn) .<= max_level(qn))
 
     @test get_state(qn, components(qn)[1]) == 1
-    @test S(qn, C(qn)[1]) == 1
 
     @test_throws r"max" set_state!(qn, Symbol(1), 6)
 end
