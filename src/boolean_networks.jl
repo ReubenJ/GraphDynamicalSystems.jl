@@ -1,5 +1,10 @@
+"""
+
+$(EXPORTS)
+"""
 module BooleanNetworks
 
+using DocStringExtensions
 using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv, labels
 using DynamicalSystems: ArbitrarySteppable
 using SoleLogics:
@@ -20,7 +25,7 @@ using Random: seed!
 using FileIO: load
 
 """
-    sample_boolean_network(n::Int)
+    $(TYPEDSIGNATURES)
 
 Return a random Boolean network with `n` nodes.
 """
@@ -35,6 +40,9 @@ function sample_boolean_network(n::Int, depth::Int = 2, seed::Int = 0; tactic = 
     return bn
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function update_functions_to_network(update_functions::AbstractVector{<:Formula})
     network = MetaGraph(SimpleDiGraph(); label_type = Int, vertex_data_type = Formula)
 
@@ -53,15 +61,32 @@ function update_functions_to_network(update_functions::AbstractVector{<:Formula}
     return network
 end
 
+"""
+    $(TYPEDEF)
+
+$(FIELDS)
+"""
 mutable struct BooleanNetwork
+    "The structure and update functions of the network"
     graph::MetaGraph
+    "The state of the network"
     state::AbstractVector{Int}
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function truth_dict_from_state(state::AbstractVector{Int}, labels::AbstractVector)
     return TruthDict(Dict(l => s for (l, s) in zip(labels, state)))
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+Update step for an asynchronous Boolean network (see [`abn`](@ref)). At each step,
+It selects a node in the network and applies its update function, updating
+the state for the selected node with the update function's output.
+"""
 function abn_step!(model::BooleanNetwork)
     vertex_labels = collect(labels(model.graph))
     i = rand(vertex_labels)
@@ -74,18 +99,15 @@ end
 
 extract_state(model::BooleanNetwork) = model.state
 extract_parameters(model::BooleanNetwork) = model.graph
-
-function reset_model!(model::BooleanNetwork, u, _)
-    model.state .= u
-end
+reset_model!(model::BooleanNetwork, u, _) = model.state .= u
 
 """
-    abn(network, initial_state)
+    $(TYPEDSIGNATURES)
 
 Create an asynchronous Boolean network (ABN) with the given `network`,
-`initial_state`. The update scheme for an asynchronous Boolean network
+`initial_state`. The update step  for an asynchronous Boolean network
 is to choose a random node and update its state, one node at a time.
-The random choice is uniform over all nodes.
+The random choice is uniform over all nodes. See [`abn_step!`](@ref).
 """
 function abn(network::MetaGraph, initial_state::AbstractVector{Int})
     model = BooleanNetwork(network, initial_state)
@@ -100,6 +122,11 @@ function abn(network::MetaGraph, initial_state::AbstractVector{Int})
     )
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+Create an asynchronous Boolean network with a random initial state.
+"""
 function abn(network::MetaGraph; seed::Int = 42)
     n = nv(network)
     seed!(seed)

@@ -1,3 +1,7 @@
+using Revise
+
+Revise.revise()
+
 using GraphDynamicalSystems
 using Documenter
 
