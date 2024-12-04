@@ -22,6 +22,9 @@ end
 
 const default_qn_constants = [2]
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function build_qn_grammar(
     entity_names::AbstractVector{Symbol},
     constants::AbstractVector{<:Integer},
@@ -39,6 +42,9 @@ function build_qn_grammar(
     return g
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function update_functions_to_network(
     update_functions::AbstractDict{Symbol,Union{Symbol,Expr,Int}},
     grammar::AbstractGrammar,
@@ -64,6 +70,9 @@ function update_functions_to_network(
     return network
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function sample_qualitative_network(entities::AbstractVector{Symbol}, max_eq_depth::Int)
     g = build_qn_grammar(entities, default_qn_constants)
     update_fns = Dict{Symbol,Union{Symbol,Expr,Int}}([
@@ -74,14 +83,35 @@ function sample_qualitative_network(entities::AbstractVector{Symbol}, max_eq_dep
     return graph
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function sample_qualitative_network(size::Int, max_eq_depth::Int)
     entities = [Symbol("c$e") for e = 1:size]
     sample_qualitative_network(entities, max_eq_depth)
 end
 
+"""
+    $(TYPEDEF)
+
+A qualitative network model as described in
+["Qualitative networks: a symbolic approach to analyze biological
+signaling networks"](https://doi.org/10.1186/1752-0509-1-4
+).
+
+$(FIELDS)
+
+Systems that include the model semantics wrap around this struct
+with an [`ArbitrarySteppable`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/tutorial/#DynamicalSystemsBase.ArbitrarySteppable)
+from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/).
+See [`aqn`](@ref) for an example.
+"""
 struct QualitativeNetwork
+    "Graph containing the topology and target functions of the network"
     graph::MetaGraph
+    "State of the network"
     state::AbstractVector{Int}
+    "The maximum activation level/state value of any component"
     N::Int
 
     function QualitativeNetwork(g, s, N)
@@ -93,8 +123,16 @@ struct QualitativeNetwork
     end
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+Shorthand for [`QualitativeNetwork`](@ref).
+"""
 const QN = QualitativeNetwork
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function max_level(qn::QN)
     return qn.N
 end
@@ -103,20 +141,32 @@ function _get_component_index(qn::QN, component::Symbol)
     return findfirst(isequal(component), components(qn))
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function components(qn::QN)
     return collect(labels(qn.graph))
 end
 
 C(qn::QN) = components(qn)
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function target_functions(qn::QN)
     return Dict([c => fn for (c, (_, fn)) in qn.graph.vertex_properties])
 end
 
 T(qn::QN) = target_functions(qn)
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 get_state(qn::QN) = qn.state
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function get_state(qn::QN, component::Symbol)
     i = _get_component_index(qn, component)
     return qn.state[i]
@@ -130,6 +180,9 @@ function _set_state!(qn::QN, component::Symbol, value::Integer)
     qn.state[i] = value
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function set_state!(qn::QN, component::Symbol, value::Integer)
     if value > max_level(qn)
         error(
@@ -140,6 +193,11 @@ function set_state!(qn::QN, component::Symbol, value::Integer)
     _set_state!(qn, component, value)
 end
 
+"""
+    $(TYPEDSIGNATURES)
+
+Interpret target functions from a [`QualitativeNetwork`](@ref).
+"""
 function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
     @match e begin
         ::Symbol => get_state(qn, e)
@@ -155,19 +213,24 @@ function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
     end
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function limit_change(prev_value, next_value, N::Int)
-    limited_value = 1
     if next_value > prev_value
         limited_value = min(prev_value + 1, N + 1)
     elseif next_value < prev_value
         limited_value = max(prev_value - 1, 0)
-    elseif next_value == prev_value
+    else
         limited_value = next_value
     end
 
     return round(Int, limited_value)
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function async_qn_step!(qn::QN)
     vertex_labels = collect(labels(qn.graph))
     c_i = rand(vertex_labels)
@@ -180,11 +243,14 @@ end
 
 extract_state(model::QN) = model.state
 extract_parameters(model::QN) = model.graph
+reset_model!(model::QN, u, _) = model.state .= u
 
-function reset_model!(model::QN, u, _)
-    model.state .= u
-end
+"""
+    $(TYPEDSIGNATURES)
 
+Construct an asynchronous [`QualitativeNetwork`](@ref) system using the
+[`async_qn_step!`](@ref) as a step function.
+"""
 function aqn(network::MetaGraph, initial_state::AbstractVector{Int}, max_level::Int)
     model = QualitativeNetwork(network, initial_state, max_level)
 
@@ -198,6 +264,9 @@ function aqn(network::MetaGraph, initial_state::AbstractVector{Int}, max_level::
     )
 end
 
+"""
+    $(TYPEDSIGNATURES)
+"""
 function aqn(network::MetaGraph, max_level::Int)
     n_components = nv(network)
     initial_state = rand(0:max_level, n_components)

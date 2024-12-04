@@ -17,12 +17,7 @@ export QualitativeNetwork,
     sample_qualitative_network,
     max_level,
     components,
-    C,
-    get_state,
-    S,
     target_functions,
-    T,
-    set_state!,
     interpret,
     aqn
 
