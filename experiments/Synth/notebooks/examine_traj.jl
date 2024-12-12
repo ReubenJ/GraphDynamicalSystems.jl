@@ -7,7 +7,14 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
-        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
+        local iv = try
+            Base.loaded_modules[Base.PkgId(
+                Base.UUID("6e696c72-6542-2067-7265-42206c756150"),
+                "AbstractPlutoDingetjes",
+            )].Bonds.initial_value
+        catch
+            b -> missing
+        end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
@@ -80,7 +87,7 @@ res = load(pname)
 
 # ╔═╡ 1ce04619-14b1-4a4b-bc65-40dfdcae2c74
 anim = @animate for i in eachindex(res["trajectories"])
-	heatmap(Matrix(res["trajectories"][i]))
+    heatmap(Matrix(res["trajectories"][i]))
 end
 
 # ╔═╡ b36271d5-f908-4e65-b0fa-9175e8c2416c
@@ -100,9 +107,9 @@ split_applied = [split_state_space(t) for t in traj]
 
 # ╔═╡ 17f352fc-6f4e-4d7d-ad7a-d6d2ac049ada
 begin
-	name = tempname()
-	name *= ".jld2" 
-	save(name, @strdict split_applied)
+    name = tempname()
+    name *= ".jld2"
+    save(name, @strdict split_applied)
 end
 
 # ╔═╡ 947a965d-54f5-40e3-b703-4a18bf671d9c
