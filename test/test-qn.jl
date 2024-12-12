@@ -57,10 +57,10 @@ end
     set_state!(qn, :c2, 2)
     @test interpret(:(c1 / c2), qn) == 0.5
     @test interpret(:(c1 / 2), qn) == 0.5
-    @test interpret(:(Min(c1, c2)), qn) == 1
-    @test interpret(:(Max(c1, c2)), qn) == 2
-    @test interpret(:(Ceil(c1 / c2)), qn) == 1
-    @test interpret(:(Floor(c1 / c2)), qn) == 0
+    @test interpret(:(min(c1, c2)), qn) == 1
+    @test interpret(:(max(c1, c2)), qn) == 2
+    @test interpret(:(ceil(c1 / c2)), qn) == 1
+    @test interpret(:(floor(c1 / c2)), qn) == 0
     @test_throws r"Unhandled" interpret(:(nonexistent_function(c1)), qn)
 end
 

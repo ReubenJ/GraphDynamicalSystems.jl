@@ -12,12 +12,13 @@ const base_qn_grammar = @csgrammar begin
     Val =
         (Val + Val) |
         (Val - Val) |
-        Val / Val |
+        (Val * Val) |
+        (Val / Val) |
         # Avg(ManyVals) |
-        Min(Val, Val) |
-        Max(Val, Val) |
-        Ceil(Val) |
-        Floor(Val)
+        min(Val, Val) |
+        max(Val, Val) |
+        ceil(Val) |
+        floor(Val)
 end
 
 const default_qn_constants = [2]
@@ -197,11 +198,12 @@ function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
         ::Int => e
         :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
         :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
+        :($v1 * $v2) => interpret(v1, qn) * interpret(v2, qn)
         :($v1 / $v2) => interpret(v1, qn) / interpret(v2, qn)
-        :(Min($v1, $v2)) => min(interpret(v1, qn), interpret(v2, qn))
-        :(Max($v1, $v2)) => max(interpret(v1, qn), interpret(v2, qn))
-        :(Ceil($v)) => ceil(interpret(v, qn))
-        :(Floor($v)) => floor(interpret(v, qn))
+        :(min($v1, $v2)) => min(interpret(v1, qn), interpret(v2, qn))
+        :(max($v1, $v2)) => max(interpret(v1, qn), interpret(v2, qn))
+        :(ceil($v)) => ceil(interpret(v, qn))
+        :(floor($v)) => floor(interpret(v, qn))
         _ => error("Unhandled Expr in `interpret`: $e")
     end
 end

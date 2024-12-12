@@ -21,4 +21,7 @@ export QualitativeNetwork,
     interpret,
     aqn
 
+include("io/bma.jl")
+export load_bma_file, bma_vars_to_grammar_style
+
 end

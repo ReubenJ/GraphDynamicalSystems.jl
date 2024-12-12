@@ -1,0 +1,2560 @@
+{
+    "Layout": {
+        "AnnotatedGridCells": [],
+        "Containers": [
+            {
+                "Id": 1,
+                "Name": "C0",
+                "PositionX": 3,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 6,
+                "Name": "C1",
+                "PositionX": 3,
+                "PositionY": 3,
+                "Size": 1
+            },
+            {
+                "Id": 7,
+                "Name": "C2",
+                "PositionX": 4,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 8,
+                "Name": "C3",
+                "PositionX": 5,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 9,
+                "Name": "C4",
+                "PositionX": 2,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 10,
+                "Name": "C5",
+                "PositionX": 1,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 11,
+                "Name": "C6",
+                "PositionX": 0,
+                "PositionY": 2,
+                "Size": 1
+            },
+            {
+                "Id": 12,
+                "Name": "C7",
+                "PositionX": 2,
+                "PositionY": 3,
+                "Size": 1
+            },
+            {
+                "Id": 13,
+                "Name": "C8",
+                "PositionX": 1,
+                "PositionY": 3,
+                "Size": 1
+            },
+            {
+                "Id": 14,
+                "Name": "C9",
+                "PositionX": 0,
+                "PositionY": 3,
+                "Size": 1
+            },
+            {
+                "Id": 15,
+                "Name": "C10",
+                "PositionX": 4,
+                "PositionY": 3,
+                "Size": 1
+            },
+            {
+                "Id": 16,
+                "Name": "C11",
+                "PositionX": 5,
+                "PositionY": 3,
+                "Size": 1
+            }
+        ],
+        "Description": "",
+        "Variables": [
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 0,
+                "Description": "",
+                "Id": 95,
+                "Name": "AC",
+                "PositionX": 880.7,
+                "PositionY": 422.62857142857143,
+                "Type": "Constant"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 1,
+                "Name": "LET-23",
+                "PositionX": 879.0696034250146,
+                "PositionY": 563.5798435700199,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 2,
+                "Name": "lin-12",
+                "PositionX": 756.5135611766459,
+                "PositionY": 687.332200230584,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 3,
+                "Name": "signalact",
+                "PositionX": 877.5333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 4,
+                "Name": "SEM-5",
+                "PositionX": 877.5333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 5,
+                "Name": "LET-60",
+                "PositionX": 877.5333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 6,
+                "Name": "signal",
+                "PositionX": 877.5333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 7,
+                "Name": "MPK-1",
+                "PositionX": 877.5333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 8,
+                "Name": "relsig",
+                "PositionX": 925.0333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 9,
+                "Name": "lst",
+                "PositionX": 830.0333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 10,
+                "Name": "ROM-1",
+                "PositionX": 849.0333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 6,
+                "Description": "",
+                "Id": 21,
+                "Name": "lin-3",
+                "PositionX": 849.0333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 6,
+                "Description": "",
+                "Id": 22,
+                "Name": "lin-15",
+                "PositionX": 849.0333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 6,
+                "Description": "",
+                "Id": 23,
+                "Name": "LSext",
+                "PositionX": 817.3666666666667,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 6,
+                "Description": "",
+                "Id": 24,
+                "Name": "Relay",
+                "PositionX": 912.3666666666667,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 25,
+                "Name": "LET-23",
+                "PositionX": 1129.0696034251146,
+                "PositionY": 563.5798435712932,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 26,
+                "Name": "lin-12",
+                "PositionX": 1006.5135611766462,
+                "PositionY": 687.3322002305847,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 27,
+                "Name": "signalact",
+                "PositionX": 1127.5333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 28,
+                "Name": "SEM-5",
+                "PositionX": 1127.5333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 29,
+                "Name": "LET-60",
+                "PositionX": 1127.5333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 30,
+                "Name": "signal",
+                "PositionX": 1127.5333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 31,
+                "Name": "MPK-1",
+                "PositionX": 1127.5333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 32,
+                "Name": "relsig",
+                "PositionX": 1175.0333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 33,
+                "Name": "lst",
+                "PositionX": 1080.0333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 7,
+                "Description": "",
+                "Id": 34,
+                "Name": "ROM-1",
+                "PositionX": 1099.0333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 35,
+                "Name": "LET-23",
+                "PositionX": 1379.0696034251148,
+                "PositionY": 563.5798435712786,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 36,
+                "Name": "lin-12",
+                "PositionX": 1256.5135611766457,
+                "PositionY": 687.332200230584,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 37,
+                "Name": "signalact",
+                "PositionX": 1377.5333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 38,
+                "Name": "SEM-5",
+                "PositionX": 1377.5333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 39,
+                "Name": "LET-60",
+                "PositionX": 1377.5333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 40,
+                "Name": "signal",
+                "PositionX": 1377.5333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 41,
+                "Name": "MPK-1",
+                "PositionX": 1377.5333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 42,
+                "Name": "relsig",
+                "PositionX": 1425.0333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 43,
+                "Name": "lst",
+                "PositionX": 1330.0333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 8,
+                "Description": "",
+                "Id": 44,
+                "Name": "ROM-1",
+                "PositionX": 1349.0333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 45,
+                "Name": "LET-23",
+                "PositionX": 629.069603425211,
+                "PositionY": 563.5798435703327,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 46,
+                "Name": "lin-12",
+                "PositionX": 506.51356117664653,
+                "PositionY": 687.332200230584,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 47,
+                "Name": "signalact",
+                "PositionX": 627.5333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 48,
+                "Name": "SEM-5",
+                "PositionX": 627.5333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 49,
+                "Name": "LET-60",
+                "PositionX": 627.5333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 50,
+                "Name": "signal",
+                "PositionX": 627.5333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 51,
+                "Name": "MPK-1",
+                "PositionX": 627.5333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 52,
+                "Name": "relsig",
+                "PositionX": 675.0333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 53,
+                "Name": "lst",
+                "PositionX": 580.0333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 9,
+                "Description": "",
+                "Id": 54,
+                "Name": "ROM-1",
+                "PositionX": 599.0333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 55,
+                "Name": "LET-23",
+                "PositionX": 379.0696034251953,
+                "PositionY": 563.5798435702982,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 56,
+                "Name": "lin-12",
+                "PositionX": 256.5135611766465,
+                "PositionY": 687.3322002305841,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 57,
+                "Name": "signalact",
+                "PositionX": 377.5333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 58,
+                "Name": "SEM-5",
+                "PositionX": 377.5333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 59,
+                "Name": "LET-60",
+                "PositionX": 377.5333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 60,
+                "Name": "signal",
+                "PositionX": 377.5333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 61,
+                "Name": "MPK-1",
+                "PositionX": 377.5333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 62,
+                "Name": "relsig",
+                "PositionX": 425.0333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 63,
+                "Name": "lst",
+                "PositionX": 330.0333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 10,
+                "Description": "",
+                "Id": 64,
+                "Name": "ROM-1",
+                "PositionX": 349.0333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 65,
+                "Name": "LET-23",
+                "PositionX": 129.06960342517323,
+                "PositionY": 563.5798435703164,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": -90,
+                "CellX": 0,
+                "CellY": 0,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 66,
+                "Name": "lin-12",
+                "PositionX": 6.513561176646482,
+                "PositionY": 687.3322002305839,
+                "Type": "MembraneReceptor"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 67,
+                "Name": "signalact",
+                "PositionX": 127.53333333333333,
+                "PositionY": 622.4571428571428,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 68,
+                "Name": "SEM-5",
+                "PositionX": 127.53333333333333,
+                "PositionY": 655.3142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 69,
+                "Name": "LET-60",
+                "PositionX": 127.53333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 70,
+                "Name": "signal",
+                "PositionX": 127.53333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 71,
+                "Name": "MPK-1",
+                "PositionX": 127.53333333333333,
+                "PositionY": 753.8857142857142,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 72,
+                "Name": "relsig",
+                "PositionX": 175.03333333333333,
+                "PositionY": 721.0285714285715,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 73,
+                "Name": "lst",
+                "PositionX": 80.03333333333333,
+                "PositionY": 688.1714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 11,
+                "Description": "",
+                "Id": 74,
+                "Name": "ROM-1",
+                "PositionX": 99.03333333333333,
+                "PositionY": 771.6285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 12,
+                "Description": "",
+                "Id": 75,
+                "Name": "lin-3",
+                "PositionX": 599.0333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 12,
+                "Description": "",
+                "Id": 76,
+                "Name": "lin-15",
+                "PositionX": 599.0333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 12,
+                "Description": "",
+                "Id": 77,
+                "Name": "LSext",
+                "PositionX": 567.3666666666667,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 12,
+                "Description": "",
+                "Id": 78,
+                "Name": "Relay",
+                "PositionX": 662.3666666666667,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 13,
+                "Description": "",
+                "Id": 79,
+                "Name": "lin-3",
+                "PositionX": 349.0333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 13,
+                "Description": "",
+                "Id": 80,
+                "Name": "lin-15",
+                "PositionX": 349.0333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 13,
+                "Description": "",
+                "Id": 81,
+                "Name": "LSext",
+                "PositionX": 317.3666666666667,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 13,
+                "Description": "",
+                "Id": 82,
+                "Name": "Relay",
+                "PositionX": 412.3666666666667,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 14,
+                "Description": "",
+                "Id": 83,
+                "Name": "lin-3",
+                "PositionX": 99.03333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 14,
+                "Description": "",
+                "Id": 84,
+                "Name": "lin-15",
+                "PositionX": 99.03333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 14,
+                "Description": "",
+                "Id": 85,
+                "Name": "LSext",
+                "PositionX": 67.36666666666667,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 14,
+                "Description": "",
+                "Id": 86,
+                "Name": "Relay",
+                "PositionX": 162.36666666666667,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 15,
+                "Description": "",
+                "Id": 87,
+                "Name": "lin-3",
+                "PositionX": 1099.0333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 15,
+                "Description": "",
+                "Id": 88,
+                "Name": "lin-15",
+                "PositionX": 1099.0333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 15,
+                "Description": "",
+                "Id": 89,
+                "Name": "LSext",
+                "PositionX": 1067.3666666666666,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 15,
+                "Description": "",
+                "Id": 90,
+                "Name": "Relay",
+                "PositionX": 1162.3666666666668,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 16,
+                "Description": "",
+                "Id": 91,
+                "Name": "lin-3",
+                "PositionX": 1349.0333333333333,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 16,
+                "Description": "",
+                "Id": 92,
+                "Name": "lin-15",
+                "PositionX": 1349.0333333333333,
+                "PositionY": 985.9142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 16,
+                "Description": "",
+                "Id": 93,
+                "Name": "LSext",
+                "PositionX": 1317.3666666666666,
+                "PositionY": 920.2,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 16,
+                "Description": "",
+                "Id": 94,
+                "Name": "Relay",
+                "PositionX": 1412.3666666666668,
+                "PositionY": 903.7714285714286,
+                "Type": "Default"
+            }
+        ]
+    },
+    "Model": {
+        "Name": "VPC",
+        "Relationships": [
+            {
+                "FromVariable": 3,
+                "Id": 2,
+                "ToVariable": 4,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 4,
+                "Id": 3,
+                "ToVariable": 5,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 5,
+                "Id": 4,
+                "ToVariable": 6,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 6,
+                "Id": 5,
+                "ToVariable": 7,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 8,
+                "Id": 6,
+                "ToVariable": 7,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 3,
+                "Id": 8,
+                "ToVariable": 9,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 9,
+                "Id": 9,
+                "ToVariable": 4,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 9,
+                "Id": 10,
+                "ToVariable": 5,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 9,
+                "Id": 11,
+                "ToVariable": 6,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 9,
+                "Id": 12,
+                "ToVariable": 8,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 7,
+                "Id": 14,
+                "ToVariable": 10,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 22,
+                "Id": 30,
+                "ToVariable": 21,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 27,
+                "Id": 32,
+                "ToVariable": 28,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 28,
+                "Id": 33,
+                "ToVariable": 29,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 29,
+                "Id": 34,
+                "ToVariable": 30,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 30,
+                "Id": 35,
+                "ToVariable": 31,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 32,
+                "Id": 36,
+                "ToVariable": 31,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 27,
+                "Id": 38,
+                "ToVariable": 33,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 33,
+                "Id": 39,
+                "ToVariable": 28,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 33,
+                "Id": 40,
+                "ToVariable": 29,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 33,
+                "Id": 41,
+                "ToVariable": 30,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 33,
+                "Id": 42,
+                "ToVariable": 32,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 31,
+                "Id": 44,
+                "ToVariable": 34,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 37,
+                "Id": 47,
+                "ToVariable": 38,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 38,
+                "Id": 48,
+                "ToVariable": 39,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 39,
+                "Id": 49,
+                "ToVariable": 40,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 40,
+                "Id": 50,
+                "ToVariable": 41,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 42,
+                "Id": 51,
+                "ToVariable": 41,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 37,
+                "Id": 53,
+                "ToVariable": 43,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 43,
+                "Id": 54,
+                "ToVariable": 38,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 43,
+                "Id": 55,
+                "ToVariable": 39,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 43,
+                "Id": 56,
+                "ToVariable": 40,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 43,
+                "Id": 57,
+                "ToVariable": 42,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 41,
+                "Id": 59,
+                "ToVariable": 44,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 47,
+                "Id": 62,
+                "ToVariable": 48,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 48,
+                "Id": 63,
+                "ToVariable": 49,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 49,
+                "Id": 64,
+                "ToVariable": 50,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 50,
+                "Id": 65,
+                "ToVariable": 51,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 52,
+                "Id": 66,
+                "ToVariable": 51,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 47,
+                "Id": 68,
+                "ToVariable": 53,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 53,
+                "Id": 69,
+                "ToVariable": 48,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 53,
+                "Id": 70,
+                "ToVariable": 49,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 53,
+                "Id": 71,
+                "ToVariable": 50,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 53,
+                "Id": 72,
+                "ToVariable": 52,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 51,
+                "Id": 74,
+                "ToVariable": 54,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 57,
+                "Id": 77,
+                "ToVariable": 58,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 58,
+                "Id": 78,
+                "ToVariable": 59,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 59,
+                "Id": 79,
+                "ToVariable": 60,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 60,
+                "Id": 80,
+                "ToVariable": 61,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 62,
+                "Id": 81,
+                "ToVariable": 61,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 57,
+                "Id": 83,
+                "ToVariable": 63,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 63,
+                "Id": 84,
+                "ToVariable": 58,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 63,
+                "Id": 85,
+                "ToVariable": 59,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 63,
+                "Id": 86,
+                "ToVariable": 60,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 63,
+                "Id": 87,
+                "ToVariable": 62,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 61,
+                "Id": 89,
+                "ToVariable": 64,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 67,
+                "Id": 92,
+                "ToVariable": 68,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 68,
+                "Id": 93,
+                "ToVariable": 69,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 69,
+                "Id": 94,
+                "ToVariable": 70,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 70,
+                "Id": 95,
+                "ToVariable": 71,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 72,
+                "Id": 96,
+                "ToVariable": 71,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 67,
+                "Id": 98,
+                "ToVariable": 73,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 73,
+                "Id": 99,
+                "ToVariable": 68,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 73,
+                "Id": 100,
+                "ToVariable": 69,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 73,
+                "Id": 101,
+                "ToVariable": 70,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 73,
+                "Id": 102,
+                "ToVariable": 72,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 71,
+                "Id": 104,
+                "ToVariable": 74,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 76,
+                "Id": 106,
+                "ToVariable": 75,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 80,
+                "Id": 107,
+                "ToVariable": 79,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 84,
+                "Id": 108,
+                "ToVariable": 83,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 88,
+                "Id": 109,
+                "ToVariable": 87,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 92,
+                "Id": 110,
+                "ToVariable": 91,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 24,
+                "Id": 111,
+                "ToVariable": 8,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 21,
+                "Id": 113,
+                "ToVariable": 3,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 78,
+                "Id": 114,
+                "ToVariable": 52,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 75,
+                "Id": 115,
+                "ToVariable": 47,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 82,
+                "Id": 117,
+                "ToVariable": 62,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 79,
+                "Id": 118,
+                "ToVariable": 57,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 86,
+                "Id": 120,
+                "ToVariable": 72,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 83,
+                "Id": 121,
+                "ToVariable": 67,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 90,
+                "Id": 123,
+                "ToVariable": 32,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 87,
+                "Id": 124,
+                "ToVariable": 27,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 94,
+                "Id": 126,
+                "ToVariable": 42,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 91,
+                "Id": 127,
+                "ToVariable": 37,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 64,
+                "Id": 129,
+                "ToVariable": 86,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 61,
+                "Id": 130,
+                "ToVariable": 85,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 71,
+                "Id": 131,
+                "ToVariable": 81,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 74,
+                "Id": 132,
+                "ToVariable": 82,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 64,
+                "Id": 133,
+                "ToVariable": 78,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 61,
+                "Id": 134,
+                "ToVariable": 77,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 51,
+                "Id": 135,
+                "ToVariable": 81,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 54,
+                "Id": 136,
+                "ToVariable": 82,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 51,
+                "Id": 137,
+                "ToVariable": 23,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 54,
+                "Id": 138,
+                "ToVariable": 24,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 7,
+                "Id": 139,
+                "ToVariable": 77,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 10,
+                "Id": 140,
+                "ToVariable": 78,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 7,
+                "Id": 141,
+                "ToVariable": 89,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 10,
+                "Id": 142,
+                "ToVariable": 90,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 31,
+                "Id": 143,
+                "ToVariable": 23,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 34,
+                "Id": 144,
+                "ToVariable": 24,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 31,
+                "Id": 145,
+                "ToVariable": 93,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 34,
+                "Id": 146,
+                "ToVariable": 94,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 41,
+                "Id": 147,
+                "ToVariable": 89,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 44,
+                "Id": 148,
+                "ToVariable": 90,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 1,
+                "Id": 1,
+                "ToVariable": 3,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 1,
+                "Id": 15,
+                "ToVariable": 10,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 149,
+                "ToVariable": 1,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 2,
+                "Id": 7,
+                "ToVariable": 9,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 7,
+                "Id": 13,
+                "ToVariable": 2,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 23,
+                "Id": 112,
+                "ToVariable": 2,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 25,
+                "Id": 31,
+                "ToVariable": 27,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 25,
+                "Id": 45,
+                "ToVariable": 34,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 153,
+                "ToVariable": 25,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 26,
+                "Id": 37,
+                "ToVariable": 33,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 31,
+                "Id": 43,
+                "ToVariable": 26,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 89,
+                "Id": 125,
+                "ToVariable": 26,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 35,
+                "Id": 46,
+                "ToVariable": 37,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 35,
+                "Id": 60,
+                "ToVariable": 44,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 154,
+                "ToVariable": 35,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 36,
+                "Id": 52,
+                "ToVariable": 43,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 41,
+                "Id": 58,
+                "ToVariable": 36,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 93,
+                "Id": 128,
+                "ToVariable": 36,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 45,
+                "Id": 61,
+                "ToVariable": 47,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 45,
+                "Id": 75,
+                "ToVariable": 54,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 150,
+                "ToVariable": 45,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 46,
+                "Id": 67,
+                "ToVariable": 53,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 51,
+                "Id": 73,
+                "ToVariable": 46,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 77,
+                "Id": 116,
+                "ToVariable": 46,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 55,
+                "Id": 76,
+                "ToVariable": 57,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 55,
+                "Id": 90,
+                "ToVariable": 64,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 151,
+                "ToVariable": 55,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 56,
+                "Id": 82,
+                "ToVariable": 63,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 61,
+                "Id": 88,
+                "ToVariable": 56,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 81,
+                "Id": 119,
+                "ToVariable": 56,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 65,
+                "Id": 91,
+                "ToVariable": 67,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 65,
+                "Id": 105,
+                "ToVariable": 74,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 95,
+                "Id": 152,
+                "ToVariable": 65,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 66,
+                "Id": 97,
+                "ToVariable": 73,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 71,
+                "Id": 103,
+                "ToVariable": 66,
+                "Type": "Inhibitor"
+            },
+            {
+                "FromVariable": 85,
+                "Id": 122,
+                "ToVariable": 66,
+                "Type": "Activator"
+            }
+        ],
+        "Variables": [
+            {
+                "Formula": "",
+                "Id": 95,
+                "Name": "AC",
+                "RangeFrom": 0,
+                "RangeTo": 0
+            },
+            {
+                "Formula": "2",
+                "Id": 1,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(23))*(max(var(7) - 1,0) + 1)))",
+                "Id": 2,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(1),var(21))",
+                "Id": 3,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(3))*(max(var(9) - 1,0) + 1)))",
+                "Id": 4,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(4))*(max(var(9)-1,0)+1)))",
+                "Id": 5,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(5))*(max(var(9)-1,0)+1)))",
+                "Id": 6,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(6)+var(8),2)",
+                "Id": 7,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(24) - var(9) - 1,0)",
+                "Id": 8,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(3),1)*var(2)",
+                "Id": 9,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(7),var(1))",
+                "Id": 10,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(22)",
+                "Id": 21,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 22,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(31),var(51))",
+                "Id": 23,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(34),var(54))",
+                "Id": 24,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "1",
+                "Id": 25,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(89))*(max(var(31) - 1,0) + 1)))",
+                "Id": 26,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(25),var(87))",
+                "Id": 27,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(27))*(max(var(33) - 1,0) + 1)))",
+                "Id": 28,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(28))*(max(var(33)-1,0)+1)))",
+                "Id": 29,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(29))*(max(var(33)-1,0)+1)))",
+                "Id": 30,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(30)+var(32),2)",
+                "Id": 31,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(90) - var(33) - 1,0)",
+                "Id": 32,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(27),1)*var(26)",
+                "Id": 33,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(31),var(25))",
+                "Id": 34,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "0",
+                "Id": 35,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(93))*(max(var(41) - 1,0) + 1)))",
+                "Id": 36,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(35),var(91))",
+                "Id": 37,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(37))*(max(var(43) - 1,0) + 1)))",
+                "Id": 38,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(38))*(max(var(43)-1,0)+1)))",
+                "Id": 39,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(39))*(max(var(43)-1,0)+1)))",
+                "Id": 40,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(40)+var(42),2)",
+                "Id": 41,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(94) - var(43) - 1,0)",
+                "Id": 42,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(37),1)*var(36)",
+                "Id": 43,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(41),var(35))",
+                "Id": 44,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "1",
+                "Id": 45,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(77))*(max(var(51) - 1,0) + 1)))",
+                "Id": 46,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(45),var(75))",
+                "Id": 47,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(47))*(max(var(53) - 1,0) + 1)))",
+                "Id": 48,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(48))*(max(var(53)-1,0)+1)))",
+                "Id": 49,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(49))*(max(var(53)-1,0)+1)))",
+                "Id": 50,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(50)+var(52),2)",
+                "Id": 51,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(78) - var(53) - 1,0)",
+                "Id": 52,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(47),1)*var(46)",
+                "Id": 53,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(51),var(45))",
+                "Id": 54,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "0",
+                "Id": 55,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(81))*(max(var(61) - 1,0) + 1)))",
+                "Id": 56,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(55),var(79))",
+                "Id": 57,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(57))*(max(var(63) - 1,0) + 1)))",
+                "Id": 58,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(58))*(max(var(63)-1,0)+1)))",
+                "Id": 59,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(59))*(max(var(63)-1,0)+1)))",
+                "Id": 60,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(60)+var(62),2)",
+                "Id": 61,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(82) - var(63) - 1,0)",
+                "Id": 62,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(57),1)*var(56)",
+                "Id": 63,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(61),var(55))",
+                "Id": 64,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "0",
+                "Id": 65,
+                "Name": "LET-23",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(85))*(max(var(71) - 1,0) + 1)))",
+                "Id": 66,
+                "Name": "lin-12",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(65),var(83))",
+                "Id": 67,
+                "Name": "signalact",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(67))*(max(var(73) - 1,0) + 1)))",
+                "Id": 68,
+                "Name": "SEM-5",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(68))*(max(var(73)-1,0)+1)))",
+                "Id": 69,
+                "Name": "LET-60",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,2 - ((2 - var(69))*(max(var(73)-1,0)+1)))",
+                "Id": 70,
+                "Name": "signal",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(70)+var(72),2)",
+                "Id": 71,
+                "Name": "MPK-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(86) - var(73) - 1,0)",
+                "Id": 72,
+                "Name": "relsig",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(2 - var(67),1)*var(66)",
+                "Id": 73,
+                "Name": "lst",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "min(var(71),var(65))",
+                "Id": 74,
+                "Name": "ROM-1",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(76)",
+                "Id": 75,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 76,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(7),var(61))",
+                "Id": 77,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(10),var(64))",
+                "Id": 78,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(80)",
+                "Id": 79,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 80,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(51),var(71))",
+                "Id": 81,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(54),var(74))",
+                "Id": 82,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(84)",
+                "Id": 83,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 84,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,var(61))",
+                "Id": 85,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(0,var(64))",
+                "Id": 86,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(88)",
+                "Id": 87,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 88,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(7),var(41))",
+                "Id": 89,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(10),var(44))",
+                "Id": 90,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2 - var(92)",
+                "Id": 91,
+                "Name": "lin-3",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "2",
+                "Id": 92,
+                "Name": "lin-15",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(31),0)",
+                "Id": 93,
+                "Name": "LSext",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            },
+            {
+                "Formula": "max(var(34),0)",
+                "Id": 94,
+                "Name": "Relay",
+                "RangeFrom": 0,
+                "RangeTo": 2
+            }
+        ]
+    },
+    "ltl": {
+        "operations": [],
+        "states": []
+    }
+}
