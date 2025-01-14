@@ -1,6 +1,6 @@
 #!/usr/bin/env -S srun julia -p $SLURM_NTASKS
 #
-#SBATCH --job-name="Get, parse and convert Biodivine Benchmark"
+#SBATCH --job-name="BBM"
 #SBATCH --partition=compute
 #SBATCH --time=00:15:00
 #SBATCH --ntasks 32
