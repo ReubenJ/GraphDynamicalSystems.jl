@@ -1,4 +1,4 @@
-module SynthBN
+module Synth
 
 using DrWatson
 using HerbGrammar

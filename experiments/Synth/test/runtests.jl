@@ -1,5 +1,5 @@
 using DrWatson, Test
-@quickactivate :SynthBN
+@quickactivate :Synth
 
 using HerbGrammar, HerbConstraints
 using GraphDynamicalSystems: BooleanNetworks
@@ -12,7 +12,7 @@ ti = time()
 
 testdir = (x...) -> projectdir("test", x...)
 
-@testset "SynthBN tests" begin
+@testset "Synth tests" begin
     # @testset "Sample Trajectories" begin
     #     @unpack model = load(joinpath(@__DIR__, "ex_model.jld2"))
     #     async_bn = BooleanNetworks.abn(model.graph)

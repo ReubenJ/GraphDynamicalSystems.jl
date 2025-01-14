@@ -1,9 +1,9 @@
 using DrWatson
 
-@quickactivate :SynthBN
+@quickactivate :Synth
 
 using DataFrames
-using Herb, HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
+using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
 using Random
 using Graphs: nv
 
@@ -13,7 +13,7 @@ include(srcdir("evaluator.jl"))
 include(srcdir("create_problem.jl"))
 
 
-res = collect_results(datadir("sims", "biodivine_split");)
+res = collect_results(datadir("sims", "biodivine_split"))
 res.ID = ((x -> x[end-1]["id"]) ∘ parse_savename).(res.path)
 rename!(res, :path => "Trajectory Path")
 mg_df = collect_results(datadir("src_parsed", "biodivine_benchmark_as_metagraphs");)

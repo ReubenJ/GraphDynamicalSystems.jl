@@ -4,7 +4,7 @@ Takes the biodivine trajectories and divides them into i/o pairs for synthesis
 
 using DrWatson
 
-@quickactivate :SynthBN
+@quickactivate :Synth
 
 using JLD2
 

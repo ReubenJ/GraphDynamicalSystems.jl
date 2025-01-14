@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-#SBATCH --job-name="Get Biodivine Benchmark"
+#SBATCH --job-name="Get, parse and convert Biodivine Benchmark"
 #SBATCH --partition=compute
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=1

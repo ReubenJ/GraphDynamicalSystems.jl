@@ -1,6 +1,6 @@
 using DrWatson
 
-@quickactivate :SynthBN
+@quickactivate :Synth
 
 using DataFrames
 using GraphDynamicalSystems: BooleanNetworks

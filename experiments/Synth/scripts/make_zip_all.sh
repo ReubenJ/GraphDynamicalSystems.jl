@@ -11,4 +11,4 @@
 # Load modules:
 module load 2024r1
 
-zip -r /scratch/rjgardosreid/synthbn_backup.zip data/
+zip -r /scratch/rjgardosreid/Synth_backup.zip data/

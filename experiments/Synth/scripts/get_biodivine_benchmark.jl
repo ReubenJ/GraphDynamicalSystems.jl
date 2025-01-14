@@ -1,22 +1,37 @@
-using DrWatson
+#!/usr/bin/env -S julia -p 32
+#
+#SBATCH --job-name="Get, parse and convert Biodivine Benchmark"
+#SBATCH --partition=compute
+#SBATCH --time=00:15:00
+# `ntasks` should match the value provided to -p in the first line of this script!
+#SBATCH --ntasks 32
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=1G
+#SBATCH --account=research-eemcs-st
 
-@quickactivate :SynthBN
+using Distributed
+
+@everywhere using DrWatson
+
+@everywhere @quickactivate :Synth
 
 
 @info "Cloning the biodivine benchmark repository"
-raw_src_dir = datadir("src_raw", "biodivine-boolean-models")
-if !isdir(raw_src_dir)
-    get_biodivine_repo(raw_src_dir)
+bbm_dir = datadir("src_raw", "biodivine-boolean-models")
+if !isdir(bbm_dir)
+    get_biodivine_repo(bbm_dir)
 end
 
 @info "Bundling the benchmark to .aeon format"
-aeon_bundle_dir = joinpath(raw_src_dir, "bbm-aeon-format")
+aeon_bundle_dir = joinpath(bbm_dir, "bbm-aeon-format")
 if !isdir(aeon_bundle_dir)
-    bundle_biodivine_benchmark(raw_src_dir, aeon_bundle_dir)
+    bundle_biodivine_benchmark(bbm_dir, aeon_bundle_dir)
 end
 
 @info "Parsing .aeon model files"
-load_aeon_biodivine()
+ids_to_ignore = ["079"]
+load_aeon_biodivine(bbm_dir, ids_to_ignore)
 
 @info "Converting to MetaGraph-based models"
-convert_aeon_models_to_metagraphs()
+excluded_files = [r"041\.aeon\.jld2", r"079\.aeon\.jld2"]
+convert_aeon_models_to_metagraphs(excluded_files)

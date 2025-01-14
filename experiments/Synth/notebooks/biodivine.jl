@@ -23,7 +23,7 @@ using MetaGraphsNext: MetaGraph
 using Plots
 
 # ╔═╡ 3ab50cf5-da53-440c-9796-c9ee73b7ad86
-using SynthBN: AEONParser
+using Synth: AEONParser
 
 # ╔═╡ 8a5e88c4-b0a6-4848-b6d2-74bdbd960e7c
 using DataFrames
@@ -183,7 +183,7 @@ md"""
 
 $((!isdefined(@__MODULE__, :df) || nrow(df) == 0) ? danger(md"It seems that the dataframe with the benchmark information failed to load, or it was empty. Try running the script:
 
-`julia experiments/SynthBN/scripts/biodivine_benchmark/load_aeon.jl`
+`julia experiments/Synth/scripts/biodivine_benchmark/load_aeon.jl`
 
 to load/parse the benchmark.") : md"")
 """

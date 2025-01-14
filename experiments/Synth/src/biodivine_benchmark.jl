@@ -8,9 +8,12 @@ using MetaGraphsNext: MetaGraph
 using Graphs: SimpleDiGraph, add_edge!
 using SoleLogics: Atom, subformulas, Formula
 
-using Term: Progress, ProgressBar
+# using Term
+using ProgressMeter
 
 using TidierData
+
+using Distributed
 
 function get_biodivine_repo(raw_src_dir)
     remote = "https://github.com/ReubenJ/biodivine-boolean-models.git"
@@ -41,38 +44,32 @@ function bundle_biodivine_benchmark(raw_src_dir, output_dir)
     end
 end
 
-function load_aeon_biodivine()
-    repo = datadir("src_raw", "biodivine-boolean-models")
-
-    if !ispath(repo)
-        include("fetch_repo.jl")
-        @assert ispath(repo)
-    end
+function load_aeon_biodivine(repo, ids_to_ignore = String[])
+    @assert ispath(repo)
 
     models_path = joinpath(repo, "bbm-aeon-format")
     summary_csv_path = joinpath(models_path, "summary.csv")
-    df = DataFrame(CSV.File(summary_csv_path; types = Dict([:ID => String])))
-    df[!, :path] = [joinpath(models_path, id) * ".aeon" for id in df.ID]
+
+    df = DataFrame(
+        CSV.File(summary_csv_path; types = Dict([:ID => String]), normalizenames = true),
+    )
+
+    # construct path column
+    df = transform(df, :ID => ByRow(id -> joinpath(models_path, id) * ".aeon") => :path)
+
     @tagsave(datadir("src_parsed", "summary_biodivine_benchmark.jld2"), @strdict(df))
 
-    pbar = ProgressBar(; columns = :detailed)
-    Progress.foreachprogress(
-        df.path,
-        pbar;
-        parallel = true,
-        transient = false,
-        description = "Loading models...",
-    ) do model
-        if basename(model) != "079.aeon" # 79 is massive and seems to cause a stackoverflow error
-            @produce_or_load(
-                @dict(model), # produce_or_load needs this to be a dict
-                path = datadir("src_parsed", "biodivine_benchmark"),
-                filename = basename(model),
-            ) do config
-                @unpack model = config
-                parsed_model = AEONParser.parse_aeon_file(model)
-                @strdict parsed_model
-            end
+    df = filter(row -> row.ID ∉ ids_to_ignore, df)
+
+    @showprogress "Parsing AEON Files..." pmap(eachrow(df)) do model
+        @produce_or_load(
+            model,
+            path = datadir("src_parsed", "biodivine_benchmark"),
+            filename = basename(model.path),
+            verbose = false
+        ) do model
+            parsed_model = AEONParser.parse_aeon_file(model.path)
+            @strdict parsed_model
         end
     end
 end
@@ -107,55 +104,41 @@ function update_functions_to_network(
     return network
 end
 
-function convert_aeon_models_to_metagraphs()
-    excluded_files = [r"041\.aeon\.jld2", r"079\.aeon\.jld2"]
-
-    df = collect_results!(
+function convert_aeon_models_to_metagraphs(excluded_files = Regex[])
+    df = collect_results(
         datadir("src_parsed", "biodivine_benchmark");
         rexclude = excluded_files,
     )
     # "full/path/to/001.aeon.jld2" -> "001"
     df.ID = map((x -> x[1]) ∘ splitext ∘ (x -> x[1]) ∘ splitext ∘ basename, df.path)
 
-    components_df = @chain df begin
+    gdf = @chain df begin
         @select parsed_model ID
         flatten(:parsed_model)
         @rename Component = parsed_model  # new = old
         @mutate ComponentType = typeof(Component)
-        @group_by ComponentType
-    end
-
-    just_update_functions = components_df[(ComponentType = AEONParser.UpdateFunction,)]
-    just_regulations = components_df[(ComponentType = AEONParser.Regulation,)]
-
-    update_functions_by_id = @chain just_update_functions begin
         @group_by ID
-        @select Component
     end
 
-    regulations_by_id = @chain just_regulations begin
-        @group_by ID
-        @select Component
-    end
-
-    pbar = ProgressBar(; columns = :detailed)
-    Progress.foreachprogress(
-        collect(zip(update_functions_by_id, regulations_by_id)),
-        pbar;
-        parallel = true,
-        transient = false,
-        # description = "AEON -> MetaGraph",
-    ) do model
+    @showprogress "AEON -> MetaGraph" pmap(pairs(gdf)) do (components_key, components)
         @produce_or_load(
-            @dict(model), # produce_or_load needs this to be a dict
+            components,
             path = datadir("src_parsed", "biodivine_benchmark_as_metagraphs"),
-            filename = model[1].ID[1],
-        ) do config
-            @unpack model = config
-            (update_functions, regulations) = model
+            filename = components_key.ID
+        ) do components
             metagraph_model = update_functions_to_network(
-                Vector{AEONParser.UpdateFunction}(update_functions.Component),
-                Vector{AEONParser.Regulation}(regulations.Component),
+                Vector{AEONParser.UpdateFunction}(
+                    components[
+                        components.ComponentType.==AEONParser.UpdateFunction,
+                        :,
+                    ].Component,
+                ),
+                Vector{AEONParser.Regulation}(
+                    components[
+                        components.ComponentType.==AEONParser.Regulation,
+                        :,
+                    ].Component,
+                ),
             )
             @strdict metagraph_model
         end
