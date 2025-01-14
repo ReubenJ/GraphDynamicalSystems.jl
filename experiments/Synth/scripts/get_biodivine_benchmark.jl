@@ -1,4 +1,4 @@
-#!/usr/bin/env -S julia -p 32
+#!/usr/bin/env -S srun julia -p 32
 #
 #SBATCH --job-name="Get, parse and convert Biodivine Benchmark"
 #SBATCH --partition=compute
