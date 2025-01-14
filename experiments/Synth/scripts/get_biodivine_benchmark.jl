@@ -1,4 +1,4 @@
-#!/usr/bin/env -S srun julia -p $SLURM_NTASKS
+#!/usr/bin/env julia
 #
 #SBATCH --job-name="BBM"
 #SBATCH --partition=compute
@@ -8,7 +8,8 @@
 #SBATCH --mem-per-cpu=1G
 #SBATCH --account=research-eemcs-st
 
-using Distributed
+using Distributed, SlurmClusterManager
+addprocs(SlurmManager())
 
 @everywhere using DrWatson
 
