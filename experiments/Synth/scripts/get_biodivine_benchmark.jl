@@ -1,4 +1,4 @@
-#!/usr/bin/env julia
+#!/usr/bin/env -S julia
 #
 #SBATCH --job-name="BBM"
 #SBATCH --partition=compute
@@ -8,12 +8,9 @@
 #SBATCH --mem-per-cpu=1G
 #SBATCH --account=research-eemcs-st
 
-using DrWatson
-
-@quickactivate :Synth
-
-using Distributed, SlurmClusterManager
+using Distributed
 try
+    using SlurmClusterManager
     addprocs(SlurmManager())
 catch
     @info "Not running from within Slurm, proceeding without Slurm workers"
