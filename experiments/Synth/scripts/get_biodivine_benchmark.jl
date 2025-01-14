@@ -1,9 +1,8 @@
-#!/usr/bin/env -S srun julia -p 32
+#!/usr/bin/env -S srun julia -p $SLURM_NTASKS
 #
 #SBATCH --job-name="Get, parse and convert Biodivine Benchmark"
 #SBATCH --partition=compute
 #SBATCH --time=00:15:00
-# `ntasks` should match the value provided to -p in the first line of this script!
 #SBATCH --ntasks 32
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1G
