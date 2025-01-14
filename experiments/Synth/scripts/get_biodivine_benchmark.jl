@@ -8,8 +8,16 @@
 #SBATCH --mem-per-cpu=1G
 #SBATCH --account=research-eemcs-st
 
+using DrWatson
+
+@quickactivate :Synth
+
 using Distributed, SlurmClusterManager
-addprocs(SlurmManager())
+try
+    addprocs(SlurmManager())
+catch
+    @info "Not running from within Slurm, proceeding without Slurm workers"
+end
 
 @everywhere using DrWatson
 
