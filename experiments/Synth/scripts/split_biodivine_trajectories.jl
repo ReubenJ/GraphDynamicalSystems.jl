@@ -34,17 +34,16 @@ all_params = dict_list(param_setup)
     @produce_or_load(
         params,
         path = split_trajectories_dir,
-        filename = params["traj_file"]
+        filename = splitext(basename(params["traj_file"]))[1]
     ) do params
         @unpack traj_file = params
         traj_file_contents = load(joinpath(trajectories_dir, traj_file))
+        split_traj = nothing
         if "trajectories" in keys(traj_file_contents)
             trajectories = traj_file_contents["trajectories"] # also includes git tag, etc.
 
             split_traj = split_state_space.(trajectories)
-            return @strdict split_traj
-        else
-            @info "No trajectory found for $traj_file"
         end
+        @strdict split_traj
     end
 end
