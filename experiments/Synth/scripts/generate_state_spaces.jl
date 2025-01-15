@@ -1,9 +1,9 @@
 using DrWatson
 
-@quickactivate "Synth"
+@quickactivate :Synth
 
 using DataFrames
-using Herb, HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
+using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
 
 include(srcdir("gather_bn_data.jl"))
 include(srcdir("grammars.jl"))
