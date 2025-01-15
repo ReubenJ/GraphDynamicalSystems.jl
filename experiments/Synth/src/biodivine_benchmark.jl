@@ -8,7 +8,6 @@ using MetaGraphsNext: MetaGraph
 using Graphs: SimpleDiGraph, add_edge!
 using SoleLogics: Atom, subformulas, Formula
 
-# using Term
 using ProgressMeter
 
 using TidierData
