@@ -1,4 +1,4 @@
-#!/usr/bin/env -S julia
+#!/usr/bin/env -S julia --project=.
 #
 #SBATCH --job-name="BBM"
 #SBATCH --partition=compute
@@ -18,7 +18,8 @@ end
 
 @everywhere using DrWatson
 
-@everywhere @quickactivate :Synth
+@everywhere quickactivate(pwd())
+@everywhere using Synth
 
 
 @info "Cloning the biodivine benchmark repository"
