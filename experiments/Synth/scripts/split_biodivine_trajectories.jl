@@ -27,12 +27,16 @@ using ProgressMeter
 trajectories_dir = datadir("sims", "biodivine_trajectories")
 split_trajectories_dir = datadir("sims", "biodivine_split")
 
-@showprogress pmap(readdir(datadir("sims", "biodivine_trajectories"))) do traj_file
+param_setup = Dict("traj_file" => readdir(datadir("sims", "biodivine_trajectories")))
+all_params = dict_list(param_setup)
+
+@showprogress pmap(all_params) do params
     @produce_or_load(
-        traj_file,
+        params,
         path = split_trajectories_dir,
-        filename = traj_file
-    ) do traj_file
+        filename = params["traj_file"]
+    ) do params
+        @unpack traj_file = params
         traj_file_contents = load(joinpath(trajectories_dir, traj_file))
         if "trajectories" in keys(traj_file_contents)
             trajectories = traj_file_contents["trajectories"] # also includes git tag, etc.
