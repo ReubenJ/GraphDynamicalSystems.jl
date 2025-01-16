@@ -46,7 +46,9 @@ function synth_biodivine(problem, iterator, grammar, max_iterations)
 
         score = evaluate_bn(problem, expr)
 
-        push!(exprs_and_scores, (eval(expr), score))
+        if score > 0
+            push!(exprs_and_scores, (eval(expr), score, i))
+        end
 
         if i > max_iterations
             @warn "Maximum iterations reached"

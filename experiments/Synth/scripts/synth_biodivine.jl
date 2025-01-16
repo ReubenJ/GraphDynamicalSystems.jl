@@ -1,17 +1,38 @@
-using DrWatson
+#!/usr/bin/env -S julia --project=.
+#
+#SBATCH --job-name="Synth"
+#SBATCH --partition=compute
+#SBATCH --time=24:00:00
+#SBATCH --ntasks 512
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=2G
+#SBATCH --account=research-eemcs-st
 
-@quickactivate :Synth
+using Distributed
+try
+    using SlurmClusterManager
+    addprocs(SlurmManager())
+catch
+    @info "Not running from within Slurm, proceeding without Slurm workers"
+end
 
-using DataFrames
-using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
-using Random
-using Graphs: nv
+@everywhere using DrWatson
 
-include(srcdir("grammars.jl"))
-include(srcdir("synth_process.jl"))
-include(srcdir("evaluator.jl"))
-include(srcdir("create_problem.jl"))
+@everywhere quickactivate(pwd())
+@everywhere using Synth
 
+@everywhere begin
+    using ProgressMeter
+    using DataFrames
+    using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
+    using Random
+    using Graphs: nv
+
+    include(srcdir("grammars.jl"))
+    include(srcdir("synth_process.jl"))
+    include(srcdir("evaluator.jl"))
+    include(srcdir("create_problem.jl"))
+end
 
 res = collect_results(datadir("sims", "biodivine_split"))
 res.ID = ((x -> x[end-1]["id"]) ∘ parse_savename).(res.path)
@@ -32,7 +53,7 @@ synth_params = Dict(
     "max_iterations" => 1_000_000,
 )
 
-function synth_one_vertex(save_data)
+@everywhere function synth_one_vertex(save_data)
     @unpack vertex, examples = save_data
     problem = examples_to_problem(vertex, examples)
 
@@ -45,7 +66,10 @@ function synth_one_vertex(save_data)
     return save_data
 end
 
-function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFrame)
+@everywhere function synth_one_biodivine(
+    outer_params::AbstractDict{String,Any},
+    res::DataFrame,
+)
     params = deepcopy(outer_params)
     @unpack seed = params
     Random.seed!(seed)
@@ -61,7 +85,7 @@ function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFr
     model = only(res[res.ID.==id, :metagraph_model])
     grammar = grammar_builder(nv(model))
 
-    for (vertex, examples) ∈ merged_selected_trajs
+    @showprogress pmap(collect(merged_selected_trajs)) do (vertex, examples)
         @info "Synthesizing model $id, node $vertex, $n_trajectories traj."
         save_data = deepcopy(params)
         delete!(save_data, "specifications")
@@ -79,6 +103,6 @@ function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFr
     end
 end
 
-Threads.@threads for params in dict_list(synth_params)
+@showprogress pmap(dict_list(synth_params)) do params
     synth_one_biodivine(params, res)
 end
