@@ -2,10 +2,10 @@
 #
 #SBATCH --job-name="Synth"
 #SBATCH --partition=compute
-#SBATCH --time=24:00:00
-#SBATCH --ntasks 512
+#SBATCH --time=72:00:00
+#SBATCH --ntasks 256
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=2G
+#SBATCH --mem-per-cpu=4G
 #SBATCH --account=research-eemcs-st
 
 using Distributed
