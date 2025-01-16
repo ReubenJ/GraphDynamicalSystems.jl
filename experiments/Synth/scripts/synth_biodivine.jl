@@ -21,17 +21,7 @@ end
 @everywhere quickactivate(pwd())
 @everywhere using Synth
 
-@everywhere using ProgressMeter
-@everywhere using DataFrames
-@everywhere using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
-@everywhere using Random
-@everywhere using Graphs: nv
-@everywhere using GraphDynamicalSystems
-
-@everywhere include(srcdir("grammars.jl"))
-@everywhere include(srcdir("synth_process.jl"))
-@everywhere include(srcdir("evaluator.jl"))
-@everywhere include(srcdir("create_problem.jl"))
+@everywhere using ProgressMeter, DataFrames, HerbSearch, GraphDynamicalSystems
 
 res = collect_results(datadir("sims", "biodivine_split"))
 res.ID = ((x -> x[end-1]["id"]) ∘ parse_savename).(res.path)
@@ -51,56 +41,6 @@ synth_params = Dict(
     "grammar_builder" => [build_dnf_grammar, build_qn_grammar],
     "max_iterations" => 1_000_000,
 )
-
-@everywhere function synth_one_vertex(save_data)
-    @unpack vertex, examples = save_data
-    problem = examples_to_problem(vertex, examples)
-
-    @unpack max_depth, iterator_type, max_iterations, grammar = save_data
-    iterator = iterator_type(grammar, :Start, max_depth = max_depth)
-    exprs_and_scores = synth_biodivine(problem, iterator, grammar, max_iterations)
-
-    # Save output
-    save_data["exprs_and_scores"] = exprs_and_scores
-    return save_data
-end
-
-@everywhere function synth_one_biodivine(
-    outer_params::AbstractDict{String,Any},
-    res::DataFrame,
-)
-    params = deepcopy(outer_params)
-    @unpack seed = params
-    Random.seed!(seed)
-
-    @unpack n_trajectories, id = params
-    selected_trajs = rand(only(res[res.ID.==id, :split_traj]), n_trajectories)
-
-    merged_selected_trajs = reduce(mergewith(union), selected_trajs)
-
-    @unpack id, grammar_builder = params
-    @info "Synthsizing for model $id with $n_trajectories traj."
-
-    model = only(res[res.ID.==id, :metagraph_model])
-    grammar = grammar_builder(nv(model))
-
-    @showprogress pmap(collect(merged_selected_trajs)) do (vertex, examples)
-        @info "Synthesizing model $id, node $vertex, $n_trajectories traj."
-        save_data = deepcopy(params)
-        delete!(save_data, "specifications")
-        save_data["grammar"] = grammar
-        save_data["vertex"] = vertex
-        save_data["examples"] = examples
-        file_name = savename(save_data)
-        @produce_or_load(
-            synth_one_vertex,
-            save_data,
-            datadir("exp_raw", "biodivine_search");
-            filename = file_name
-        )
-        @info "Completed synthesis for model $id, node $vertex, $n_trajectories traj."
-    end
-end
 
 @showprogress pmap(dict_list(synth_params)) do params
     synth_one_biodivine(params, res)
