@@ -5,7 +5,7 @@
 #SBATCH --time=72:00:00
 #SBATCH --ntasks 256
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=4G
+#SBATCH --mem-per-cpu=8G
 #SBATCH --account=research-eemcs-st
 
 using Distributed
