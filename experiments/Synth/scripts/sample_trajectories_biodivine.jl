@@ -30,7 +30,7 @@ mg_df = collect_results(datadir("src_parsed", "biodivine_benchmark_as_metagraphs
 mg_df[!, :ID] = ((x -> x[1]) ∘ splitext ∘ basename).(mg_df.path)
 mg_df_by_id = groupby(mg_df, :ID)
 
-param_setup = Dict("id" => mg_df.ID, "n_trajectories" => 200, "iterations" => 1000)
+param_setup = Dict("id" => mg_df.ID, "n_trajectories" => 200, "iterations" => 100)
 all_params = dict_list(param_setup)
 
 @showprogress pmap(all_params) do params
