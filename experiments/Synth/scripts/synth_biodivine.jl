@@ -21,18 +21,17 @@ end
 @everywhere quickactivate(pwd())
 @everywhere using Synth
 
-@everywhere begin
-    using ProgressMeter
-    using DataFrames
-    using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
-    using Random
-    using Graphs: nv
+@everywhere using ProgressMeter
+@everywhere using DataFrames
+@everywhere using HerbGrammar, SoleLogics, HerbSpecification, HerbSearch
+@everywhere using Random
+@everywhere using Graphs: nv
+@everywhere using GraphDynamicalSystems
 
-    include(srcdir("grammars.jl"))
-    include(srcdir("synth_process.jl"))
-    include(srcdir("evaluator.jl"))
-    include(srcdir("create_problem.jl"))
-end
+@everywhere include(srcdir("grammars.jl"))
+@everywhere include(srcdir("synth_process.jl"))
+@everywhere include(srcdir("evaluator.jl"))
+@everywhere include(srcdir("create_problem.jl"))
 
 res = collect_results(datadir("sims", "biodivine_split"))
 res.ID = ((x -> x[end-1]["id"]) ∘ parse_savename).(res.path)
@@ -49,7 +48,7 @@ synth_params = Dict(
     "id" => res.ID,
     "n_trajectories" => collect(10:20:110),
     "iterator_type" => [BFSIterator],
-    "grammar_builder" => [build_dnf_grammar],
+    "grammar_builder" => [build_dnf_grammar, build_qn_grammar],
     "max_iterations" => 1_000_000,
 )
 
