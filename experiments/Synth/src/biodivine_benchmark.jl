@@ -162,7 +162,7 @@ function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFr
     model = only(res[res.ID.==id, :metagraph_model])
     grammar = grammar_builder(nv(model))
 
-    @showprogress pmap(collect(merged_selected_trajs)) do (vertex, examples)
+    @showprogress map(collect(merged_selected_trajs)) do (vertex, examples)
         @info "Synthesizing model $id, node $vertex, $n_trajectories traj."
         save_data = deepcopy(params)
         delete!(save_data, "specifications")
