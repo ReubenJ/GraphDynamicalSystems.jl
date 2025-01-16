@@ -936,12 +936,12 @@ uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
 version = "2.82.4+0"
 
 [[deps.GraphDynamicalSystems]]
-deps = ["DynamicalSystems", "FileIO", "MetaGraphsNext", "Random", "SoleLogics"]
-git-tree-sha1 = "200e4fed52d9c25fb18935533a672f19069916e0"
-repo-rev = "main"
+deps = ["AbstractTrees", "DocStringExtensions", "DynamicalSystems", "FileIO", "HerbCore", "HerbGrammar", "HerbSearch", "MLStyle", "MetaGraphsNext", "Random", "SoleLogics", "Statistics"]
+git-tree-sha1 = "8ca1dbca624e42094220e1d15da56da999e82b1b"
+repo-rev = "feat/qn"
 repo-url = "../.."
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
-version = "0.1.0"
+version = "0.2.0"
 
 [[deps.GraphRecipes]]
 deps = ["AbstractTrees", "GeometryTypes", "Graphs", "InteractiveUtils", "Interpolations", "LinearAlgebra", "NaNMath", "NetworkLayout", "PlotUtils", "RecipesBase", "SparseArrays", "Statistics"]
