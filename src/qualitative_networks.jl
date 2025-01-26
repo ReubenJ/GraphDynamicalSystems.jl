@@ -2,25 +2,24 @@ import DynamicalSystems: get_state, set_state!
 
 using AbstractTrees: Leaves
 using HerbCore: AbstractGrammar, RuleNode, get_rule
-using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
+using HerbGrammar: add_rule!, rulenode2expr, @csgrammar
+using HerbConstraints: addconstraint!, DomainRuleNode, VarNode, Ordered, Forbidden
 using HerbSearch
 using MLStyle: @match
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, nv
 
-const base_qn_grammar = @csgrammar begin
-    # ManyVals = Pos() | Neg()
-    Val =
-        (Val + Val) |
-        (Val - Val) |
-        Val / Val |
-        # Avg(ManyVals) |
-        Min(Val, Val) |
-        Max(Val, Val) |
-        Ceil(Val) |
-        Floor(Val)
+base_qn_grammar = @csgrammar begin
+    Val = Val + Val
+    Val = Val - Val
+    Val = Val / Val
+    Val = Val * Val
+    Val = Min(Val, Val)
+    Val = Max(Val, Val)
+    Val = Ceil(Val)
+    Val = Floor(Val)
 end
 
-const default_qn_constants = [2]
+default_qn_constants = [2]
 
 """
     $(TYPEDSIGNATURES)
@@ -38,6 +37,43 @@ function build_qn_grammar(
     for c in constants
         add_rule!(g, :(Val = $c))
     end
+
+    # +, *, min, max, are all commutative
+    template_tree = DomainRuleNode(
+        BitVector([
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            zeros(Int, length(entity_names) + length(constants))...,
+        ]),
+        [VarNode(:a), VarNode(:b)],
+    )
+    order = [:a, :b]
+
+    addconstraint!(g, Ordered(template_tree, order))
+
+    # Forbid same arguments for 2-argument functions
+    template_tree = DomainRuleNode(
+        BitVector([
+            1,
+            0,
+            0,
+            1,
+            1,
+            1,
+            0,
+            0,
+            zeros(Int, length(entity_names) + length(constants))...,
+        ]),
+        [VarNode(:a), VarNode(:a)],
+    )
+
+    addconstraint!(g, Forbidden(template_tree))
 
     return g
 end
