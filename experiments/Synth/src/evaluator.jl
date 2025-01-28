@@ -29,14 +29,73 @@ function interpret(φ::Expr, i::SoleLogics.AbstractInterpretation, args...; kwar
     return interpret(syntax_branch, i, args...; kwargs...)
 end
 
-function evaluate_bn(problem, expr)
-    sat_examples = 0
+function interpret(
+    e::Union{AbstractString,Integer,Expr},
+    qn_state::AbstractVector{<:Integer},
+    vertex_names::AbstractVector{<:AbstractString},
+)
+    state_map = Dict(zip(vertex_names, deepcopy(qn_state)))
 
-    for example ∈ problem.spec
-        truth = TruthDict(Dict(enumerate(example.in[:state])))
-        res = interpret(expr, truth)
-        sat_examples += res.flag == example.out
+    _int(e) = @match e begin
+        ::AbstractString => state_map[e]
+        ::Integer => e
+        :($v1 + $v2) => _int(v1) + _int(v2)
+        :($v1 - $v2) => _int(v1) - _int(v2)
+        :($v1 / $v2) => _int(v1) / _int(v2)
+        :($v1 * $v2) => _int(v1) * _int(v2)
+        :(Min($v1, $v2)) => min(_int(v1), _int(v2))
+        :(Max($v1, $v2)) => max(_int(v1), _int(v2))
+        :(Ceil($v)) => ceil(_int(v))
+        :(Floor($v)) => floor(_int(v))
+        _ => error("Unhandled Expr in `interpret`: $e, $(typeof(e))")
     end
 
-    return sat_examples / length(problem.spec)
+    return _int(e)
+end
+
+function evaluate_bn(problem::UndirectedProblem, expr, vertex_names)
+    sat_examples = BitVector[]
+
+    function _eval_1_dir(in, out)
+        truth = TruthDict(Dict(zip(vertex_names, in[:state])))
+        res = interpret(expr, truth)
+        expected = BooleanTruth(out[:state][findfirst(==(problem.name), vertex_names)])
+        success = expected == res
+
+        return success
+    end
+
+    for example ∈ problem.examples
+        success_direction1 = _eval_1_dir(example.data1, example.data2)
+        success_direction2 = _eval_1_dir(example.data2, example.data1)
+
+        success = BitVector([success_direction1, success_direction2])
+
+        push!(sat_examples, success)
+    end
+
+    return sat_examples
+end
+
+function evaluate_qn(problem::UndirectedProblem, expr, vertex_names)
+    sat_examples = BitVector[]
+
+    function _eval_1_dir(in, out)
+        res = interpret(expr, in[:state], vertex_names)
+        expected = out[:state][findfirst(==(problem.name), vertex_names)]
+        success = expected == res
+
+        return success
+    end
+
+    for example ∈ problem.examples
+        success_direction1 = _eval_1_dir(example.data1, example.data2)
+        success_direction2 = _eval_1_dir(example.data2, example.data1)
+
+        success = BitVector([success_direction1, success_direction2])
+
+        push!(sat_examples, success)
+    end
+
+    return sat_examples
 end

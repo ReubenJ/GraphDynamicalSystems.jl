@@ -146,49 +146,17 @@ function convert_aeon_models_to_metagraphs(excluded_files = Regex[])
     end
 end
 
-function synth_one_biodivine(outer_params::AbstractDict{String,Any}, res::DataFrame)
-    params = deepcopy(outer_params)
-    @unpack seed = params
-    Random.seed!(seed)
+function synth_one_vertex(params::AbstractDict{String,Any})
+    @unpack vertex, selected_trajectories = params
+    problem = examples_to_problem(vertex, selected_trajectories)
 
-    @unpack n_trajectories, id = params
-    selected_trajs = rand(only(res[res.ID.==id, :split_traj]), n_trajectories)
-
-    merged_selected_trajs = reduce(mergewith(union), selected_trajs)
-
-    @unpack id, grammar_builder = params
-    @info "Synthsizing for model $id with $n_trajectories traj."
-
-    model = only(res[res.ID.==id, :metagraph_model])
-    grammar = grammar_builder(nv(model))
-
-    @showprogress map(collect(merged_selected_trajs)) do (vertex, examples)
-        @info "Synthesizing model $id, node $vertex, $n_trajectories traj."
-        save_data = deepcopy(params)
-        delete!(save_data, "specifications")
-        save_data["grammar"] = grammar
-        save_data["vertex"] = vertex
-        save_data["examples"] = examples
-        file_name = savename(save_data)
-        @produce_or_load(
-            synth_one_vertex,
-            save_data,
-            datadir("exp_raw", "biodivine_search");
-            filename = file_name
-        )
-        @info "Completed synthesis for model $id, node $vertex, $n_trajectories traj."
-    end
-end
-
-function synth_one_vertex(save_data)
-    @unpack vertex, examples = save_data
-    problem = examples_to_problem(vertex, examples)
-
-    @unpack max_depth, iterator_type, max_iterations, grammar = save_data
+    @unpack max_depth, iterator_type, max_iterations, grammar, evaluator, vertex_names =
+        params
     iterator = iterator_type(grammar, :Start, max_depth = max_depth)
-    exprs_and_scores = synth_biodivine(problem, iterator, grammar, max_iterations)
+    exprs_and_scores =
+        synth_biodivine(problem, iterator, grammar, max_iterations, evaluator, vertex_names)
 
     # Save output
-    save_data["exprs_and_scores"] = exprs_and_scores
-    return save_data
+    params["exprs_and_scores"] = exprs_and_scores
+    return params
 end

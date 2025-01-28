@@ -2,7 +2,7 @@
 
 julia_version = "1.10.2"
 manifest_format = "2.0"
-project_hash = "19cda9b05e0584d6a0dc95f7351f7b83848951bf"
+project_hash = "db74a993eef408d9b910e97f9a72ec5fee351591"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "72af59f5b8f09faee36b4ec48e014a79210f2f4f"
@@ -936,10 +936,8 @@ uuid = "7746bdde-850d-59dc-9ae8-88ece973131d"
 version = "2.82.4+0"
 
 [[deps.GraphDynamicalSystems]]
-deps = ["AbstractTrees", "DocStringExtensions", "DynamicalSystems", "FileIO", "HerbCore", "HerbGrammar", "HerbSearch", "MLStyle", "MetaGraphsNext", "Random", "SoleLogics", "Statistics"]
-git-tree-sha1 = "8ca1dbca624e42094220e1d15da56da999e82b1b"
-repo-rev = "feat/qn"
-repo-url = "../.."
+deps = ["AbstractTrees", "DocStringExtensions", "DynamicalSystems", "FileIO", "Graphs", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbSearch", "MLStyle", "MetaGraphsNext", "Random", "SoleLogics", "Statistics"]
+path = "../.."
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
 version = "0.2.0"
 
@@ -1004,9 +1002,7 @@ version = "0.1.6"
 
 [[deps.HerbSearch]]
 deps = ["DataStructures", "HerbConstraints", "HerbCore", "HerbGrammar", "HerbInterpret", "HerbSpecification", "MLStyle", "Random", "StatsBase"]
-git-tree-sha1 = "913c9d8549076d4e13dd5255656177b6893ce6c1"
-repo-rev = "compathelper/new_version/2024-12-13-01-52-34-511-01072321669"
-repo-url = "https://github.com/Herb-AI/HerbSearch.jl.git"
+git-tree-sha1 = "95a5c1e87cd61b14cf9785f293e5633b39a69fc5"
 uuid = "3008d8e8-f9aa-438a-92ed-26e9c7b4829f"
 version = "0.4.1"
 

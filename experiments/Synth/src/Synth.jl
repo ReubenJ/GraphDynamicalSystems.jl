@@ -27,16 +27,20 @@ include("gather_bn_data.jl")
 
 export gather_bn_data, split_state_space, get_split_state_space
 
-include("create_problem.jl")
-
-export examples_to_problem
-
-include("evaluator.jl")
-
-export evaluate_bn, interpret
-
 include("synth_process.jl")
 
 export synth, synth_biodivine
+
+include("undirected_specification.jl")
+
+export UndirectedExample, UndirectedProblem
+
+include("evaluator.jl")
+
+export evaluate_bn, evaluate_qn, interpret
+
+include("create_problem.jl")
+
+export examples_to_problem
 
 end

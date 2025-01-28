@@ -23,11 +23,20 @@ disjunctive = @cfgrammar begin
     Lit = ¬Var
 end
 
-function _add_variables(grammar, num_vars::Int)
-    for i = 1:num_vars
+function _add_variables(grammar, vars::AbstractVector{<:Union{<:AbstractString,<:Atom}})
+    for i in vars
         add_rule!(grammar, :(Var = Atom($i)))
     end
 end
+
+function _add_variables(grammar, vars::AbstractVector{<:Integer})
+    for i in vars
+        add_rule!(grammar, :(Var = Atom($(string(i)))))
+    end
+end
+
+_add_variables(grammar, num_vars::Int) =
+    _add_variables(grammar, string.(collect(1:num_vars)))
 
 function build_cnf_grammar(num_vars::Int)
     grammar = deepcopy(conjunctive)
@@ -36,9 +45,23 @@ function build_cnf_grammar(num_vars::Int)
     return grammar
 end
 
+function build_cnf_grammar(vars::AbstractVector)
+    grammar = deepcopy(conjunctive)
+    _add_variables(grammar, vars)
+
+    return grammar
+end
+
 function build_dnf_grammar(num_vars::Int)
     grammar = deepcopy(disjunctive)
     _add_variables(grammar, num_vars)
+
+    return grammar
+end
+
+function build_dnf_grammar(vars::AbstractVector)
+    grammar = deepcopy(disjunctive)
+    _add_variables(grammar, vars)
 
     return grammar
 end

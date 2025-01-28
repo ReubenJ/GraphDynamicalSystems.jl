@@ -25,18 +25,20 @@ default_qn_constants = [2]
     $(TYPEDSIGNATURES)
 """
 function build_qn_grammar(
-    entity_names::AbstractVector{Symbol},
+    entity_names::AbstractVector,
     constants::AbstractVector{<:Integer},
 )
     g = deepcopy(base_qn_grammar)
 
     for e in entity_names
-        add_rule!(g, :(Val = $e))
+        add_rule!(g, :(Val = $(e.value)))
     end
 
     for c in constants
         add_rule!(g, :(Val = $c))
     end
+
+    add_rule!(g, :(Start = Val))
 
     # +, *, min, max, are all commutative
     template_tree = DomainRuleNode(
@@ -47,6 +49,7 @@ function build_qn_grammar(
             1,
             1,
             1,
+            0,
             0,
             0,
             zeros(Int, length(entity_names) + length(constants))...,
@@ -68,6 +71,7 @@ function build_qn_grammar(
             1,
             0,
             0,
+            0,
             zeros(Int, length(entity_names) + length(constants))...,
         ]),
         [VarNode(:a), VarNode(:a)],
@@ -77,6 +81,8 @@ function build_qn_grammar(
 
     return g
 end
+
+build_qn_grammar(entity_names) = build_qn_grammar(entity_names, default_qn_constants)
 
 """
     $(TYPEDSIGNATURES)

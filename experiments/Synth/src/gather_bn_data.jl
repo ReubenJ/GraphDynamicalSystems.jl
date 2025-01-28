@@ -7,7 +7,8 @@ end
 
 function split_state_space(trajectory::StateSpaceSet)
     # split into pairs of input (all values) and output (changed value)
-    input_output_pairs_per_node = Dict{Int,Set{Tuple{Vector{Int},Int}}}()
+    #
+    input_output_pairs_per_node = Dict{Int,Set{Tuple{Vector{Int},Vector{Int}}}}()
     for i = 1:length(trajectory)-1
         changed = findfirst(trajectory[i+1] .!= trajectory[i])
         # only proceed if there was a change
@@ -15,22 +16,15 @@ function split_state_space(trajectory::StateSpaceSet)
 
             # in real data we don't know the direction of the transition
             # was it from i -> i+1 or i+1 -> i, we only know that two
-            # states are adjacent, so for gathering data, we add both
-            # directions as IO pairs
-            #   1. state `i` and the new value of the single variable in
-            #      the state that changed
-            #   2. state `i+1` and the previous value of the single variable
-            #      in the state that changed
+            # states are adjacent, so for synthesis, we want to add the pair
+            # of i and i+1, and test possible programs on both.
 
-            new_value = trajectory[i+1][changed]
-            old_value = trajectory[i][changed]
-            existing_pairs =
-                get(input_output_pairs_per_node, changed, Set{Tuple{Vector{Int},Int}}())
-            push!(
-                existing_pairs,
-                (trajectory[i], new_value),     # 1
-                (trajectory[i+1], old_value),   # 2
+            existing_pairs = get(
+                input_output_pairs_per_node,
+                changed,
+                Set{Tuple{Vector{Int},Vector{Int}}}(),
             )
+            push!(existing_pairs, (trajectory[i], trajectory[i+1]))
             input_output_pairs_per_node[changed] = existing_pairs
         end
     end
