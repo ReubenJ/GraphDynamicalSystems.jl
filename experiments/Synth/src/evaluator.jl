@@ -81,15 +81,10 @@ function evaluate_qn(problem::UndirectedProblem, expr, vertex_names)
     sat_examples = BitVector[]
 
     function _eval_1_dir(in, out)
-        try
-            res = interpret(expr, in[:state], vertex_names)
-            expected = out[:state][findfirst(==(problem.name), vertex_names)]
-            success = expected == res
-
-            return success
-        catch
-            error("$(problem.name) $(in[:state]) $expr")
-        end
+        res = interpret(expr, in[:state], vertex_names)
+        expected = out[:state][findfirst(==(problem.name), vertex_names)]
+        success = expected == res
+        return success
     end
 
     for example ∈ problem.examples
