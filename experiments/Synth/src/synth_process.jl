@@ -19,7 +19,7 @@ function synth_biodivine(
         try
             sat_examples = evaluator(problem, expr, vertex_names)
         catch
-            @error "Problem evaluating: Problem name $(problem.name) state: $(in[:state]) $expr, i: $i."
+            @error "Problem evaluating: Problem name $(problem.name), expr: $expr, i: $i."
         end
 
         if isnothing(sat_examples)
