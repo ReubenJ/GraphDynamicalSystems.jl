@@ -36,8 +36,7 @@ model_df.vertex = collect.(labels.(model_df.metagraph_model))
 model_df.vertices = model_df.vertex
 
 # Filter only smaller models
-# model_df = model_df[length.(model_df.vertices).<15, :]
-
+# per_vertex_df = flatten(model_df[length.(model_df.vertices).<15, :], :vertex)
 per_vertex_df = flatten(model_df, :vertex)
 
 grammars_df = model_df[!, [:ID, :vertices]]
@@ -89,5 +88,11 @@ synth_params = Dict(
 )
 
 @showprogress pmap(dict_list(synth_params)) do params
-    @produce_or_load(synth_one_vertex, params, datadir("exp_raw", "biodivine_search"))
+    # loadfile = false so we don't load all results into memory of the main process
+    @produce_or_load(
+        synth_one_vertex,
+        params,
+        datadir("exp_raw", "biodivine_search"),
+        loadfile = false
+    )
 end
