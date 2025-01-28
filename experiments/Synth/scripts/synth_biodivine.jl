@@ -2,10 +2,10 @@
 #
 #SBATCH --job-name="Synth"
 #SBATCH --partition=compute
-#SBATCH --time=72:00:00
-#SBATCH --ntasks 256
+#SBATCH --time=00:30:00
+#SBATCH --ntasks 16
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=8G
+#SBATCH --mem-per-cpu=2G
 #SBATCH --account=research-eemcs-st
 
 using Distributed
@@ -23,6 +23,7 @@ end
 
 @everywhere using ProgressMeter, DataFrames, HerbSearch, GraphDynamicalSystems, Random
 using MetaGraphsNext: labels
+using Statistics: quantile
 
 traj_df = collect_results(datadir("sims", "biodivine_split"))
 path2id = path -> parse_savename(path)[end-1]["id"]
@@ -35,9 +36,11 @@ model_df.vertex = collect.(labels.(model_df.metagraph_model))
 # add a copy so that after flattening we have all of the vertices of a model in each row of df
 model_df.vertices = model_df.vertex
 
-# Filter only smaller models
-# per_vertex_df = flatten(model_df[length.(model_df.vertices).<15, :], :vertex)
-per_vertex_df = flatten(model_df, :vertex)
+# Filter out the largest 5% of models
+# They are likely Booleanized multivalue models—have to check
+n_verts_per_model = length.(model_df.vertices)
+per_vertex_df =
+    flatten(model_df[n_verts_per_model.<=quantile(n_verts_per_model, 0.95), :], :vertex)
 
 grammars_df = model_df[!, [:ID, :vertices]]
 grammars_df.dnf_grammar = build_dnf_grammar.(grammars_df.vertices)
