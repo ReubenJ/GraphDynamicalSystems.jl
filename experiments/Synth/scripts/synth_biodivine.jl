@@ -68,7 +68,7 @@ end
 
 synth_params = Dict(
     "seed" => 42,
-    "max_depth" => 6,
+    "max_depth" => 7,
     "unique" => collect(eachrow(per_vertex_df[!, [:ID, :vertex, :vertices]])),
     "id" => Derived("unique", x -> x.ID),
     "vertex_names" => Derived("unique", x -> getfield.(x.vertices, :value)),
