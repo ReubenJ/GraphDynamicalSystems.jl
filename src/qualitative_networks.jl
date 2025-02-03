@@ -31,7 +31,7 @@ function build_qn_grammar(
     g = deepcopy(base_qn_grammar)
 
     for e in entity_names
-        add_rule!(g, :(Val = $(e.value)))
+        add_rule!(g, :(Val = $e))
     end
 
     for c in constants
@@ -240,6 +240,7 @@ function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
         :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
         :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
         :($v1 / $v2) => interpret(v1, qn) / interpret(v2, qn)
+        :($v1 * $v2) => interpret(v1, qn) * interpret(v2, qn)
         :(Min($v1, $v2)) => min(interpret(v1, qn), interpret(v2, qn))
         :(Max($v1, $v2)) => max(interpret(v1, qn), interpret(v2, qn))
         :(Ceil($v)) => ceil(interpret(v, qn))
