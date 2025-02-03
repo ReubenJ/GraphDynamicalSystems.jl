@@ -1,4 +1,0 @@
-channels = ["bioconda"]
-
-[pip.deps]
-biodivine-aeon = ""
