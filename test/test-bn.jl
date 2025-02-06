@@ -1,5 +1,5 @@
 using MetaGraphsNext: nv, MetaGraph
-using DynamicalSystems: trajectory
+using DynamicalSystemsBase: trajectory
 using SoleLogics: cnf, AbstractSyntaxStructure, LeftmostLinearForm, ∧
 
 @testset "Boolean Network Sampling" begin
