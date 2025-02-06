@@ -1,5 +1,6 @@
 using DynamicalSystemsBase: step!, get_state, set_state!
 using Graphs: ne, nv
+using Random: seed!
 
 @testset "QN Grammar Creation" begin
     entities = [:a, :b, :c]
@@ -64,7 +65,11 @@ end
 end
 
 @testset "Async QN" begin
-    async_qn = aqn(network, N)
-    step!(async_qn, 10)
-    @test all(get_state(async_qn.model) .<= N)
+    seed!(42)
+
+    for i = 1:100
+        async_qn = aqn(network, N + i)
+        step!(async_qn, 10)
+        @test all(get_state(async_qn.model) .<= N + i)
+    end
 end
