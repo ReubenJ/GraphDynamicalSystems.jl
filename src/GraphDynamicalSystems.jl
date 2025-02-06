@@ -1,9 +1,6 @@
 module GraphDynamicalSystems
 
 using DocStringExtensions
-using DynamicalSystems
-using MetaGraphsNext
-using SoleLogics
 
 
 include("boolean_networks.jl")

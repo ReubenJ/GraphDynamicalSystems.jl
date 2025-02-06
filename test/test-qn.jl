@@ -1,5 +1,4 @@
-using DynamicalSystems
-using GraphDynamicalSystems
+using DynamicalSystemsBase: step!, get_state, set_state!
 using Graphs: ne, nv
 
 @testset "QN Grammar Creation" begin
