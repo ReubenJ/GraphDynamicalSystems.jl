@@ -255,7 +255,7 @@ end
 """
 function limit_change(prev_value, next_value, N::Int)
     if next_value > prev_value
-        limited_value = min(prev_value + 1, N + 1)
+        limited_value = min(prev_value + 1, N)
     elseif next_value < prev_value
         limited_value = max(prev_value - 1, 0)
     else
