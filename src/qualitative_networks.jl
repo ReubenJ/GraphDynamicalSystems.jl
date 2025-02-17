@@ -80,6 +80,49 @@ function build_qn_grammar(
 
     addconstraint!(g, Forbidden(template_tree))
 
+    # Forbid Ceil and Floor from including an entity or constant directly
+    entities_consts = DomainRuleNode(
+        BitVector([
+            zeros(Int, 9)...,
+            ones(Int, length(entity_names) + length(constants))...,
+        ]),
+    )
+    template_tree = DomainRuleNode(
+        BitVector([
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            zeros(Int, length(entity_names) + length(constants))...,
+        ]),
+        [entities_consts],
+    )
+
+    addconstraint!(g, Forbidden(template_tree))
+
+    # Forbid ceil(floor(x)) and vice-versa
+    ceil_or_floor = BitVector([
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        zeros(Int, length(entity_names) + length(constants))...,
+    ])
+    template_tree =
+        DomainRuleNode(ceil_or_floor, [DomainRuleNode(ceil_or_floor, [VarNode(:a)])])
+
+    addconstraint!(g, Forbidden(template_tree))
+
     return g
 end
 
