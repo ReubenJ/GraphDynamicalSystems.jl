@@ -24,6 +24,16 @@ default_qn_constants = [2]
 
 """
     $(TYPEDSIGNATURES)
+
+Builds a grammar based on the base QN grammar adding `entity_names` and `constants`
+to the grammar.
+
+Four constraints are currently included
+
+1. removing symmetry due to commutativity of `+`/`*`/`min`/`max`
+2. forbidding same arguments of two argument functions
+3. forbidding trivial inputs (consts and entity values) to `floor`/`ceil`
+4. forbidding `ceil(floor(_))` and `floor(ceil(_))`
 """
 function build_qn_grammar(
     entity_names::AbstractVector,
