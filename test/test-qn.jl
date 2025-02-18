@@ -1,6 +1,9 @@
+using Attractors: AttractorsViaRecurrences, basins_of_attraction
 using DynamicalSystemsBase: step!, get_state, set_state!
 using Graphs: ne, nv
 using Random: seed!
+
+seed!(42)
 
 @testset "QN Grammar Creation" begin
     entities = [:a, :b, :c]
@@ -65,11 +68,22 @@ end
 end
 
 @testset "Async QN" begin
-    seed!(42)
-
     for i = 1:100
         async_qn = aqn(network, N + i)
         step!(async_qn, 10)
         @test all(get_state(async_qn.model) .<= N + i)
     end
+end
+
+@testset "Get attractors" begin
+    n_entities = 3
+    qn = sample_qualitative_network(n_entities, 2)
+
+    async_qn = aqn(qn, 1)
+
+    grid = Tuple(range(0, 1) for _ = 1:n_entities)
+
+    mapper = AttractorsViaRecurrences(async_qn, grid)
+
+    basins = basins_of_attraction(mapper, grid)
 end

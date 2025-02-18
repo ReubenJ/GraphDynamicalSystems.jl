@@ -1,13 +1,15 @@
 import DynamicalSystemsBase: get_state, set_state!
 
 using AbstractTrees: Leaves
-using DynamicalSystemsBase: ArbitrarySteppable
+using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
 using HerbConstraints: addconstraint!, DomainRuleNode, VarNode, Ordered, Forbidden
 using HerbCore: AbstractGrammar, RuleNode, get_rule
 using HerbGrammar: add_rule!, rulenode2expr, @csgrammar
 using HerbSearch: rand
 using MLStyle: @match
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, nv, labels
+import SciMLBase
+using StaticArrays: MVector
 
 base_qn_grammar = @csgrammar begin
     Val = Val + Val
@@ -202,11 +204,11 @@ with an [`ArbitrarySteppable`](https://juliadynamics.github.io/DynamicalSystems.
 from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/).
 See [`aqn`](@ref) for an example.
 """
-struct QualitativeNetwork
+struct QualitativeNetwork{N,C}
     "Graph containing the topology and target functions of the network"
     graph::MetaGraph
     "State of the network"
-    state::AbstractVector{Int}
+    state::MVector{C,Int}
     "The maximum activation level/state value of any component"
     N::Int
 
@@ -215,7 +217,7 @@ struct QualitativeNetwork
             error("All values in state must be <= N (N=$N)")
         end
 
-        return new(g, s, N)
+        return new{N,length(s)}(g, s, N)
     end
 end
 
@@ -306,7 +308,7 @@ end
 """
     $(TYPEDSIGNATURES)
 """
-function limit_change(prev_value, next_value, N::Int)
+function limit_change(prev_value, next_value, N::Integer)
     if next_value > prev_value
         limited_value = min(prev_value + 1, N)
     elseif next_value < prev_value
@@ -315,7 +317,7 @@ function limit_change(prev_value, next_value, N::Int)
         limited_value = next_value
     end
 
-    return round(Int, limited_value)
+    return limited_value
 end
 
 """
@@ -334,6 +336,17 @@ end
 extract_state(model::QN) = model.state
 extract_parameters(model::QN) = model.graph
 reset_model!(model::QN, u, _) = model.state .= u
+
+function SciMLBase.reinit!(
+    ds::ArbitrarySteppable{<:AbstractVector{<:Real},<:QualitativeNetwork},
+    u::AbstractVector{<:Real} = initial_state(ds);
+    p = current_parameters(ds),
+    t0 = 0, # t0 is not used but required for downstream.
+)
+    ds.reinit(ds.model, u, p)
+    ds.t[] = 0
+    return ds
+end
 
 """
     $(TYPEDSIGNATURES)
