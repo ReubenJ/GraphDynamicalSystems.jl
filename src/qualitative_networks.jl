@@ -24,6 +24,16 @@ default_qn_constants = [2]
 
 """
     $(TYPEDSIGNATURES)
+
+Builds a grammar based on the base QN grammar adding `entity_names` and `constants`
+to the grammar.
+
+Four constraints are currently included
+
+1. removing symmetry due to commutativity of `+`/`*`/`min`/`max`
+2. forbidding same arguments of two argument functions
+3. forbidding trivial inputs (consts and entity values) to `floor`/`ceil`
+4. forbidding `ceil(floor(_))` and `floor(ceil(_))`
 """
 function build_qn_grammar(
     entity_names::AbstractVector,
@@ -77,6 +87,49 @@ function build_qn_grammar(
         ]),
         [VarNode(:a), VarNode(:a)],
     )
+
+    addconstraint!(g, Forbidden(template_tree))
+
+    # Forbid Ceil and Floor from including an entity or constant directly
+    entities_consts = DomainRuleNode(
+        BitVector([
+            zeros(Int, 9)...,
+            ones(Int, length(entity_names) + length(constants))...,
+        ]),
+    )
+    template_tree = DomainRuleNode(
+        BitVector([
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            0,
+            zeros(Int, length(entity_names) + length(constants))...,
+        ]),
+        [entities_consts],
+    )
+
+    addconstraint!(g, Forbidden(template_tree))
+
+    # Forbid ceil(floor(x)) and vice-versa
+    ceil_or_floor = BitVector([
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        zeros(Int, length(entity_names) + length(constants))...,
+    ])
+    template_tree =
+        DomainRuleNode(ceil_or_floor, [DomainRuleNode(ceil_or_floor, [VarNode(:a)])])
 
     addconstraint!(g, Forbidden(template_tree))
 
