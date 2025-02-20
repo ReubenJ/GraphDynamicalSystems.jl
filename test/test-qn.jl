@@ -68,11 +68,14 @@ end
 end
 
 @testset "Async QN" begin
-    for i = 1:100
-        async_qn = aqn(network, N + i)
-        step!(async_qn, 10)
-        @test all(get_state(async_qn.model) .<= N + i)
+    for N = 2:5 # a few different levels of N
+        for _ = 1:100 # 100 different initializations
+            async_qn = aqn(network, N)
+            step!(async_qn, 100)
+            @test all(get_state(async_qn.model) .<= N)
+        end
     end
+
 end
 
 @testset "Get attractors" begin

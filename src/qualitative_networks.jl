@@ -307,8 +307,12 @@ end
 
 """
     $(TYPEDSIGNATURES)
+
+Returns the limited value of `next_value` which is at most 1 different than `prev_value`.
+
+It is also never negative, or larger than `N`.
 """
-function limit_change(prev_value, next_value, N::Integer)
+function limit_change(prev_value::Integer, next_value::Integer, N::Integer)
     if next_value > prev_value
         limited_value = min(prev_value + 1, N)
     elseif next_value < prev_value
