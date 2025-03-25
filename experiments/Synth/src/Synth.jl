@@ -29,7 +29,7 @@ export gather_bn_data, split_state_space, get_split_state_space
 
 include("synth_process.jl")
 
-export synth, synth_biodivine
+export synth, synth_biodivine, synth_complete_qn, get_basins_qn, get_basins_bn
 
 include("undirected_specification.jl")
 

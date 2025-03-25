@@ -6,7 +6,7 @@ module BooleanNetworks
 
 using DocStringExtensions
 using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv, labels
-using DynamicalSystemsBase: ArbitrarySteppable
+using DynamicalSystemsBase: ArbitrarySteppable, current_parameters
 using SoleLogics:
     Formula,
     Atom,
@@ -23,6 +23,7 @@ using SoleLogics:
     ⊤
 using Random: seed!
 using FileIO: load
+import SciMLBase
 
 """
     $(TYPEDSIGNATURES)
@@ -100,6 +101,17 @@ end
 extract_state(model::BooleanNetwork) = model.state
 extract_parameters(model::BooleanNetwork) = model.graph
 reset_model!(model::BooleanNetwork, u, _) = model.state .= u
+
+function SciMLBase.reinit!(
+    ds::ArbitrarySteppable{<:AbstractVector{<:Real},<:BooleanNetwork},
+    u::AbstractVector{<:Real} = initial_state(ds);
+    p = current_parameters(ds),
+    t0 = 0, # t0 is not used but required for downstream.
+)
+    ds.reinit(ds.model, u, p)
+    ds.t[] = 0
+    return ds
+end
 
 """
     $(TYPEDSIGNATURES)
