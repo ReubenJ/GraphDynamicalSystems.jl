@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.4
+# v0.20.8
 
 using Markdown
 using InteractiveUtils
@@ -7,7 +7,7 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     #! format: off
-    quote
+    return quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
@@ -21,17 +21,20 @@ using DrWatson
 
 # ╔═╡ ca420cdc-208a-4341-8409-b2e826dcf9d7
 begin
-    quickactivate(pwd())
-    using Synth
-    using ProgressMeter, DataFrames, HerbSearch, GraphDynamicalSystems, Random
-    using MetaGraphsNext: labels
-    using Statistics: quantile
-    using DynamicalSystems
-    using Clingo_jll
-    using Plots
-    using Graphs
-    using GraphRecipes
+	quickactivate(pwd())
+	using Synth
+	using ProgressMeter, DataFrames, HerbSearch, GraphDynamicalSystems, Random
+	using MetaGraphsNext: labels
+	using Statistics: quantile
+	using DynamicalSystems
+	using Clingo_jll
+	using Plots
+	using Graphs
+	using GraphRecipes
 end
+
+# ╔═╡ 73a912bb-3f03-4190-a4b8-7d3352b541ff
+using BenchmarkTools
 
 # ╔═╡ df97a629-608b-45d0-815d-0a6c1d37d95c
 using PlutoUI
@@ -90,9 +93,9 @@ To mark which states are steady, we need to load the original Boolean Network mo
 
 # ╔═╡ b8265bb9-83d4-4bfd-9480-a9b55d78495e
 begin
-    model_df = collect_results(datadir("src_parsed", "biodivine_benchmark_as_metagraphs");)
-    path2id = path -> parse(Int, splitext(basename(path))[1])
-    model_df.ID = path2id.(model_df.path)
+	model_df = collect_results(datadir("src_parsed", "biodivine_benchmark_as_metagraphs"););
+	path2id = path -> parse(Int, splitext(basename(path))[1])
+	model_df.ID = path2id.(model_df.path)
 end
 
 # ╔═╡ 437a480c-e63d-40f2-9d01-dd95275a333c
@@ -102,24 +105,13 @@ end
 original_model = model_df.metagraph_model[1]
 
 # ╔═╡ 003f7d18-1801-4eda-9092-1d8685e41da6
-original_aeon =
-    """
+original_aeon = """
 \$v_Coup_fti: !(v_Fgf8 | v_Sp8) | !(v_Sp8 | v_Fgf8)
 \$v_Emx2: v_Coup_fti & !(v_Fgf8 | v_Sp8 | v_Pax6)
 \$v_Fgf8: v_Fgf8 & v_Sp8 & !v_Emx2
 \$v_Pax6: v_Sp8 & !(v_Emx2 | v_Coup_fti)
 \$v_Sp8: v_Fgf8 & !v_Emx2
-""" |> (
-        x -> replace(
-            x,
-            "v_" => "",
-            "\$" => "",
-            "!" => "¬",
-            "|" => "∨",
-            "&" => "∧",
-            "\n" => "\n",
-        )
-    )
+""" |> (x -> replace(x, "v_" => "", "\$" => "", "!" => "¬", "|" => "∨", "&" => "∧", "\n" => "\n"))
 
 # ╔═╡ cf9bb61c-7892-4b0b-91fe-e9c437be849d
 Markdown.parse("""
@@ -130,9 +122,9 @@ $original_aeon
 
 # ╔═╡ e699ff65-d7cc-4a9b-80b8-1fe4b17bb6ea
 plot(
-    reverse(original_model.graph);
-    names = Dict([k => v.value[3:end] for (k, v) in original_model.vertex_labels]),
-    nodecolor = :lightblue,
+	reverse(original_model.graph);
+	names=Dict([k => v.value[3:end] for (k, v) in original_model.vertex_labels]),
+	nodecolor=:lightblue
 )
 
 # ╔═╡ 38bcaaaf-5ddb-4536-b270-4b93caba66c2
@@ -140,6 +132,14 @@ plot(
 
 # ╔═╡ 17aa2324-3b02-47c9-8c91-9bbdd4c3cb4a
 steady_states = Iterators.flatten(values(target_basins)) |> collect
+
+# ╔═╡ 7d8c46e2-c03a-4e50-ab5a-336b58b28115
+for s in steady_states
+	for x in s
+		print("[$x], ")
+	end
+	println()
+end
 
 # ╔═╡ 749b6a19-a723-4df4-a37f-4d2d30f8d4e7
 md"""
@@ -256,7 +256,16 @@ One solution from the unfiltered model is
 """
 
 # ╔═╡ 26153e85-5a49-4376-a9ad-0e55ad6d1329
-assignments = ["sp8_3210", "emx2_1128", "coupfti_3218", "pax6_9228", "fgf8_5146"]
+assignments = [
+	"sp8_3210",
+	"emx2_1128",
+	"coupfti_3218",
+	"pax6_9228",
+	"fgf8_5146"
+]
+
+# ╔═╡ a434481a-e609-4a6d-a9cb-f0136672afff
+
 
 # ╔═╡ 1de6aafa-9012-4027-a754-7e3ca811fb6a
 md"""
@@ -270,11 +279,11 @@ What is their index in the original solutions? We need this to examine their tra
 
 # ╔═╡ b06e9728-6482-4082-baf5-d3ad63f02b16
 first_transition = [
-    BitVector([true, true]),
-    BitVector([true, true]),
-    BitVector([true, true]),
-    BitVector([true, true]),
-    BitVector([true, true]),
+	BitVector([true, true]),
+	BitVector([true, true]),
+	BitVector([true, true]),
+	BitVector([true, true]),
+	BitVector([true, true]),
 ]
 
 # ╔═╡ a5e7fab3-8e13-4e88-a452-72ac0617055a
@@ -289,29 +298,16 @@ res_filtered = "edge(20,20) edge(10,10) assign(sp8_1409,sp8) assign(emx2_1393,em
 res_sat = "edge(20,20) edge(10,10) assign(sp8_2282,sp8) assign(emx2_6156,emx2) assign(coupfti_3214,coupfti) assign(pax6_4797,pax6) assign(fgf8_1104,fgf8) edge(1,2) edge(7,8) edge(9,10) edge(3,4) edge(5,6) edge(11,12) edge(3,14) edge(13,10) edge(6,11) edge(4,18) edge(8,15) edge(14,2) edge(16,10) edge(17,13) edge(15,13) edge(12,1) edge(2,20) edge(19,9) edge(18,16) edge(21,15) edge(15,21) edge(16,18)"
 
 # ╔═╡ 2457d4f1-a93f-407d-9e53-4e44f721568b
-edges =
-    res_sat |>
-    split |>
-    filter(startswith("edge")) .|>
-    (x -> x[5:end]) .|>
-    x ->
-        replace(x, r"[()]" => "") .|>
-        (x -> split(x, ",")) .|>
-        (((x, y),) -> Pair(parse(Int, x), parse(Int, y)))
+edges = res_sat |> split |> filter(startswith("edge")) .|> (x -> x[5:end]) .|> x -> replace(x, r"[()]" => "") .|> (x -> split(x, ",")) .|> (((x, y),) -> Pair(parse(Int, x), parse(Int, y)))
 
 # ╔═╡ d50e737f-4bb2-40a7-a906-663a2d296cc1
 graph = SimpleDiGraphFromIterator(Edge.(edges))
 
 # ╔═╡ 113a60e4-8ef5-4d37-a978-d4ac9299d649
-plot(
-    graph;
-    markersize = 0.25,
-    fontsize = 6,
-    names = 1:length(graph),
-    curves = true,
-    method = :spring,
-    # nodesize=1,
-    self_edge_size = 0.2,
+plot(graph; markersize=0.25, fontsize=6, names=1:length(graph), curves=true, 
+	method=:spring,
+	# nodesize=1,
+	self_edge_size=0.2
 )
 
 # ╔═╡ 4d863e2c-e9a5-4c32-8776-5427744ff411
@@ -341,9 +337,7 @@ entity_string = "entity($(join(vertex_names, ";")))."
 entity_string
 
 # ╔═╡ 3bff2b94-eef4-4185-be8f-1bca5774ff13
-@assert all(
-    vertex_names |> Iterators.flatten |> collect |> filter(isletter) .|> islowercase,
-)
+@assert all(vertex_names |> Iterators.flatten |> collect |> filter(isletter) .|> islowercase)
 
 # ╔═╡ 61442d48-1005-4caa-af78-138dfcecc064
 @assert all(vertex_names |> Iterators.flatten |> collect |> filter(!isletter) .|> isdigit)
@@ -377,41 +371,41 @@ steady_state_string
 
 # ╔═╡ 4de0dced-294b-46c8-bb8a-c36922bf9df1
 function raw_connection_builder(solution_name, successes, specifications)
-    @assert length(successes) == length(specifications)
-    raw_connections = Tuple{Int,Int}[]
-    for (success, spec) in zip(successes, specifications)
-        id1 = findfirst(==(spec[1]), states)
-        id2 = findfirst(==(spec[2]), states)
-        if success[1]
-            push!(raw_connections, (id1, id2))
-        end
+	@assert length(successes) == length(specifications)
+	raw_connections = Tuple{Int, Int}[]
+	for (success, spec) in zip(successes, specifications)
+		id1 = findfirst(==(spec[1]), states)
+		id2 = findfirst(==(spec[2]), states)
+		if success[1]
+			push!(raw_connections, (id1, id2))
+		end
 
-        if success[2]
-            push!(raw_connections, (id2, id1))
-        end
-    end
+		if success[2]
+			push!(raw_connections, (id2, id1))
+		end
+	end
 
-    return raw_connections
+	return raw_connections
 end
 
 # ╔═╡ 15ac2c7c-c01c-4c3c-a145-84bbdfb788ca
 function connection_builder(solution_name, successes, specifications)
-    @assert length(successes) == length(specifications)
-    connection_strings = String[]
-    connects = (x, a, b) -> "connects($x, $a, $b)."
-    for (success, spec) in zip(successes, specifications)
-        id1 = findfirst(==(spec[1]), states)
-        id2 = findfirst(==(spec[2]), states)
-        if success[1]
-            push!(connection_strings, connects(solution_name, id1, id2))
-        end
+	@assert length(successes) == length(specifications)
+	connection_strings = String[]
+	connects = (x, a, b) -> "connects($x, $a, $b)."
+	for (success, spec) in zip(successes, specifications)
+		id1 = findfirst(==(spec[1]), states)
+		id2 = findfirst(==(spec[2]), states)
+		if success[1]
+			push!(connection_strings, connects(solution_name, id1, id2))
+		end
 
-        if success[2]
-            push!(connection_strings, connects(solution_name, id2, id1))
-        end
-    end
+		if success[2]
+			push!(connection_strings, connects(solution_name, id2, id1))
+		end
+	end
 
-    return connection_strings
+	return connection_strings
 end
 
 # ╔═╡ 5840a8e6-1451-4637-9099-2256246baeb3
@@ -433,10 +427,7 @@ sol_ids = [df.exprs_and_scores[i] .|> (x -> x[4]) for i in eachindex(df.exprs_an
 length.(sol_ids)
 
 # ╔═╡ 691e4ff4-177a-4a12-b353-6cfc2b4180be
-solution_names_stacked = [
-    ["$(vertex_names[vert])_$id" for id in sol_ids[vert]] for
-    vert in eachindex(vertex_names)
-]
+solution_names_stacked =  [["$(vertex_names[vert])_$id" for id in sol_ids[vert]] for vert in eachindex(vertex_names)]
 
 # ╔═╡ 1996288a-5696-4d59-ab5f-f8f64dae1954
 solution_names = solution_names_stacked |> Iterators.flatten |> collect
@@ -467,14 +458,10 @@ While we have $(length(solution_strings)) solutions, many of these solutions ind
 solution_names_stacked
 
 # ╔═╡ b45ae1e4-00f7-4648-9048-432f52d1ab3b
-sol_exprs_printable =
-    [df.exprs_and_scores[i] .|> (x -> x[1]) for i in eachindex(df.exprs_and_scores)][1][999] |>
-    string |>
-    x -> replace(x, "SoleLogics.Atom{SubString{String}}: v_" => "")
+sol_exprs_printable = [df.exprs_and_scores[i] .|> (x -> x[1]) for i in eachindex(df.exprs_and_scores)][1][999] |> string |> x -> replace(x, "SoleLogics.Atom{SubString{String}}: v_" => "")
 
 # ╔═╡ 1c555d75-fa37-493f-9a6b-14bba03924da
-pertransition_successes =
-    [df.exprs_and_scores[i] .|> (x -> x[3]) for i in eachindex(df.exprs_and_scores)]
+pertransition_successes = [df.exprs_and_scores[i] .|> (x -> x[3]) for i in eachindex(df.exprs_and_scores)]
 
 # ╔═╡ f561ee12-0bb4-476e-9873-9b0504282321
 n_successes = length.(pertransition_successes)
@@ -502,14 +489,10 @@ However, after filtering out unique values, we end up with only $(join(n_unique_
 unique_indices = [unique(i -> x[i], eachindex(x)) for x in pertransition_successes]
 
 # ╔═╡ 459a1a38-f0d2-41b2-9e10-38ed10caa135
-solution_names_filtered_and_stacked =
-    filtered ?
-    [solutions[idxs] for (solutions, idxs) in zip(solution_names_stacked, unique_indices)] :
-    solution_names_stacked
+solution_names_filtered_and_stacked = filtered ? [solutions[idxs] for (solutions, idxs) in zip(solution_names_stacked, unique_indices)] : solution_names_stacked
 
 # ╔═╡ 29c3b786-82bd-40e7-bb1d-0aa1f3e7921d
-solution_names_filtered =
-    solution_names_filtered_and_stacked |> Iterators.flatten |> collect
+solution_names_filtered = solution_names_filtered_and_stacked |> Iterators.flatten |> collect
 
 # ╔═╡ 80d449f8-13ea-40d4-b3bd-58ca766a15ae
 solution_strings_filtered = ["solution($x)." for x in solution_names_filtered]
@@ -518,10 +501,7 @@ solution_strings_filtered = ["solution($x)." for x in solution_names_filtered]
 solution_strings_filtered
 
 # ╔═╡ 065f36d0-ea7e-4eb7-a82c-5236c3df0044
-belongs_to_strings = [
-    "belongs_to($(entity)_$id, $entity)." for
-    (entity, id) in split.(solution_names_filtered, "_")
-]
+belongs_to_strings = ["belongs_to($(entity)_$id, $entity)." for (entity, id) in split.(solution_names_filtered, "_")]
 
 # ╔═╡ e6f5276e-5660-435a-a151-8af927b0c301
 belongs_to_strings
@@ -530,31 +510,22 @@ belongs_to_strings
 @assert all(in.(assignments, (solution_names_filtered,)))
 
 # ╔═╡ c56a5fa7-18e9-4257-9bea-b85e51faeaca
-sol_idxs = [
-    only(findall(==(assignments[i]), solution_names_filtered_and_stacked[i])) for
-    i in eachindex(assignments)
-]
+sol_idxs = [only(findall(==(assignments[i]), solution_names_filtered_and_stacked[i])) for i in eachindex(assignments)]
 
 # ╔═╡ 52f6ab50-9c4f-41b4-b9f7-8a47cdad6c42
-@assert filtered ?
-        (solution_names_filtered |> length) ==
-        (pertransition_successes |> Iterators.flatten |> unique |> length) : true
+@assert filtered ? (solution_names_filtered |> length) == (pertransition_successes |> Iterators.flatten |> unique |> length) : true
 
 # ╔═╡ 982b0fab-1eee-4231-a656-557484fb0aaf
-pertransition_successes |>
-Iterators.flatten |>
-Iterators.flatten |>
-Iterators.flatten |>
-count
+pertransition_successes |> Iterators.flatten |> Iterators.flatten |> Iterators.flatten |> count
 
 # ╔═╡ 08f84a71-db13-47ff-8144-d6879fd7cb3c
-pertransition_successes .|> unique |> Iterators.flatten |> collect
+pertransition_successes .|> unique |> Iterators.flatten |> collect 
 
 # ╔═╡ 28af4ee4-0fb6-4377-b17d-ed1e8d1d3598
-pertransition_successes |> Iterators.flatten |> collect
+pertransition_successes |> Iterators.flatten |> collect 
 
 # ╔═╡ 97c803c6-00c0-42e0-9c97-ff015a51335c
-pertransition_successes |> Iterators.flatten .|> unique |> collect
+pertransition_successes |> Iterators.flatten .|> unique |> collect 
 
 # ╔═╡ 8b570775-6afe-435d-b3f6-4030b0df5e6c
 sol_trans = [pertransition_successes[i][sol_idxs[i]] for i in eachindex(sol_idxs)]
@@ -569,56 +540,47 @@ df.selected_trajectories .|> first
 foreach(x -> println(x), df.selected_trajectories[1])
 
 # ╔═╡ 9fe9fae0-ef94-4b40-89ea-32eb314013d0
-sol_connections =
-    [df.exprs_and_scores[i] .|> (x -> x[3]) for i in eachindex(df.exprs_and_scores)]
+sol_connections = [df.exprs_and_scores[i] .|> (x -> x[3]) for i in eachindex(df.exprs_and_scores)]
 
 # ╔═╡ 414b38e6-c0c1-4429-907e-a7f836f5312c
-trajectories =
-    [df.selected_trajectories[i] .|> collect for i in eachindex(df.selected_trajectories)]
+trajectories = [df.selected_trajectories[i] .|> collect for i in eachindex(df.selected_trajectories)]
 
 # ╔═╡ 072404b8-a243-4b40-86ea-52393754de4f
-raw_connections_stacked = [
-    [raw_connection_builder(name[i], conn[i], traj) for i in eachindex(name)] for
-    (name, conn, traj) in
-    zip(solution_names_filtered_and_stacked, sol_connections, trajectories)
-]
+raw_connections_stacked = [[raw_connection_builder(name[i], conn[i], traj) for i in eachindex(name)] for (name, conn, traj) in zip(solution_names_filtered_and_stacked, sol_connections, trajectories)]
 
 # ╔═╡ 4a4190e7-6c01-47b6-801c-97b3f3165050
 raw_connections_stacked |> Iterators.flatten |> Iterators.flatten |> collect |> length
 
 # ╔═╡ 75257860-f733-441f-95ee-93c6d1b7ae2a
-connection_strings_stacked = [
-    [connection_builder(name[i], conn[i], traj) for i in eachindex(name)] for
-    (name, conn, traj) in
-    zip(solution_names_filtered_and_stacked, sol_connections, trajectories)
-]
+connection_strings_stacked = [[connection_builder(name[i], conn[i], traj) for i in eachindex(name)] for (name, conn, traj) in zip(solution_names_filtered_and_stacked, sol_connections, trajectories)]
 
 # ╔═╡ 56448558-2952-4764-8766-36e8c62d1de5
-connection_strings =
-    connection_strings_stacked |> Iterators.flatten |> Iterators.flatten |> collect
+connection_strings = connection_strings_stacked |> Iterators.flatten |> Iterators.flatten |> collect
 
 # ╔═╡ caf5fbec-f323-45ed-94c9-bfd0957ff97c
 connection_strings
 
 # ╔═╡ b563aa33-ee26-4c12-98f6-65d02cd3899d
 mktemp() do path, io
-    println(io, entity_string)
-    println(io, state_string)
-    for x in solution_strings_filtered
-        println(io, x)
-    end
-    println(io, steady_state_string)
-    for x in belongs_to_strings
-        println(io, x)
-    end
-    for x in connection_strings
-        println(io, x)
-    end
-    println(io, model_def)
-    close(io)
-    @show length(readlines(path))
-
-    run(pipeline(ignorestatus(`$(Clingo_jll.clingo()) -n1 $path`)))
+	println(io, entity_string)
+	println(io, state_string)
+	for x in solution_strings_filtered
+		println(io, x)
+	end
+	println(io, steady_state_string)
+	for x in belongs_to_strings
+		println(io, x)
+	end
+	for x in connection_strings
+		println(io, x)
+	end
+	println(io, model_def)
+	close(io)
+	# @show length(readlines(path))
+	
+	# @benchmark
+	run(pipeline(ignorestatus(`$(Clingo_jll.clingo()) -n10000 $path`))) 
+	# setup=(path=$path)
 end
 
 # ╔═╡ 25dd6bf1-4ca2-4084-b682-858020d90bbc
@@ -635,7 +597,7 @@ selected_exprs = [sol_exprs[i][sol_idxs[i]] for i in eachindex(sol_idxs)]
 # ╟─701cca9d-f8de-4160-8f5d-c1ce30d31525
 # ╟─e1421a5b-11c7-44a8-b6f0-4654489a2b81
 # ╟─8a2c00df-b9a9-42a2-ac0c-e243527545af
-# ╟─1c9ab992-a1d4-4a03-af70-358389149f15
+# ╠═1c9ab992-a1d4-4a03-af70-358389149f15
 # ╟─690734ed-bdbf-4635-a4d2-37500fcea3cf
 # ╠═b917a2ab-f41a-45ff-83a4-60cb43c9feb3
 # ╠═b45ae1e4-00f7-4648-9048-432f52d1ab3b
@@ -667,6 +629,7 @@ selected_exprs = [sol_exprs[i][sol_idxs[i]] for i in eachindex(sol_idxs)]
 # ╠═49112c99-533c-4f96-acfe-1f660df01d74
 # ╠═38bcaaaf-5ddb-4536-b270-4b93caba66c2
 # ╠═17aa2324-3b02-47c9-8c91-9bbdd4c3cb4a
+# ╠═7d8c46e2-c03a-4e50-ab5a-336b58b28115
 # ╠═79c72d39-c2af-4b5e-8370-49f8e652a733
 # ╠═fdd9a8d5-7bc0-4121-94d9-f6259e44e240
 # ╠═17cad63a-2003-4500-acef-a02c5567a428
@@ -710,9 +673,11 @@ selected_exprs = [sol_exprs[i][sol_idxs[i]] for i in eachindex(sol_idxs)]
 # ╠═1141d91e-ee98-4740-9765-ce1aa4f178cf
 # ╟─5207cff2-6f14-4ced-a7c3-bcb5e899b83a
 # ╟─3010c862-fb99-4993-9109-d90b1ab04e46
+# ╠═73a912bb-3f03-4190-a4b8-7d3352b541ff
 # ╠═b563aa33-ee26-4c12-98f6-65d02cd3899d
 # ╟─02155e62-04d9-4c66-b29a-e4bb53e467d2
 # ╠═26153e85-5a49-4376-a9ad-0e55ad6d1329
+# ╠═a434481a-e609-4a6d-a9cb-f0136672afff
 # ╟─1de6aafa-9012-4027-a754-7e3ca811fb6a
 # ╠═feb6c350-5eb9-462d-8ba9-6185fe97441c
 # ╟─1337307b-163c-4eb2-8d1f-702637837d01
@@ -727,7 +692,7 @@ selected_exprs = [sol_exprs[i][sol_idxs[i]] for i in eachindex(sol_idxs)]
 # ╠═6feceb12-f887-4fed-a9a1-c085267188b5
 # ╠═2457d4f1-a93f-407d-9e53-4e44f721568b
 # ╠═d50e737f-4bb2-40a7-a906-663a2d296cc1
-# ╠═113a60e4-8ef5-4d37-a978-d4ac9299d649
+# ╟─113a60e4-8ef5-4d37-a978-d4ac9299d649
 # ╠═4d863e2c-e9a5-4c32-8776-5427744ff411
 # ╠═070c8187-736d-4fe6-adbd-923e38d4f731
 # ╠═56fb75e5-f3ae-47af-a425-a92c784087a6
