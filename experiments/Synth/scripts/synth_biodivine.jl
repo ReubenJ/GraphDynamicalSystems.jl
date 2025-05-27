@@ -72,11 +72,12 @@ synth_params = Dict(
     "seed" => 42,
     "max_depth" => 7,
     "unique" => collect(eachrow(per_vertex_df[!, [:ID, :vertex, :vertices]])),
+    # "metagraph_model" => Derived("unique", x -> first(model_df[model_df.ID .== x.ID].metagraph_model),
     "id" => Derived("unique", x -> x.ID),
     "vertex_names" => Derived("unique", x -> getfield.(x.vertices, :value)),
     "index_of_vertex" => Derived("unique", x -> findfirst(==(x.vertex), x.vertices)),
     "vertex" => Derived("unique", x -> string(x.vertex.value)),
-    "n_trajectories" => collect(10:45:110),
+    "n_trajectories" => 10, #collect(10:45:110),
     "selected_trajectories" => Derived(
         ["n_trajectories", "unique", "index_of_vertex", "seed"],
         (N, unique, index_of_vertex, seed) ->
@@ -84,10 +85,10 @@ synth_params = Dict(
     ),
     "iterator_type" => [BFSIterator],
     "iter_name" => Derived("iterator_type", string),
-    "grammar_type" => [:DNF, :QN],
+    "grammar_type" => :QN, #[:DNF, :QN],
     "grammar" => Derived(["unique", "grammar_type"], get_grammar),
     "evaluator" => Derived("grammar_type", get_evaluator),
-    "max_iterations" => 1_000_000,
+    "max_iterations" => 10_000,
 )
 
 @showprogress pmap(dict_list(synth_params)) do params

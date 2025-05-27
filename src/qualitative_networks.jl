@@ -10,8 +10,9 @@ using MLStyle: @match
 using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, nv, labels
 import SciMLBase
 using StaticArrays: MVector
+using SoleLogics: Atom, value
 
-base_qn_grammar = @csgrammar begin
+const base_qn_grammar = @csgrammar begin
     Val = Val + Val
     Val = Val - Val
     Val = Val / Val
@@ -22,7 +23,7 @@ base_qn_grammar = @csgrammar begin
     Val = Floor(Val)
 end
 
-default_qn_constants = [2]
+const default_qn_constants = [2]
 
 """
     $(TYPEDSIGNATURES)
@@ -36,12 +37,10 @@ Four constraints are currently included
 2. forbidding same arguments of two argument functions
 3. forbidding trivial inputs (consts and entity values) to `floor`/`ceil`
 4. forbidding `ceil(floor(_))` and `floor(ceil(_))`
+
 """
-function build_qn_grammar(
-    entity_names::AbstractVector,
-    constants::AbstractVector{<:Integer},
-)
-    g = deepcopy(base_qn_grammar)
+function build_qn_grammar(entity_names, constants = default_qn_constants)
+    g = deepcopy(GraphDynamicalSystems.base_qn_grammar)
 
     for e in entity_names
         add_rule!(g, :(Val = $e))
@@ -54,82 +53,37 @@ function build_qn_grammar(
     add_rule!(g, :(Start = Val))
 
     # +, *, min, max, are all commutative
-    template_tree = DomainRuleNode(
-        BitVector([
-            1,
-            0,
-            0,
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            zeros(Int, length(entity_names) + length(constants))...,
-        ]),
-        [VarNode(:a), VarNode(:b)],
-    )
+    domain = BitVector(zeros(length(g.rules)))
+    @. domain[[1, 4:6...]] = true
+    template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:b)])
     order = [:a, :b]
 
     addconstraint!(g, Ordered(template_tree, order))
 
     # Forbid same arguments for 2-argument functions
-    template_tree = DomainRuleNode(
-        BitVector([
-            1,
-            0,
-            0,
-            1,
-            1,
-            1,
-            0,
-            0,
-            0,
-            zeros(Int, length(entity_names) + length(constants))...,
-        ]),
-        [VarNode(:a), VarNode(:a)],
-    )
+    domain = BitVector(zeros(length(g.rules)))
+    @. domain[length(g.childtypes)==2] = true
+    template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:a)])
 
     addconstraint!(g, Forbidden(template_tree))
 
     # Forbid Ceil and Floor from including an entity or constant directly
-    entities_consts = DomainRuleNode(
-        BitVector([
-            zeros(Int, 9)...,
-            ones(Int, length(entity_names) + length(constants))...,
-        ]),
-    )
-    template_tree = DomainRuleNode(
-        BitVector([
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            1,
-            1,
-            0,
-            zeros(Int, length(entity_names) + length(constants))...,
-        ]),
-        [entities_consts],
-    )
+    domain = BitVector(zeros(length(g.rules)))
+    n_original_rules = length(GraphDynamicalSystems.base_qn_grammar.rules)
+    domain[[n_original_rules+1:length(g.rules)...]] .= true
+
+    entities_consts = DomainRuleNode(domain)
+
+    domain = BitVector(zeros(length(g.rules)))
+    domain[[7, 8]] .= true
+
+    template_tree = DomainRuleNode(domain, [entities_consts])
 
     addconstraint!(g, Forbidden(template_tree))
 
     # Forbid ceil(floor(x)) and vice-versa
-    ceil_or_floor = BitVector([
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        1,
-        0,
-        zeros(Int, length(entity_names) + length(constants))...,
-    ])
+    ceil_or_floor = BitVector(zeros(length(g.rules)))
+    ceil_or_floor[[7, 8]] .= true
     template_tree =
         DomainRuleNode(ceil_or_floor, [DomainRuleNode(ceil_or_floor, [VarNode(:a)])])
 
@@ -138,19 +92,17 @@ function build_qn_grammar(
     return g
 end
 
-build_qn_grammar(entity_names) = build_qn_grammar(entity_names, default_qn_constants)
-
 """
     $(TYPEDSIGNATURES)
 """
 function update_functions_to_network(
-    update_functions::AbstractDict{Symbol,Union{Symbol,Expr,Int}},
+    update_functions::AbstractDict{Symbol,<:Any},
     grammar::AbstractGrammar,
 )
     network = MetaGraph(
         SimpleDiGraph();
         label_type = Symbol,
-        vertex_data_type = Union{Symbol,Expr,Int},
+        vertex_data_type = Union{Symbol,Expr,Int,Atom},
         graph_data = grammar,
     )
 
@@ -235,7 +187,7 @@ function max_level(qn::QN)
     return qn.N
 end
 
-function _get_component_index(qn::QN, component::Symbol)
+function _get_component_index(qn::QN, component)
     return findfirst(isequal(component), components(qn))
 end
 
@@ -261,7 +213,7 @@ get_state(qn::QN) = qn.state
 """
     $(TYPEDSIGNATURES)
 """
-function get_state(qn::QN, component::Symbol)
+function get_state(qn::QN, component)
     i = _get_component_index(qn, component)
     return qn.state[i]
 end
@@ -289,9 +241,10 @@ end
 
 Interpret target functions from a [`QualitativeNetwork`](@ref).
 """
-function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
+function interpret(e::Union{Expr,Symbol,Int,Atom}, qn::QN)
     @match e begin
         ::Symbol => get_state(qn, e)
+        ::Atom => get_state(qn, Symbol(value(e)))
         ::Int => e
         :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
         :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
@@ -333,7 +286,9 @@ function async_qn_step!(qn::QN)
     t = target_functions(qn)[c_i]
     old_state = get_state(qn, c_i)
     new_state = interpret(t, qn)
-    limited_state = limit_change(old_state, new_state, max_level(qn))
+    new_state = isnan(new_state) ? 0 : new_state
+    new_state = isinf(new_state) ? max_level(qn) : new_state
+    limited_state = limit_change(old_state, floor(Int, new_state), max_level(qn))
     set_state!(qn, c_i, limited_state)
 end
 

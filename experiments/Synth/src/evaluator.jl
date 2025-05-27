@@ -29,8 +29,8 @@ function interpret(φ::Expr, i::SoleLogics.AbstractInterpretation, args...; kwar
     return interpret(syntax_branch, i, args...; kwargs...)
 end
 
-function interpret(
-    e::Union{AbstractString,Integer,Expr},
+function interpret_qn(
+    e::Union{AbstractString,Integer,Expr,Atom},
     qn_state::AbstractVector{<:Integer},
     vertex_names::AbstractVector{<:AbstractString},
 )
@@ -38,6 +38,7 @@ function interpret(
 
     _int(e) = @match e begin
         ::AbstractString => state_map[e]
+        ::Atom => state_map[e]
         ::Integer => e
         :($v1 + $v2) => _int(v1) + _int(v2)
         :($v1 - $v2) => _int(v1) - _int(v2)
@@ -81,7 +82,7 @@ function evaluate_qn(problem::UndirectedProblem, expr, vertex_names)
     sat_examples = BitVector[]
 
     function _eval_1_dir(in, out)
-        res = interpret(expr, in[:state], vertex_names)
+        res = interpret_qn(expr, in[:state], vertex_names)
         expected = out[:state][findfirst(==(problem.name), vertex_names)]
         success = expected == res
         return success
