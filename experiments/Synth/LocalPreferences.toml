@@ -1,3 +1,0 @@
-[CondaPkg]
-backend = "MicroMamba"
-pip_backend = "uv"
