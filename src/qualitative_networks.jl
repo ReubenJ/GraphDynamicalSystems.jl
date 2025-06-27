@@ -241,10 +241,9 @@ end
 
 Interpret target functions from a [`QualitativeNetwork`](@ref).
 """
-function interpret(e::Union{Expr,Symbol,Int,Atom}, qn::QN)
+function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
     @match e begin
         ::Symbol => get_state(qn, e)
-        ::Atom => get_state(qn, Symbol(value(e)))
         ::Int => e
         :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
         :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
@@ -257,6 +256,7 @@ function interpret(e::Union{Expr,Symbol,Int,Atom}, qn::QN)
         _ => error("Unhandled Expr in `interpret`: $e")
     end
 end
+interpret(e::Atom, qn::QN) = get_state(qn, Symbol(value(e)))
 
 """
     $(TYPEDSIGNATURES)

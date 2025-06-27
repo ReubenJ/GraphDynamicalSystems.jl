@@ -6,7 +6,7 @@ module BooleanNetworks
 
 using DocStringExtensions
 using MetaGraphsNext: MetaGraph, add_edge!, SimpleDiGraph, nv, labels
-using DynamicalSystemsBase: ArbitrarySteppable, current_parameters
+using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
 using SoleLogics:
     Formula,
     Atom,
