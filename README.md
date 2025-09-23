@@ -12,13 +12,15 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![All Contributors](https://img.shields.io/github/all-contributors/ReubenJ/GraphDynamicalSystems.jl?labelColor=5e1ec7&color=c0ffee&style=flat-square)](#contributors)
 
+`GraphDynamicalSystems.jl` builds on top of the [`DynamicalSystems.jl`](https://juliadynamics.github.io/DynamicalSystems.jl/dev/) universe to define, run, and analyze [Graph Dynamical Systems](https://en.wikipedia.org/wiki/Graph_dynamical_system) (GDS).
+
 ## How to Cite
 
 If you use GraphDynamicalSystems.jl in your work, please cite using the reference given in [CITATION.cff](https://github.com/ReubenJ/GraphDynamicalSystems.jl/blob/main/CITATION.cff).
 
 ## Contributing
 
-If you want to make contributions of any kind, please first that a look into our [contributing guide directly on GitHub](docs/src/90-contributing.md) or the [contributing page on the website](https://ReubenJ.github.io/GraphDynamicalSystems.jl/dev/90-contributing/).
+If you want to make contributions of any kind, please first have a look at our [contributing guide directly on GitHub](docs/src/90-contributing.md) or the [contributing page on the website](https://ReubenJ.github.io/GraphDynamicalSystems.jl/dev/90-contributing/).
 
 ---
 
