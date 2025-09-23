@@ -1,5 +1,24 @@
 {
-  "projectName": "GraphDynamicalSystems",
+  "projectName": "GraphDynamicalSystems.jl",
   "projectOwner": "ReubenJ",
-  "files": ["README.md", "docs/src/index.md"]
+  "files": [
+    "README.md",
+    "docs/src/index.md"
+  ],
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributorsPerLine": 7,
+  "contributors": [
+    {
+      "login": "ReubenJ",
+      "name": "Reuben Gardos Reid",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5456207?v=4",
+      "profile": "http://reuben.gr.com",
+      "contributions": [
+        "code",
+        "test",
+        "design"
+      ]
+    }
+  ]
 }
