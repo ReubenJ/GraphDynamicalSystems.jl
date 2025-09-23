@@ -3,7 +3,16 @@ module GraphDynamicalSystems
 using DocStringExtensions
 
 include("gds_interface.jl")
-export ScheduleStyle, Asynchronous, Synchronous, get_schedule, get_state, get_graph
+export GraphDynamicalSystem,
+    GDS,
+    ScheduleStyle,
+    Asynchronous,
+    Synchronous,
+    get_n_entities,
+    entities,
+    get_schedule,
+    get_state,
+    get_graph
 
 include("qualitative_networks.jl")
 export QualitativeNetwork,
@@ -11,7 +20,6 @@ export QualitativeNetwork,
     build_qn_grammar,
     update_functions_to_interaction_graph,
     sample_qualitative_network,
-    entities,
     get_domain,
     target_functions,
     interpret,
