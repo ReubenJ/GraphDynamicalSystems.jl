@@ -167,7 +167,7 @@ $(FIELDS)
 Systems that include the model semantics wrap around this struct with an
 [`ArbitrarySteppable`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/tutorial/#DynamicalSystemsBase.ArbitrarySteppable)
 from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/). See
-[`aqn`](@ref) for an example.
+[`create_qn_system`](@ref) for an example.
 """
 struct QualitativeNetwork{N,S} <: GraphDynamicalSystem{N,S}
     "Graph containing the topology and target functions of the network"
