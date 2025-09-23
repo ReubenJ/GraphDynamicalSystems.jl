@@ -13,8 +13,21 @@ authors:
     email: 5456207+ReubenJ@users.noreply.github.com
     affiliation: Delft University of Technology
     orcid: 'https://orcid.org/0000-0002-3491-9686'
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.17185992
+  - type: swh
+    value: 'swh:1:dir:ce26de466b91cac89cb0a9b69fcfd25da96e3b4f'
 repository-code: 'https://github.com/ReubenJ/GraphDynamicalSystems.jl'
+url: 'https://reubenj.github.io/GraphDynamicalSystems.jl/'
+abstract: >-
+  GraphDynamicalSystems.jl builds on top of the
+  DynamicalSystems.jl universe to define, run, and analyze
+  Graph Dynamical Systems (GDS).
 keywords:
   - dynamical systems
   - discrete systems
 license: MIT
+commit: 2b086b68f6a7e6d51783f4aa9055a41ccf797ff3
+version: v0.0.1
+date-released: '2025-09-23'
