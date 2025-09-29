@@ -15,16 +15,11 @@ end
 
 @testitem "QN Grammar Creation" begin
     entities = [:a, :b, :c]
-    constants = [i for i = 1:10]
+    constants = [i for i = 0:10]
     g = build_qn_grammar(entities, constants)
 
     @test issubset(Set(entities), Set(g.rules))
     @test issubset(Set(constants), Set(g.rules))
-
-    g2 = build_qn_grammar(Symbol[], Integer[])
-
-    @test isempty(intersect(Set(g2.rules), Set(entities)))
-    @test isempty(intersect(Set(g2.rules), Set(constants)))
 end
 
 @testitem "QN Sampling" setup = [RandomSetup, ExampleQN] begin

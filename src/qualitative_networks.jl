@@ -3,7 +3,7 @@ import SciMLBase
 
 using AbstractTrees: Leaves
 using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
-using HerbConstraints: DomainRuleNode, Forbidden, Ordered, VarNode, addconstraint!
+using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
 using HerbCore: AbstractGrammar, RuleNode, get_rule
 using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
 using HerbSearch: rand
@@ -22,7 +22,7 @@ const base_qn_grammar = @csgrammar begin
     Val = Floor(Val)
 end
 
-const default_qn_constants = [2]
+const default_qn_constants = [0, 1, 2]
 
 """
     $(TYPEDSIGNATURES)
@@ -30,16 +30,26 @@ const default_qn_constants = [2]
 Builds a grammar based on the base QN grammar adding `entity_names` and `constants`
 to the grammar.
 
-Four constraints are currently included
+The following constraints are currently included
 
 1. removing symmetry due to commutativity of `+`/`*`/`min`/`max`
 2. forbidding same arguments of two argument functions
-3. forbidding trivial inputs (consts and entity values) to `floor`/`ceil`
-4. forbidding `ceil(floor(_))` and `floor(ceil(_))`
+3. forbidding constant arguments to 2-argument functions
+4. forbidding constant arguments to 1-argument functions
+5. using each of the entities only once per function
+6. forbidding adding or subtracting zero
+7. forbidding multiplication and division by 1 or 0
+8. forcing the first operator inside `ceil` and `floor` to be `÷`
+9. forbidding `max(□, X)` and `min(□, X)` where X is either the max or min
+constant in the grammar.
 
 """
-function build_qn_grammar(entity_names, constants = default_qn_constants)
-    g = deepcopy(GraphDynamicalSystems.base_qn_grammar)
+function build_qn_grammar(
+    entity_names,
+    constants = default_qn_constants;
+    unique_constr = true,
+)
+    g = deepcopy(base_qn_grammar)
 
     for e in entity_names
         add_rule!(g, :(Val = $e))
@@ -57,39 +67,97 @@ function build_qn_grammar(entity_names, constants = default_qn_constants)
     template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:b)])
     order = [:a, :b]
 
-    addconstraint!(g, Ordered(template_tree, order))
+    addconstraint!(g, Ordered(deepcopy(template_tree), order))
 
     # Forbid same arguments for 2-argument functions
     domain = BitVector(zeros(length(g.rules)))
     @. domain[length(g.childtypes)==2] = true
     template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:a)])
 
-    addconstraint!(g, Forbidden(template_tree))
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
 
-    # Forbid Ceil and Floor from including an entity or constant directly
-    domain = BitVector(zeros(length(g.rules)))
-    n_original_rules = length(GraphDynamicalSystems.base_qn_grammar.rules)
-    domain[[n_original_rules+1:length(g.rules)...]] .= true
+    # Forbid constant arguments for 2-argument functions
+    domain = falses(length(g.rules))
+    @. domain[length(g.childtypes)==2] = true
+    consts_domain = falses(length(g.rules))
+    consts_domain[findall(x -> x isa Int, g.rules)] .= true
+    consts_domain_rn = DomainRuleNode(consts_domain)
+    template_tree = DomainRuleNode(domain, [consts_domain_rn, consts_domain_rn])
 
-    entities_consts = DomainRuleNode(domain)
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
 
-    domain = BitVector(zeros(length(g.rules)))
-    domain[[7, 8]] .= true
+    # Forbid constant arguments for 1-argument functions
+    domain = falses(length(g.rules))
+    @. domain[[7, 8]] = true
+    consts_domain = falses(length(g.rules))
+    consts_domain[findall(x -> x isa Int, g.rules)] .= true
+    consts_domain_rn = DomainRuleNode(consts_domain)
+    template_tree = DomainRuleNode(domain, [consts_domain_rn])
 
-    template_tree = DomainRuleNode(domain, [entities_consts])
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
 
-    addconstraint!(g, Forbidden(template_tree))
+    n_original_rules = length(base_qn_grammar.rules)
 
-    # Forbid ceil(floor(x)) and vice-versa
+    # Only use each of the entities once per function
+    n_consts = length(constants)
+    entities = n_original_rules+1:length(g.rules)-n_consts
+
+    if unique_constr
+        addconstraint!.((g,), Unique.(entities))
+    end
+
+    # Forbid □ + 0, □ - 0
+    plus_or_minus = falses(length(g.rules))
+    plus_or_minus[[1, 2]] .= true
+    zero_rule = findfirst(==(0), g.rules)
+    if !isnothing(zero_rule)
+        template_tree = DomainRuleNode(plus_or_minus, [VarNode(:a), RuleNode(zero_rule)])
+
+        addconstraint!(g, Forbidden(deepcopy(template_tree)))
+
+        # Both orderings, but only for plus. Allow 0 - □
+        plus_or_minus[2] = false
+        template_tree = DomainRuleNode(plus_or_minus, [RuleNode(zero_rule), VarNode(:a)])
+        addconstraint!(g, Forbidden(deepcopy(template_tree)))
+    end
+
+    # Forbid □ * 1, □ / 1, □ * 0, □ / 0
+    mult_or_div = falses(length(g.rules))
+    mult_or_div[[3, 4]] .= true
+    one_zero_domain = falses(length(g.rules))
+    one_zero_domain[findfirst(==(1), g.rules)] = true
+    if !isnothing(findfirst(==(0), g.rules))
+        one_zero_domain[findfirst(==(0), g.rules)] = true
+    end
+
+    template_tree =
+        DomainRuleNode(mult_or_div, [VarNode(:a), DomainRuleNode(one_zero_domain)])
+
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
+
+    # Forbid ceil(X) and floor(X) unless X = □ ÷ □
     ceil_or_floor = BitVector(zeros(length(g.rules)))
     ceil_or_floor[[7, 8]] .= true
-    template_tree =
-        DomainRuleNode(ceil_or_floor, [DomainRuleNode(ceil_or_floor, [VarNode(:a)])])
+    all_except_div = trues(length(g.rules))
+    all_except_div[3] = false
+    template_tree = DomainRuleNode(ceil_or_floor, [DomainRuleNode(all_except_div)])
 
-    addconstraint!(g, Forbidden(template_tree))
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
+
+    # Forbid max(□, X) and min(□, X) where X is either the largest or smallest constant in the grammar
+    min_max_rules = falses(length(g.rules))
+    min_max_rules[[5, 6]] .= true
+    (min_const, max_const) = extrema(filter(x -> isa(x, Int), g.rules))
+    extrema_domain = falses(length(g.rules))
+    extrema_domain[findall(x -> x == min_const || x == max_const, g.rules)] .= true
+    rule_extrema_consts = DomainRuleNode(extrema_domain)
+    template_tree = DomainRuleNode(min_max_rules, [VarNode(:a), rule_extrema_consts])
+
+    addconstraint!(g, Forbidden(deepcopy(template_tree)))
 
     return g
 end
+
 
 struct Entity{I}
     target_function::Any
