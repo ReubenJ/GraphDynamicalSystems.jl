@@ -8,8 +8,8 @@ on:
 jobs:
     pre-commit-update:
         permissions:
-              pull-requests: write
-              contents: write
+            pull-requests: write
+            contents: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
