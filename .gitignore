@@ -13,3 +13,4 @@ env
 node_modules
 .vscode
 .CondaPkg
+LocalPreferences.toml

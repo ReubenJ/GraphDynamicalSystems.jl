@@ -1,7 +1,7 @@
 name = "GraphDynamicalSystems"
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
 authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
-version = "0.0.2"
+version = "0.0.3"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
