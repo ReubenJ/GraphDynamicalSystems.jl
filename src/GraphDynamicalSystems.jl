@@ -23,6 +23,7 @@ export QualitativeNetwork,
     get_domain,
     target_functions,
     interpret,
-    create_qn_system
+    create_qn_system,
+    default_target_function
 
 end

@@ -112,3 +112,32 @@ end
 
     basins = basins_of_attraction(mapper, grid)
 end
+
+@testitem "Construct default target functions" begin
+    lower_bound = 0
+    upper_bound = 4
+    activators = [:A, :B, :C]
+    inhibitors = [:D, :E, :F]
+
+    @test default_target_function(lower_bound, upper_bound, activators, inhibitors) ==
+          :(max($lower_bound, (A + B + C) / 3 - (D + E + F) / 3))
+
+    activators = [:A, :B]
+    inhibitors = [:D]
+
+    @test default_target_function(lower_bound, upper_bound, activators, inhibitors) ==
+          :(max($lower_bound, (A + B) / 2 - D))
+
+    activators = []
+    inhibitors = [:D]
+
+    @test default_target_function(lower_bound, upper_bound, activators, inhibitors) ==
+          :($upper_bound - D)
+
+    activators = [:A]
+    inhibitors = []
+
+    @test default_target_function(lower_bound, upper_bound, activators, inhibitors) == :(A)
+
+    @test_throws r"no activators or inhibitors" default_target_function(0, 4)
+end
