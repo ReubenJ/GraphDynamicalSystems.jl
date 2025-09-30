@@ -1,0 +1,1889 @@
+{
+    "layout": {
+        "containers": [
+            {
+                "id": 1,
+                "name": "",
+                "positionX": 2,
+                "positionY": 2,
+                "size": 1
+            },
+            {
+                "id": 2,
+                "name": "",
+                "positionX": 3,
+                "positionY": 2,
+                "size": 1
+            },
+            {
+                "id": 3,
+                "name": "",
+                "positionX": 4,
+                "positionY": 2,
+                "size": 1
+            },
+            {
+                "id": 16,
+                "name": "",
+                "positionX": 1,
+                "positionY": 2,
+                "size": 1
+            },
+            {
+                "id": 17,
+                "name": "",
+                "positionX": 5,
+                "positionY": 2,
+                "size": 1
+            }
+        ],
+        "variables": [
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 41,
+                "positionX": 880.7,
+                "positionY": 422.62857142857143
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 42,
+                "positionX": 1130.7,
+                "positionY": 422.62857142857143
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 43,
+                "positionX": 1130.7,
+                "positionY": 982.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 44,
+                "positionX": 880.7,
+                "positionY": 982.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 45,
+                "positionX": 630.7,
+                "positionY": 982.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 72,
+                "positionX": 630.7,
+                "positionY": 422.62857142857143
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 73,
+                "positionX": 380.7,
+                "positionY": 422.62857142857143
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 74,
+                "positionX": 380.7,
+                "positionY": 982.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 75,
+                "positionX": 1380.7,
+                "positionY": 422.62857142857143
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 76,
+                "positionX": 1380.7,
+                "positionY": 982.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 1,
+                "positionX": 595.8666666666667,
+                "positionY": 606.0285714285715
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 2,
+                "positionX": 595.8666666666667,
+                "positionY": 655.3142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 3,
+                "positionX": 595.8666666666667,
+                "positionY": 704.6
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 4,
+                "positionX": 595.8666666666667,
+                "positionY": 753.8857142857142
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 5,
+                "positionX": 678.2,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 6,
+                "positionX": 678.2,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 7,
+                "positionX": 678.2,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 8,
+                "positionX": 630.7,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 9,
+                "positionX": 630.7,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 10,
+                "positionX": 628.7883124043155,
+                "positionY": 573.0092058603041
+            },
+            {
+                "angle": 180,
+                "cellX": null,
+                "cellY": null,
+                "id": 11,
+                "positionX": 628.9864786101007,
+                "positionY": 826.9877441200224
+            },
+            {
+                "angle": 135,
+                "cellX": null,
+                "cellY": null,
+                "id": 12,
+                "positionX": 701.9084022973556,
+                "positionY": 791.2644136567176
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 13,
+                "positionX": 630.7,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 14,
+                "positionX": 845.8666666666667,
+                "positionY": 606.0285714285715
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 15,
+                "positionX": 845.8666666666667,
+                "positionY": 655.3142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 16,
+                "positionX": 845.8666666666667,
+                "positionY": 704.6
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 17,
+                "positionX": 845.8666666666667,
+                "positionY": 753.8857142857142
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 18,
+                "positionX": 928.2,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 19,
+                "positionX": 928.2,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 20,
+                "positionX": 928.2,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 21,
+                "positionX": 880.7,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 22,
+                "positionX": 880.7,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 23,
+                "positionX": 880.7,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 24,
+                "positionX": 878.7883124044147,
+                "positionY": 573.0092058505688
+            },
+            {
+                "angle": 180,
+                "cellX": null,
+                "cellY": null,
+                "id": 25,
+                "positionX": 878.9864786100244,
+                "positionY": 826.9877441135322
+            },
+            {
+                "angle": 135,
+                "cellX": null,
+                "cellY": null,
+                "id": 26,
+                "positionX": 951.9084022973556,
+                "positionY": 791.264413656717
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 27,
+                "positionX": 1095.8666666666666,
+                "positionY": 606.0285714285715
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 28,
+                "positionX": 1095.8666666666666,
+                "positionY": 655.3142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 29,
+                "positionX": 1095.8666666666666,
+                "positionY": 704.6
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 30,
+                "positionX": 1095.8666666666666,
+                "positionY": 753.8857142857142
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 31,
+                "positionX": 1178.2,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 32,
+                "positionX": 1178.2,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 33,
+                "positionX": 1178.2,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 34,
+                "positionX": 1130.7,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 35,
+                "positionX": 1130.7,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 36,
+                "positionX": 1130.7,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 37,
+                "positionX": 1128.7883124043487,
+                "positionY": 573.009205857059
+            },
+            {
+                "angle": 135,
+                "cellX": null,
+                "cellY": null,
+                "id": 38,
+                "positionX": 1201.9084022973539,
+                "positionY": 791.2644136567153
+            },
+            {
+                "angle": 180,
+                "cellX": null,
+                "cellY": null,
+                "id": 39,
+                "positionX": 1128.9864786101255,
+                "positionY": 826.9877441221761
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 77,
+                "positionX": 345.8666666666667,
+                "positionY": 606.0285714285715
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 78,
+                "positionX": 345.8666666666667,
+                "positionY": 655.3142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 79,
+                "positionX": 345.8666666666667,
+                "positionY": 704.6
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 80,
+                "positionX": 345.8666666666667,
+                "positionY": 753.8857142857142
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 81,
+                "positionX": 428.2,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 82,
+                "positionX": 428.2,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 83,
+                "positionX": 428.2,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 84,
+                "positionX": 380.7,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 85,
+                "positionX": 380.7,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 86,
+                "positionX": 378.78831240432385,
+                "positionY": 573.0092058594964
+            },
+            {
+                "angle": 180,
+                "cellX": null,
+                "cellY": null,
+                "id": 87,
+                "positionX": 378.9864786101198,
+                "positionY": 826.9877441216449
+            },
+            {
+                "angle": 135,
+                "cellX": null,
+                "cellY": null,
+                "id": 88,
+                "positionX": 451.90840229735466,
+                "positionY": 791.2644136567162
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 89,
+                "positionX": 380.7,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 90,
+                "positionX": 1345.8666666666666,
+                "positionY": 606.0285714285715
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 91,
+                "positionX": 1345.8666666666666,
+                "positionY": 655.3142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 92,
+                "positionX": 1345.8666666666666,
+                "positionY": 704.6
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 93,
+                "positionX": 1345.8666666666666,
+                "positionY": 753.8857142857142
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 94,
+                "positionX": 1428.2,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 95,
+                "positionX": 1428.2,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 96,
+                "positionX": 1428.2,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 97,
+                "positionX": 1380.7,
+                "positionY": 755.2
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 98,
+                "positionX": 1380.7,
+                "positionY": 656.6285714285714
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 99,
+                "positionX": 1380.7,
+                "positionY": 705.9142857142857
+            },
+            {
+                "angle": 0,
+                "cellX": null,
+                "cellY": null,
+                "id": 100,
+                "positionX": 1378.788312404349,
+                "positionY": 573.009205857059
+            },
+            {
+                "angle": 135,
+                "cellX": null,
+                "cellY": null,
+                "id": 101,
+                "positionX": 1451.908402297353,
+                "positionY": 791.2644136567162
+            },
+            {
+                "angle": 180,
+                "cellX": null,
+                "cellY": null,
+                "id": 102,
+                "positionX": 1378.9864786099747,
+                "positionY": 826.9877441092249
+            }
+        ]
+    },
+    "model": {
+        "name": "Skin1D",
+        "relationships": [
+            {
+                "fromVariableId": 7,
+                "id": 37,
+                "toVariableId": 41,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 20,
+                "id": 38,
+                "toVariableId": 42,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 33,
+                "id": 39,
+                "toVariableId": 41,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 96,
+                "id": 104,
+                "toVariableId": 42,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 74,
+                "id": 107,
+                "toVariableId": 81,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 45,
+                "id": 108,
+                "toVariableId": 5,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 44,
+                "id": 109,
+                "toVariableId": 18,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 43,
+                "id": 110,
+                "toVariableId": 31,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 76,
+                "id": 111,
+                "toVariableId": 94,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 1,
+                "id": 1,
+                "toVariableId": 2,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 2,
+                "id": 2,
+                "toVariableId": 3,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 3,
+                "id": 3,
+                "toVariableId": 4,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 5,
+                "id": 4,
+                "toVariableId": 6,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 6,
+                "id": 5,
+                "toVariableId": 7,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 8,
+                "id": 6,
+                "toVariableId": 2,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 9,
+                "id": 7,
+                "toVariableId": 3,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 5,
+                "id": 10,
+                "toVariableId": 13,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 14,
+                "id": 11,
+                "toVariableId": 15,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 15,
+                "id": 12,
+                "toVariableId": 16,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 16,
+                "id": 13,
+                "toVariableId": 17,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 18,
+                "id": 14,
+                "toVariableId": 19,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 19,
+                "id": 15,
+                "toVariableId": 20,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 18,
+                "id": 16,
+                "toVariableId": 21,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 22,
+                "id": 17,
+                "toVariableId": 15,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 23,
+                "id": 18,
+                "toVariableId": 16,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 27,
+                "id": 22,
+                "toVariableId": 28,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 28,
+                "id": 23,
+                "toVariableId": 29,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 29,
+                "id": 24,
+                "toVariableId": 30,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 31,
+                "id": 25,
+                "toVariableId": 32,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 32,
+                "id": 26,
+                "toVariableId": 33,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 31,
+                "id": 27,
+                "toVariableId": 34,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 35,
+                "id": 28,
+                "toVariableId": 28,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 36,
+                "id": 29,
+                "toVariableId": 29,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 77,
+                "id": 58,
+                "toVariableId": 78,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 78,
+                "id": 59,
+                "toVariableId": 79,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 79,
+                "id": 60,
+                "toVariableId": 80,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 81,
+                "id": 61,
+                "toVariableId": 82,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 82,
+                "id": 62,
+                "toVariableId": 83,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 84,
+                "id": 63,
+                "toVariableId": 78,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 85,
+                "id": 64,
+                "toVariableId": 79,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 81,
+                "id": 67,
+                "toVariableId": 89,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 90,
+                "id": 90,
+                "toVariableId": 91,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 91,
+                "id": 91,
+                "toVariableId": 92,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 92,
+                "id": 92,
+                "toVariableId": 93,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 94,
+                "id": 93,
+                "toVariableId": 95,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 95,
+                "id": 94,
+                "toVariableId": 96,
+                "type": "Inhibitor"
+            },
+            {
+                "fromVariableId": 94,
+                "id": 95,
+                "toVariableId": 97,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 98,
+                "id": 96,
+                "toVariableId": 91,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 99,
+                "id": 97,
+                "toVariableId": 92,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 72,
+                "id": 68,
+                "toVariableId": 10,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 10,
+                "id": 72,
+                "toVariableId": 73,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 10,
+                "id": 8,
+                "toVariableId": 1,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 11,
+                "id": 42,
+                "toVariableId": 44,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 11,
+                "id": 78,
+                "toVariableId": 74,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 13,
+                "id": 9,
+                "toVariableId": 11,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 4,
+                "id": 84,
+                "toVariableId": 11,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 45,
+                "id": 41,
+                "toVariableId": 12,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 12,
+                "id": 87,
+                "toVariableId": 5,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 41,
+                "id": 34,
+                "toVariableId": 24,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 24,
+                "id": 69,
+                "toVariableId": 72,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 24,
+                "id": 19,
+                "toVariableId": 14,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 25,
+                "id": 43,
+                "toVariableId": 45,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 25,
+                "id": 44,
+                "toVariableId": 43,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 21,
+                "id": 20,
+                "toVariableId": 25,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 17,
+                "id": 85,
+                "toVariableId": 25,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 44,
+                "id": 46,
+                "toVariableId": 26,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 26,
+                "id": 21,
+                "toVariableId": 18,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 26,
+                "id": 88,
+                "toVariableId": 18,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 42,
+                "id": 35,
+                "toVariableId": 37,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 37,
+                "id": 75,
+                "toVariableId": 75,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 37,
+                "id": 30,
+                "toVariableId": 27,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 43,
+                "id": 40,
+                "toVariableId": 38,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 38,
+                "id": 31,
+                "toVariableId": 31,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 38,
+                "id": 89,
+                "toVariableId": 31,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 39,
+                "id": 45,
+                "toVariableId": 44,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 39,
+                "id": 81,
+                "toVariableId": 76,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 34,
+                "id": 32,
+                "toVariableId": 39,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 30,
+                "id": 86,
+                "toVariableId": 39,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 86,
+                "id": 70,
+                "toVariableId": 72,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 73,
+                "id": 71,
+                "toVariableId": 86,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 86,
+                "id": 65,
+                "toVariableId": 77,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 87,
+                "id": 77,
+                "toVariableId": 45,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 89,
+                "id": 66,
+                "toVariableId": 87,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 80,
+                "id": 83,
+                "toVariableId": 87,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 74,
+                "id": 76,
+                "toVariableId": 88,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 88,
+                "id": 82,
+                "toVariableId": 81,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 75,
+                "id": 103,
+                "toVariableId": 100,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 100,
+                "id": 98,
+                "toVariableId": 90,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 76,
+                "id": 105,
+                "toVariableId": 101,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 101,
+                "id": 99,
+                "toVariableId": 94,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 101,
+                "id": 102,
+                "toVariableId": 94,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 102,
+                "id": 106,
+                "toVariableId": 43,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 97,
+                "id": 100,
+                "toVariableId": 102,
+                "type": "Activator"
+            },
+            {
+                "fromVariableId": 93,
+                "id": 101,
+                "toVariableId": 102,
+                "type": "Activator"
+            }
+        ],
+        "variables": [
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 41,
+                "name": "Wnt-ext",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 42,
+                "name": "Wnt-ext",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 43,
+                "name": "Ligand-in",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 44,
+                "name": "Ligand-in",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 45,
+                "name": "Ligand-in",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 72,
+                "name": "Wnt-ext",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 73,
+                "name": "Wnt-ext",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 74,
+                "name": "Ligand-in",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 75,
+                "name": "Wnt-ext",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 0,
+                "formula": "",
+                "id": 76,
+                "name": "Ligand-in",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Constant"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 1,
+                "name": "DSH",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 2,
+                "name": "Axin",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 3,
+                "name": "B-Cat",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 4,
+                "name": "GT1",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "min(var(Notch), var(Ligand-in))",
+                "id": 5,
+                "name": "Notch-IC",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 6,
+                "name": "P21",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 7,
+                "name": "Wnt",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 8,
+                "name": "Cask1a",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 9,
+                "name": "BCat exp",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 10,
+                "name": "Frizzled",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 11,
+                "name": "Jagged",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 12,
+                "name": "Notch",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 1,
+                "formula": "",
+                "id": 13,
+                "name": "GT2",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 14,
+                "name": "DSH",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 15,
+                "name": "Axin",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 16,
+                "name": "B-Cat",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 17,
+                "name": "GT1",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "min(var(Notch), var(Ligand-in))",
+                "id": 18,
+                "name": "Notch-IC",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 19,
+                "name": "P21",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 20,
+                "name": "Wnt",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 21,
+                "name": "GT2",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 22,
+                "name": "Cask1a",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 23,
+                "name": "bCATexp",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 24,
+                "name": "Frizzled",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 25,
+                "name": "Jagged",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 2,
+                "formula": "",
+                "id": 26,
+                "name": "Notch",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 27,
+                "name": "DSH",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 28,
+                "name": "Axin",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 29,
+                "name": "B-Cat",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 30,
+                "name": "GT1",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "min(var(Notch), var(Ligand-in))",
+                "id": 31,
+                "name": "Notch-IC",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 32,
+                "name": "P21",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 33,
+                "name": "Wnt",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 34,
+                "name": "GT2",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 35,
+                "name": "Cask1a",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 36,
+                "name": "BCat exp",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 37,
+                "name": "Frizzled",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 38,
+                "name": "Notch",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 3,
+                "formula": "",
+                "id": 39,
+                "name": "Jagged",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 77,
+                "name": "DSH",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 78,
+                "name": "Axin",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 79,
+                "name": "B-Cat",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 80,
+                "name": "GT1",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "min(var(Notch), var(Ligand-in))",
+                "id": 81,
+                "name": "Notch-IC",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 82,
+                "name": "P21",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 83,
+                "name": "Wnt",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 84,
+                "name": "Cask1a",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 85,
+                "name": "BCat exp",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 86,
+                "name": "Frizzled",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 87,
+                "name": "Jagged",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 88,
+                "name": "Notch",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 16,
+                "formula": "",
+                "id": 89,
+                "name": "GT2",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 90,
+                "name": "DSH",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 91,
+                "name": "Axin",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 92,
+                "name": "B-Cat",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 93,
+                "name": "GT1",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "min(var(Notch), var(Ligand-in))",
+                "id": 94,
+                "name": "Notch-IC",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 95,
+                "name": "P21",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 96,
+                "name": "Wnt",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 97,
+                "name": "GT2",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 98,
+                "name": "Cask1a",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 99,
+                "name": "BCat exp",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "Default"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 100,
+                "name": "Frizzled",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 101,
+                "name": "Notch",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            },
+            {
+                "containerId": 17,
+                "formula": "",
+                "id": 102,
+                "name": "Jagged",
+                "rangeFrom": 0,
+                "rangeTo": 4,
+                "type": "MembraneReceptor"
+            }
+        ]
+    }
+}
