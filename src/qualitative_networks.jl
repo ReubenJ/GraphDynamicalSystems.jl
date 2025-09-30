@@ -158,6 +158,57 @@ function build_qn_grammar(
     return g
 end
 
+"""
+    $TYPEDSIGNATURES
+
+Construct a default target function for an entity in a QN from a list of
+`activators` and `inhibitors`.
+
+Follows the definition given in Eq. 3 of ["Qualitative networks: a symbolic
+approach to analyze biological signaling
+networks"](https://doi.org/10.1186/1752-0509-1-4).
+
+## Examples
+
+Say we have a component `X` and it has an lower bound on its state value of 0,
+an upper bound of 4, activators `A`, `B`, `C`, and inhibitors `D`, `E`, `F`,
+then the following example constructs an expression for its default target
+function.
+
+```jldoctest
+julia> default_target_function(0, 4, [:A, :B, :C], [:D, :E, :F])
+:(max(0, (A + B + C) / 3 - (D + E + F) / 3))
+```
+
+"""
+function default_target_function(
+    lower_bound::Integer,
+    upper_bound::Integer,
+    activators::AbstractVector = [],
+    inhibitors::AbstractVector = [],
+)
+    sum_only_or_nothing = x -> if length(x) == 0
+        nothing
+    elseif length(x) == 1
+        :($(only(x)))
+    elseif length(x) > 1
+        :($(Expr(:call, :+, x...)) / $(length(x)))
+    end
+
+    expr_activators = sum_only_or_nothing(activators)
+    expr_inhibitors = sum_only_or_nothing(inhibitors)
+
+    if isnothing(expr_activators) && isnothing(expr_inhibitors)
+        error("Constructing a default target function for a QN with no \
+              activators or inhibitors.")
+    elseif isnothing(expr_activators) # no activators, special case mentioned in paper
+        return :($upper_bound - $expr_inhibitors)
+    elseif isnothing(expr_inhibitors)
+        return :($expr_activators)
+    else
+        return :(max($lower_bound, $expr_activators - $expr_inhibitors))
+    end
+end
 
 struct Entity{I}
     target_function::Any
