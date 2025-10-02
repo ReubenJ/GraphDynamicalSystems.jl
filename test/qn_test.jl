@@ -66,10 +66,10 @@ end
     set_state!(qn, :B, 2)
     @test interpret(:(A / B), qn) == 0.5
     @test interpret(:(A / 2), qn) == 0.5
-    @test interpret(:(Min(A, B)), qn) == 1
-    @test interpret(:(Max(A, B)), qn) == 2
-    @test interpret(:(Ceil(A / B)), qn) == 1
-    @test interpret(:(Floor(A / B)), qn) == 0
+    @test interpret(:(min(A, B)), qn) == 1
+    @test interpret(:(max(A, B)), qn) == 2
+    @test interpret(:(ceil(A / B)), qn) == 1
+    @test interpret(:(floor(A / B)), qn) == 0
     @test_throws r"Unhandled" interpret(:(nonexistent_function(A)), qn)
 end
 
