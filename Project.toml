@@ -18,6 +18,13 @@ Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
+[weakdeps]
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
+
+[extensions]
+JSONExt = ["JSON", "MacroTools"]
+
 [compat]
 AbstractTrees = "0.4.5"
 DocStringExtensions = "0.9.3"
