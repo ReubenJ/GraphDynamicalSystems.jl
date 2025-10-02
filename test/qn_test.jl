@@ -145,9 +145,19 @@ end
 @testitem "Load from BMA" begin
     using JSON
     bma_models_path = joinpath(@__DIR__, "resources", "bma_models")
+    good_models = joinpath(bma_models_path, "well_formed_examples")
 
-    for model_path in readdir(bma_models_path; join = true)
+    for model_path in readdir(good_models; join = true)
         qn = QN(model_path)
         @test qn isa GraphDynamicalSystem
     end
+
+    bad_models = joinpath(bma_models_path, "error_examples")
+
+    @test_throws "Neither alternative" QN(joinpath(bad_models, "bad_edge_key.json"))
+    @test_throws "Failed to add" QN(joinpath(bad_models, "duplicate_entity_ids.json"))
+    @test_throws "Error while constructing name for entity" QN(
+        joinpath(bad_models, "multiple_incoming_edges_same_name.json"),
+    )
+
 end
