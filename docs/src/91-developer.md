@@ -68,6 +68,24 @@ pkg> activate .
 pkg> test
 ```
 
+Alternatively, if you have
+[`ReTestItems.jl`](https://github.com/JuliaTesting/ReTestItems.jl),
+[`TestEnv.jl`](https://github.com/JuliaTesting/TestEnv.jl), and
+[`Revise.jl`](https://timholy.github.io/Revise.jl/stable) installed, you can use the script
+at `test/quick.jl` for rapid testing. This allows you to make changes and immediately run the entire test
+suite with those changes. The upside to this setup is that the tests will fail fast, and if
+you re-run, the tests that failed on the most recent run will run first. This is great if
+you're just iterating on one part of the package and trying to get a handful of tests to
+pass. You won't waste time on waiting for other tests to pass and you don't have to manually
+select which tests you're actively working on.
+
+```julia-repl
+julia> include("test/quick.jl")
+```
+
+is all you need to get up and running. Rerunning `include` will rerun the tests as described
+above.
+
 ## Working on a new issue
 
 We try to keep a linear history in this repo, so it is important to keep your branches up-to-date.
