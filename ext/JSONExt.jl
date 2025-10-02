@@ -34,7 +34,12 @@ function entity_name_from_in_neighbors(entity, in_neighbors)
 
     if length(entity_name) != 1
         error(
-            "Error while constructing name for entity: $entity, with in neighbors: $in_neighbors",
+            """
+            Error while constructing name for entity: $entity, with in neighbors: \
+            $in_neighbors. There are more than one incoming neighbor entities with the same \
+            name. To fix this error, remove the erroneous relationships from the JSON file, \
+            or reference the entity by id (like `var(3)`).
+            """,
         )
     end
     return only(entity_name)
@@ -90,7 +95,6 @@ function to_from_variable_id(r, from_to)
     elseif haskey(r, k_w_id)
         return r[k_w_id]
     else
-        @show keys(r)
         error("""
               Neither alternative key was found to retrieve the edge variable id. The \
               model file is not using the expected structure for BMA models.
@@ -110,7 +114,9 @@ function QualitativeNetwork(bma_file_path::AbstractString)
     names = [Symbol("$(v["name"])_$(v["id"])") for v in variables]
     mg = MetaGraph(SimpleDiGraph(), Int, Union{Expr,Integer,Symbol}, String)
 
-    foreach(id_to_name) do (id, n)
+    foreach(variables) do v
+        id = v["id"]
+        name = v["name"]
         # adding an empty expression: :()
         # because we need to construct the interaction graph
         # first before parsing the functions correctly
@@ -118,9 +124,9 @@ function QualitativeNetwork(bma_file_path::AbstractString)
         if !added
             error(
                 """
-                Failed to add the entity ($n, id: $id) from the input file while \
+                Failed to add the entity (\"$name\", id: #$id) from the input file while \
                 constructing the QN. Check that there is only one entity in the model with \
-                the id $id.
+                the id #$id.
                 """,
             )
         end
