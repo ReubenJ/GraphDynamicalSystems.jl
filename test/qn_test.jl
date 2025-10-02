@@ -142,14 +142,16 @@ end
     @test_throws r"no activators or inhibitors" default_target_function(0, 4)
 end
 
-@testitem "Load from BMA" begin
+@testitem "Load from BMA" setup = [RandomSetup] begin
     using JSON
+    using DynamicalSystemsBase: step!
     bma_models_path = joinpath(@__DIR__, "resources", "bma_models")
     good_models = joinpath(bma_models_path, "well_formed_examples")
 
     for model_path in readdir(good_models; join = true)
         qn = QN(model_path)
         @test qn isa GraphDynamicalSystem
+        step!(create_qn_system(qn), 100)
     end
 
     bad_models = joinpath(bma_models_path, "error_examples")
