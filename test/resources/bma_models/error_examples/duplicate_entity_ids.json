@@ -1,0 +1,103 @@
+{
+    "Layout": {
+        "AnnotatedGridCells": [],
+        "Containers": [
+            {
+                "Id": 1,
+                "Name": "C0",
+                "PositionX": 2,
+                "PositionY": 0,
+                "Size": 1
+            }
+        ],
+        "Description": "",
+        "Variables": [
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 1,
+                "Name": "a",
+                "PositionX": 630.7,
+                "PositionY": 47.34285714285714,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 2,
+                "Name": "b",
+                "PositionX": 583.2,
+                "PositionY": 178.77142857142857,
+                "Type": "Default"
+            },
+            {
+                "Angle": 0,
+                "CellX": null,
+                "CellY": null,
+                "ContainerId": 1,
+                "Description": "",
+                "Id": 3,
+                "Name": "c",
+                "PositionX": 678.2,
+                "PositionY": 162.34285714285716,
+                "Type": "Default"
+            }
+        ]
+    },
+    "Model": {
+        "Name": "ToyModelStable",
+        "Relationships": [
+            {
+                "FromVariable": 1,
+                "Id": 1,
+                "ToVariable": 2,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 2,
+                "Id": 2,
+                "ToVariable": 3,
+                "Type": "Activator"
+            },
+            {
+                "FromVariable": 3,
+                "Id": 3,
+                "ToVariable": 1,
+                "Type": "Inhibitor"
+            }
+        ],
+        "Variables": [
+            {
+                "Formula": "",
+                "Id": 1,
+                "Name": "a",
+                "RangeFrom": 0,
+                "RangeTo": 4
+            },
+            {
+                "Formula": "",
+                "Id": 1,
+                "Name": "b",
+                "RangeFrom": 0,
+                "RangeTo": 4
+            },
+            {
+                "Formula": "",
+                "Id": 1,
+                "Name": "c",
+                "RangeFrom": 0,
+                "RangeTo": 4
+            }
+        ]
+    },
+    "ltl": {
+        "operations": [],
+        "states": []
+    }
+}
