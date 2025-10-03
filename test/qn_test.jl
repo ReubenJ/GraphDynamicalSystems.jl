@@ -22,6 +22,19 @@ end
     @test issubset(Set(constants), Set(g.rules))
 end
 
+@testitem "QN Graph Correctness" begin
+    entities = [:a, :b, :c]
+    target_fns = Union{Expr,Integer,Symbol}[:(-c), :a, :b]
+    domains = [0:2 for _ = 1:3]
+
+    qn = QN(entities, target_fns, domains)
+    g = get_graph(qn)
+
+    @test haskey(g, :c, :a)
+    @test haskey(g, :a, :b)
+    @test haskey(g, :b, :c)
+end
+
 @testitem "QN Sampling" setup = [RandomSetup, ExampleQN] begin
     using Graphs: ne, nv
     graph = get_graph(qn)
