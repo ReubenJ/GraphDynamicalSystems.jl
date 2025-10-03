@@ -239,10 +239,10 @@ function update_functions_to_interaction_graph(
         graph[entity] = Entity{Int}(fn, domain)
     end
 
-    for (e1, f) in zip(entities, update_functions)
+    for (dst, f) in zip(entities, update_functions)
         input_entities = collect(Leaves(f))
-        for e2 in input_entities
-            add_edge!(graph, e1, e2)
+        for src in input_entities
+            add_edge!(graph, src, dst)
         end
     end
 
