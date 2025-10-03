@@ -3,12 +3,15 @@ import SciMLBase
 
 using AbstractTrees: Leaves
 using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
+using Graphs: SimpleDiGraph, add_edge!, add_vertex!
 using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
 using HerbCore: AbstractGrammar, RuleNode, get_rule
 using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
 using HerbSearch: rand
 using MLStyle: @match
-using MetaGraphsNext: MetaGraph, SimpleDiGraph, add_edge!, labels, nv
+using MacroTools: @capture, postwalk
+using MetaGraphsNext:
+    MetaGraph, SimpleDiGraph, add_edge!, edge_labels, inneighbor_labels, labels, nv
 using StaticArrays: MVector, SVector
 
 const base_qn_grammar = @csgrammar begin
@@ -491,4 +494,243 @@ function create_qn_system(qn::QN)
         reset_model!,
         isdeterministic = false,
     )
+end
+
+"""
+    $(SIGNATURES)
+
+Classify all symbols in `ex` as activators or inhibitors.
+
+## Examples
+
+
+"""
+function classify_activators_inhibitors(ex, activators = [], inhibitors = [])
+    (activators, inhibitors) = @match ex begin
+        :($e) && if e isa Symbol
+        end => (union(activators, [e]), inhibitors)
+        (:($e + $other) || :($other + $e)) && if e isa Symbol
+        end => classify_activators_inhibitors(other, union(activators, [e]), inhibitors)
+        :(-$e) && if e isa Symbol
+        end => (activators, union(inhibitors, [e]))
+        :($other - $e) && if e isa Symbol
+        end => classify_activators_inhibitors(other, activators, union(inhibitors, [e]))
+        :($fn($(args...))) =>
+            let a_i_pairs =
+                    classify_activators_inhibitors.(args, (activators,), (inhibitors,))
+                (union(first.(a_i_pairs)...), union(last.(a_i_pairs)...))
+            end
+        _ => (activators, inhibitors)
+    end
+
+    return activators, inhibitors
+end
+
+"""
+    $(SIGNATURES)
+
+Write QN to a dictionary to output as JSON.
+
+Use `JSON.json(qn)` directly to convert to JSON.
+"""
+function qn_to_bma_dict(qn::QN)
+    lower_upper = extrema.(get_domain(qn))
+    if !all(contains.(string.(entities(qn)), ('_',)))
+        error(
+            """
+            Currently, Dict output of models is only supported when all entity names are \
+            in the form `name_id`.
+            """,
+        )
+    end
+    ids = tryparse.((Int,), last.(split.(string.(entities(qn)), ('_',))))
+    names = [e[1:findlast('_', e)-1] for e in string.(entities(qn))]
+    functions = getindex.((target_functions(qn),), entities(qn))
+    activator_inhibitor_pairs =
+        Dict(entities(qn) .=> classify_activators_inhibitors.(functions))
+    functions =
+        postwalk.(
+            x -> @capture(x, e_Symbol) ? :($(Symbol(first(split(string(e), "_"))))) : x,
+            functions,
+        )
+
+    output_dict = Dict(
+        "Model" => Dict(
+            "Variables" => [
+                Dict(
+                    "RangeFrom" => d[1],
+                    "RangeTo" => d[2],
+                    "Id" => i,
+                    "Formula" => f,
+                    "Name" => n,
+                ) for (d, i, n, f) in zip(lower_upper, ids, names, functions)
+            ],
+            "relationships" => [
+                Dict(
+                    "Id" => i,
+                    "FromVariable" => tryparse(Int, last(split(string(src), '_'))),
+                    "ToVariable" => tryparse(Int, last(split(string(dst), '_'))),
+                    "Type" =>
+                        let (activators, inhibitors) = activator_inhibitor_pairs[dst]
+                            if src in activators
+                                "Activator"
+                            elseif src in inhibitors
+                                "Inhibitor"
+                            else
+                                error("Malformed edge")
+                            end
+                        end,
+                ) for (i, (src, dst)) in enumerate(edge_labels(get_graph(qn)))
+            ],
+        ),
+    )
+
+    return output_dict
+end
+
+function nested_dicts_keys_to_lowercase(d)
+    if d isa AbstractDict
+        return Dict([lowercase(k) => nested_dicts_keys_to_lowercase(v) for (k, v) in d])
+    elseif d isa AbstractVector
+        return [nested_dicts_keys_to_lowercase(v) for v in d]
+    else
+        return d
+    end
+end
+
+function bma_dict_to_qn(bma_dict::AbstractDict)
+    bma_dict = nested_dicts_keys_to_lowercase(bma_dict)
+    model = bma_dict["model"]
+    variables = model["variables"]
+    relationships = model["relationships"]
+
+    id_to_name = Dict([v["id"] => v["name"] for v in variables])
+    names = [Symbol("$(v["name"])_$(v["id"])") for v in variables]
+    mg = MetaGraph(SimpleDiGraph(), Int, Union{Expr,Integer,Symbol}, String)
+
+    foreach(variables) do v
+        id = v["id"]
+        name = v["name"]
+        # adding an empty expression: :()
+        # because we need to construct the interaction graph
+        # first before parsing the functions correctly
+        added = add_vertex!(mg, id, :())
+        if !added
+            error(
+                """
+                Failed to add the entity (\"$name\", id: #$id) from the input file while \
+                constructing the QN. Check that there is only one entity in the model with \
+                the id #$id.
+                """,
+            )
+        end
+    end
+
+    foreach(relationships) do r
+        from = to_from_variable_id(r, "from")
+        to = to_from_variable_id(r, "to")
+        type_of_edge = r["type"]
+        added = add_edge!(mg, from, to, type_of_edge)
+        if !added
+            @warn """
+            Encountered a duplicate relationship between entities (from: \
+            $(id_to_name[from]), #$from; to: $(id_to_name[to]), #$to) while constructing \
+            the QN.
+            """
+        end
+    end
+
+    formulas = Union{Expr,Integer,Symbol}[
+        create_target_function(v, collect(inneighbor_labels(mg, v["id"])), id_to_name, mg) for v in variables
+    ]
+
+    domains = [v["rangefrom"]:v["rangeto"] for v in variables]
+
+    return QualitativeNetwork(names, formulas, domains; schedule = Asynchronous)
+end
+
+function sanitize_formula(f)
+    # surround variable names with quotes
+    return replace(f, r"var\(([^\)]+)\)" => s"var(\"\1\")")
+end
+
+function entity_name_from_in_neighbors(entity, in_neighbors)
+    # the formulas can reference their incoming edges
+    # with either the name of the neighbor entity or
+    # its id
+    e_id = tryparse(Int, entity)
+
+    entity_name = [
+        Symbol("$(name)_$id") for
+        (id, name, _) in in_neighbors if isnothing(e_id) ? name == entity : id == e_id
+    ]
+
+    if length(entity_name) != 1
+        error(
+            """
+            Error while constructing name for entity: $entity, with in neighbors: \
+            $in_neighbors. There are more than one incoming neighbor entities with the same \
+            name. To fix this error, remove the erroneous relationships from the JSON file, \
+            or reference the entity by id (like `var(3)`).
+            """,
+        )
+    end
+    return only(entity_name)
+end
+
+function create_target_function(
+    variable::Dict,
+    in_neighbor_ids::Vector{Int},
+    id_to_name::Dict,
+    mg::MetaGraph,
+)
+    formula = Meta.parse(sanitize_formula(variable["formula"]))
+    in_neighbor_names = getindex.((id_to_name,), in_neighbor_ids)
+    in_neighbor_types = getindex.((mg.edge_data,), in_neighbor_ids, (variable["id"],))
+    in_neighbors = zip(in_neighbor_ids, in_neighbor_names, in_neighbor_types)
+
+    if isnothing(formula) # default target function
+        if length(in_neighbor_ids) == 0
+            @warn "$(variable["name"]) has no inputs, defaulting formula to lowest value ($(variable["rangefrom"]))."
+            return variable["rangefrom"]
+        else
+            activators = [
+                Symbol("$(name)_$id") for
+                (id, name, ty) in in_neighbors if ty == "Activator"
+            ]
+            inhibitors = [
+                Symbol("$(name)_$id") for
+                (id, name, ty) in in_neighbors if ty == "Inhibitor"
+            ]
+            return default_target_function(
+                variable["rangefrom"],
+                variable["rangeto"],
+                activators,
+                inhibitors,
+            )
+        end
+    else # custom target function
+        return postwalk(
+            x ->
+                @capture(x, var(v_String)) ?
+                :($(entity_name_from_in_neighbors(v, in_neighbors))) : x,
+            formula,
+        )
+    end
+end
+
+function to_from_variable_id(r, from_to)
+    k = "$(from_to)variable"
+    k_w_id = k * "id"
+
+    if haskey(r, k)
+        return r[k]
+    elseif haskey(r, k_w_id)
+        return r[k_w_id]
+    else
+        error("""
+              Neither alternative key was found to retrieve the edge variable id. The \
+              model file is not using the expected structure for BMA models.
+              """)
+    end
 end

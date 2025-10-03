@@ -174,5 +174,59 @@ end
     @test_throws "Error while constructing name for entity" QN(
         joinpath(bad_models, "multiple_incoming_edges_same_name.json"),
     )
+end
+
+@testitem "Save to BMA" begin
+    using JSON
+
+
+    function test_json_roundtrip(model_path::AbstractString)
+        qn = QN(model_path)
+        output_str = JSON.json(qn)
+        output_dict = JSON.parse(output_str)
+        orig_dict = JSON.parse(read(model_path, String))
+
+        if !haskey(orig_dict, "Model")
+            @warn "Skipping test for file $model_path for now because of the nonstandard key names"
+            return
+        end
+
+        @test haskey(output_dict, "Model")
+
+        model_dict = output_dict["Model"]
+
+        @test haskey(model_dict, "Variables")
+        variables = model_dict["Variables"]
+        orig_variables_no_f = [
+            Dict(k => v for (k, v) in var if k != "Formula") for
+            var in orig_dict["Model"]["Variables"]
+        ]
+        output_variables_no_f =
+            [Dict(k => v for (k, v) in var if k != "Formula") for var in variables]
+        @test orig_variables_no_f == output_variables_no_f
+
+        @test haskey(model_dict, "relationships")
+        relationships = model_dict["relationships"]
+        orig_relationships_no_id = [
+            Dict(k => v for (k, v) in rel if k != "Id") for
+            rel in orig_dict["Model"]["Relationships"]
+        ]
+        output_relationships_no_id =
+            [Dict(k => v for (k, v) in rel if k != "Id") for rel in relationships]
+        @test Set(orig_relationships_no_id) == Set(output_relationships_no_id)
+    end
+    bma_models_path = joinpath(@__DIR__, "resources", "bma_models")
+    good_models = joinpath(bma_models_path, "well_formed_examples")
+
+    for model_path in readdir(good_models; join = true)
+        test_json_roundtrip(model_path)
+    end
+    # toy_model = joinpath(
+    #     @__DIR__,
+    #     "resources",
+    #     "bma_models",
+    #     "well_formed_examples",
+    #     "ToyModelStable.json",
+    # )
 
 end
