@@ -535,7 +535,9 @@ Use `JSON.json(qn)` directly to convert to JSON.
 """
 function qn_to_bma_dict(qn::QN)
     lower_upper = extrema.(get_domain(qn))
-    if !all(contains.(string.(entities(qn)), ('_',)))
+    names_and_ids = rsplit.(string.(entities(qn)), ('_',); limit = 2)
+
+    if !all(length.(names_and_ids) .== 2)
         error(
             """
             Currently, Dict output of models is only supported when all entity names are \
@@ -543,9 +545,11 @@ function qn_to_bma_dict(qn::QN)
             """,
         )
     end
-    ids = tryparse.((Int,), last.(split.(string.(entities(qn)), ('_',))))
-    names = [e[1:findlast('_', e)-1] for e in string.(entities(qn))]
-    functions = getindex.((target_functions(qn),), entities(qn))
+
+    ids = parse.((Int,), last.(names_and_ids))
+    names = first.(names_and_ids)
+    fns = target_functions(qn)
+    functions = [fns[e] for e in entities(qn)]
     activator_inhibitor_pairs =
         Dict(entities(qn) .=> classify_activators_inhibitors.(functions))
     functions =
