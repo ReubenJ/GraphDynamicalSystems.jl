@@ -17,6 +17,7 @@ export GraphDynamicalSystem,
 include("qualitative_networks.jl")
 export QualitativeNetwork,
     QN,
+    Entity,
     build_qn_grammar,
     update_functions_to_interaction_graph,
     sample_qualitative_network,
