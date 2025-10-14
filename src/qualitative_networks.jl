@@ -5,7 +5,7 @@ import StructUtils
 
 using AbstractTrees: Leaves, PostOrderDFS
 using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
-using Graphs: SimpleDiGraph, add_edge!, add_vertex!
+using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!
 using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
 using HerbCore: AbstractGrammar, RuleNode, get_rule
 using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
@@ -214,39 +214,63 @@ function default_target_function(
     end
 end
 
-struct Entity{I<:Union{Symbol,Int,Tuple{Int,Union{String,Symbol}}},D}
-    id::I
+abstract type EntityLabel end
+
+struct EntityId <: EntityLabel
+    id::Int
+end
+id(e::EntityId) = e.id
+
+struct EntityName{S} <: EntityLabel
+    name::S
+end
+name(e::EntityName) = e.name
+
+struct EntityIdName{S} <: EntityLabel
+    id::Int
+    name::S
+end
+id(e::EntityIdName) = e.id
+name(e::EntityIdName) = e.name
+Base.:(==)(e::EntityIdName, e2::EntityIdName) = id(e) == id(e2) && name(e) == name(e2)
+
+struct Entity{I<:EntityLabel,D}
+    label::I
     target_function::Any
-    # _f::Any
     domain::UnitRange{D}
 end
+Entity(name::Symbol, args...) = Entity(EntityName(name), args...)
+Entity(id::Int, args...) = Entity(EntityId(id), args...)
+Entity((id, name), args...) = Entity(EntityIdName(id, name), args...)
 
+label(e::Entity) = e.label
+id(e::Entity) = id(label(e))
+name(e::Entity) = name(label(e))
 target_function(e::Entity) = e.target_function
 domain(e::Entity) = e.domain
 range_from(e::Entity) = first(domain(e))
 range_to(e::Entity) = last(domain(e))
-id(e::Entity{Int}) = e.id
-id(e::Entity{Tuple{Int,S}}) where {S} = e.id[1]
-name(e::Entity{Tuple{Int,S}}) where {S} = e.id[2]
-name(e::Entity{Symbol}) = e.id
-unique_id(e::Entity) = e.id
+
+function get_used_entities(fn, entities_in_model)
+    filter(in(name.(entities_in_model)), collect(Leaves(fn)))
+end
 
 """
     $(TYPEDSIGNATURES)
 """
 function update_functions_to_interaction_graph(
-    entities::AbstractVector{<:Entity{I}},
+    entities_in_model::AbstractVector{<:E},
     schedule = Synchronous,
-) where {I}
+) where {I,E<:Entity{I}}
     graph = MetaGraph(
         SimpleDiGraph();
         label_type = I,
-        vertex_data_type = Entity{I,Int},
+        vertex_data_type = E,
         graph_data = schedule,
     )
-    if !allunique(unique_id.(entities))
+    if !allunique(label.(entities_in_model))
         val_counts = Dict()
-        for e in entities
+        for e in entities_in_model
             val_counts[name(e)] = append!(get(val_counts, name(e), []), [e])
         end
         duplicates = [v for v in values(val_counts) if length(v) > 1]
@@ -258,14 +282,20 @@ function update_functions_to_interaction_graph(
               $duplicates""")
     end
 
-    for entity in entities
-        graph[unique_id(entity)] = entity
+    for entity in entities_in_model
+        graph[label(entity)] = entity
     end
 
-    for dst in entities
-        input_entities = collect(Leaves(target_function(dst)))
-        for src in input_entities
-            add_edge!(graph, src, name(dst))
+    for dst in entities_in_model
+        input_entities = get_used_entities(target_function(dst), entities_in_model)
+        for src in EntityName.(input_entities)
+            l = collect(labels(graph))
+            if !(src ∈ l && label(dst) ∈ l)
+                error(
+                    """Could not add edge from $src to $(label(dst)). The vertex labels in the graph are currently $(collect(labels(graph))).""",
+                )
+            end
+            add_edge!(graph, src, label(dst))
         end
     end
 
@@ -311,19 +341,50 @@ Systems that include the model semantics wrap around this struct with an
 from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/). See
 [`create_qn_system`](@ref) for an example.
 """
-struct QualitativeNetwork{N,S} <: GraphDynamicalSystem{N,S}
+struct QualitativeNetwork{
+    N,
+    Schedule,
+    M<:MetaGraph,
+    # EntityLabelType,
+    # EntityData{EntityLabelType},
+    # EdgeDataType,
+} <: GraphDynamicalSystem{N,Schedule}
     "Graph containing the topology and target functions of the network"
-    graph::MetaGraph
+    graph::M #MetaGraph{
+    #     Int,
+    #     SimpleDiGraph{Int},
+    #     EntityLabelType,
+    #     EntityData{EntityLabelType},
+    #     EdgeDataType,
+    # } # {Code, Graph type, vert. label, vert data, edge data}
     "State of the network"
     state::MVector{N,Int}
 
-    function QualitativeNetwork(graph, state; schedule = Synchronous)
+    function QualitativeNetwork(
+        graph, #::MetaGraph{
+        #     Int,
+        #     SimpleDiGraph{Int},
+        #     EntityLabelType,
+        #     EntityDataType{EntityLabelType},
+        #     EdgeDataType,
+        # },
+        state;
+        schedule = Synchronous,
+    ) #where {EntityLabelType,EntityDataType,EdgeDataType}
         N = nv(graph)
         if N != length(state)
             error("""The number of entities in the model ($N) must match the \
                   length of the provided state vector ($(length(state))).""")
         end
-        return new{N,schedule()}(graph, state)
+
+        return new{
+            N,
+            schedule(),
+            typeof(graph),
+            # EntityLabelType,
+            # EntityDataType{EntityLabelType},
+            # EdgeDataType,
+        }(graph, state)
     end
 end
 
@@ -430,19 +491,25 @@ function _get_entity_index(qn::QN, entity)
     # Ugly, we shouldn't pass entities around as Symbols anymore
     # but this works for now
     # actually, doesn't because there are sometimes variables with underscores... time to rewrite more
-    if entity isa Symbol
-        split_res = rsplit(String(entity), "_"; limit = 2)
-        entity = if length(split_res) == 2
+    entity_proc = if entity isa EntityName
+        split_res = rsplit(String(name(entity)), "_"; limit = 2)
+        entity_proc = if length(split_res) == 2
             (entity_str, id_str) = split_res
-            id_val = parse(Int, id_str)
-            (id_val, entity_str)
+            id_val = tryparse(Int, id_str)
+            if !isnothing(id_val)
+                EntityIdName(id_val, entity_str)
+            else
+                entity
+            end
         else
             entity
         end
+    else
+        entity
     end
-    i = findfirst(isequal(entity), entities(qn))
+    i = findfirst(isequal(entity_proc), entities(qn))
     if isnothing(i)
-        error("""Tried to get the state of $entity but could not retrieve it. \
+        error("""Tried to get the state of $entity_proc but could not retrieve it. \
               The entities in the model are $(entities(qn))""")
     end
     return i
@@ -464,9 +531,10 @@ function get_state(qn::QN, entity)
     i = _get_entity_index(qn, entity)
     return qn.state[i]
 end
+get_state(qn::QN, entity::Symbol) = get_state(qn, EntityName(entity))
 
-function _set_state!(qn::QN, component, value::Integer)
-    i = _get_entity_index(qn::QN, component)
+function _set_state!(qn::QN, entity, value::Integer)
+    i = _get_entity_index(qn::QN, entity)
     qn.state[i] = value
 end
 
@@ -482,6 +550,10 @@ function set_state!(qn::QN, entity, value::Integer)
     end
 
     _set_state!(qn, entity, value)
+end
+
+function set_state!(qn::QN, entity::Symbol, value::Integer)
+    set_state!(qn, EntityName(entity), value)
 end
 
 """
@@ -637,111 +709,106 @@ function bma_dict_to_qn(bma_model::JSONModel)
     return QualitativeNetwork(entities_with_functions; schedule = Asynchronous)
 end
 
-# """
-#     $(SIGNATURES)
-#
-# Classify all symbols in `ex` as activators or inhibitors.
-#
-# ## Examples
-#
-#
-# """
-# function classify_activators_inhibitors(ex, activators = [], inhibitors = [])
-#     (activators, inhibitors) = @match ex begin
-#         :($e) && if e isa Symbol
-#         end => (union(activators, [e]), inhibitors)
-#         (:($e + $other) || :($other + $e)) && if e isa Symbol
-#         end => classify_activators_inhibitors(other, union(activators, [e]), inhibitors)
-#         :(-$e) && if e isa Symbol
-#         end => (activators, union(inhibitors, [e]))
-#         :($other - $e) && if e isa Symbol
-#         end => classify_activators_inhibitors(other, activators, union(inhibitors, [e]))
-#         :($fn($(args...))) =>
-#             let a_i_pairs =
-#                     classify_activators_inhibitors.(args, (activators,), (inhibitors,))
-#                 (union(first.(a_i_pairs)...), union(last.(a_i_pairs)...))
-#             end
-#         _ => (activators, inhibitors)
-#     end
-#
-#     return activators, inhibitors
-# end
-#
-# function classify_activators_inhibitors(d::AbstractDict)
-#     return Dict(e => fn for (e, fn) in d)
-# end
-#
-# function remove_ids_from_entities_in_target_fn(ex)
-#     @match ex begin
-#
-#     end
-#
-#     # postwalk.(
-#     #     x -> @capture(x, e_Symbol) ? :($(Symbol(first(split(string(e), "_"))))) : x,
-#     #     functions,
-#     # )
-# end
-#
-# """
-#     $(SIGNATURES)
-#
-# Write QN to a dictionary to output as JSON.
-#
-# Use `JSON.json(qn)` directly to convert to JSON.
-# """
-# function qn_to_bma_dict(qn::QN)
-#     lower_upper = extrema.(get_domain(qn))
-#     names_and_ids = rsplit.(string.(entities(qn)), ('_',); limit = 2)
-#     id_to_name = Dict(parse(Int, id) .=> name for (name, id) in names_and_ids)
-#     name_to_id = Dict(name .=> parse(Int, id) for (name, id) in names_and_ids)
-#
-#     if !all(length.(names_and_ids) .== 2)
-#         error(
-#             """
-#             Currently, Dict output of models is only supported when all entity names are \
-#             in the form `name_id`.
-#             """,
-#         )
-#     end
-#
-#     # fns = Dict(id_to_name[id] => fn for fn in target_functions(qn))
-#     functions = [target_functions(qn)[e] for e in entities(qn)]
-#     activator_inhibitor_pairs = classify_activators_inhibitors(functions)
-#     functions = remove_ids_from_entities_in_target_fn.(functions)
-#     output_dict = Dict(
-#         "Model" => Dict(
-#             "Variables" => [
-#                 Dict(
-#                     "RangeFrom" => d[1],
-#                     "RangeTo" => d[2],
-#                     "Id" => i,
-#                     "Formula" => f,
-#                     "Name" => n,
-#                 ) for (d, i, n, f) in zip(lower_upper, ids, names, functions)
-#             ],
-#             "relationships" => [
-#                 Dict(
-#                     "Id" => i,
-#                     "FromVariable" => tryparse(Int, last(split(string(src), '_'))),
-#                     "ToVariable" => tryparse(Int, last(split(string(dst), '_'))),
-#                     "Type" =>
-#                         let (activators, inhibitors) = activator_inhibitor_pairs[dst]
-#                             if src in activators
-#                                 "Activator"
-#                             elseif src in inhibitors
-#                                 "Inhibitor"
-#                             else
-#                                 error("Malformed edge")
-#                             end
-#                         end,
-#                 ) for (i, (src, dst)) in enumerate(edge_labels(get_graph(qn)))
-#             ],
-#         ),
-#     )
-#
-#     return output_dict
-# end
-#
+"""
+    $(SIGNATURES)
+
+Classify all symbols in `ex` as activators or inhibitors.
+
+## Examples
+
+
+"""
+function classify_activators_inhibitors(ex, activators = [], inhibitors = [])
+    (activators, inhibitors) = @match ex begin
+        :($e) && if e isa Symbol
+        end => (union(activators, [e]), inhibitors)
+        (:($e + $other) || :($other + $e)) && if e isa Symbol
+        end => classify_activators_inhibitors(other, union(activators, [e]), inhibitors)
+        :(-$e) && if e isa Symbol
+        end => (activators, union(inhibitors, [e]))
+        :($other - $e) && if e isa Symbol
+        end => classify_activators_inhibitors(other, activators, union(inhibitors, [e]))
+        :($fn($(args...))) =>
+            let a_i_pairs =
+                    classify_activators_inhibitors.(args, (activators,), (inhibitors,))
+                (union(first.(a_i_pairs)...), union(last.(a_i_pairs)...))
+            end
+        _ => (activators, inhibitors)
+    end
+
+    return activators, inhibitors
+end
+
+function classify_activators_inhibitors(d::AbstractDict)
+    return Dict(e => fn for (e, fn) in d)
+end
+
+function remove_ids_from_entities_in_target_fn(ex)
+    # Main.@infiltrate
+    @match ex begin
+        ::Symbol => Symbol(first(rsplit(string(ex), "_"; limit = 2)))
+        Expr(:call, op, children...) =>
+            Expr(:call, op, remove_ids_from_entities_in_target_fn.(children)...)
+        _ => ex
+    end
+
+    # postwalk.(
+    #     x -> @capture(x, e_Symbol) ? :($(Symbol(first(split(string(e), "_"))))) : x,
+    #     functions,
+    # )
+end
+
+"""
+    $(SIGNATURES)
+
+Write QN to a dictionary to output as JSON.
+
+Use `JSON.json(qn)` directly to convert to JSON.
+"""
+function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGraph{C,G,L}}
+    lower_upper = extrema.(get_domain(qn))
+    # names_and_ids = rsplit.(string.(entities(qn)), ('_',); limit = 2)
+    # id_to_name = Dict(parse(Int, id) .=> name for (name, id) in names_and_ids)
+    # name_to_id = Dict(name .=> parse(Int, id) for (name, id) in names_and_ids)
+
+
+    # fns = Dict(id_to_name[id] => fn for fn in target_functions(qn))
+    ids = id.(entities(qn))
+    entity_names = name.(entities(qn))
+    functions = [target_functions(qn)[e] for e in entities(qn)]
+    activator_inhibitor_pairs = classify_activators_inhibitors(functions)
+    functions = remove_ids_from_entities_in_target_fn.(functions)
+    variables = [
+        Dict(
+            "RangeFrom" => d[1],
+            "RangeTo" => d[2],
+            "Id" => i,
+            "Formula" => f,
+            "Name" => n,
+        ) for (d, i, n, f) in zip(lower_upper, ids, entity_names, functions)
+    ]
+    relationships = [
+        Dict(
+            "Id" => i,
+            "FromVariable" => tryparse(Int, last(split(string(src), '_'))),
+            "ToVariable" => tryparse(Int, last(split(string(dst), '_'))),
+            "Type" => let (activators, inhibitors) = activator_inhibitor_pairs[dst]
+                if src in activators
+                    "Activator"
+                elseif src in inhibitors
+                    "Inhibitor"
+                else
+                    error("Malformed edge")
+                end
+            end,
+        ) for (i, (src, dst)) in enumerate(edge_labels(get_graph(qn)))
+    ]
+    output_dict =
+        Dict("Model" => Dict("Variables" => variables, "Relationships" => relationships))
+
+    return output_dict
+end
+
 function nested_dicts_keys_to_lowercase(d)
     if d isa AbstractDict
         return Dict([lowercase(k) => nested_dicts_keys_to_lowercase(v) for (k, v) in d])
@@ -833,7 +900,7 @@ function entity_name_from_in_neighbors(entity, in_neighbors)
 end
 
 function create_target_function(
-    variable::Entity{Tuple{Int,S},Int},
+    variable::Entity{EntityIdName{S},Int},
     in_neighbor_ids::Vector{Int},
     id_to_name::Dict,
     mg::MetaGraph,

@@ -23,16 +23,20 @@ end
 end
 
 @testitem "QN Graph Correctness" begin
-    entities = [:a, :b, :c]
+    import GraphDynamicalSystems: EntityName
+    import MetaGraphsNext: edge_labels
+
+    entity_labels = [:a, :b, :c]
     target_fns = Union{Expr,Integer,Symbol}[:(-c), :a, :b]
     domains = [0:2 for _ = 1:3]
 
-    qn = QN(Entity.(entities, target_fns, domains))
+    qn = QN(Entity.(entity_labels, target_fns, domains))
     g = get_graph(qn)
 
-    @test haskey(g, :c, :a)
-    @test haskey(g, :a, :b)
-    @test haskey(g, :b, :c)
+    @show collect(edge_labels(g))
+    @test haskey(g, EntityName(:c), EntityName(:a))
+    @test haskey(g, EntityName(:a), EntityName(:b))
+    @test haskey(g, EntityName(:b), EntityName(:c))
 end
 
 @testitem "QN Sampling" setup = [RandomSetup, ExampleQN] begin
@@ -44,7 +48,8 @@ end
 end
 
 @testitem "QN properties, fields" setup = [RandomSetup, ExampleQN] begin
-    using DynamicalSystemsBase: step!, get_state, set_state!
+    import GraphDynamicalSystems: EntityName
+    using DynamicalSystemsBase: get_state, set_state!, step!
 
     set_state!(qn, :A, 1)
 
@@ -180,10 +185,13 @@ end
 end
 
 @testitem "Save to BMA" begin
+    import MetaGraphsNext: edge_labels, labels
     using JSON
 
     function test_json_roundtrip(model_path::AbstractString)
         qn = QN(model_path)
+        @test length(labels(get_graph(qn))) > 0
+        @test length(edge_labels(get_graph(qn))) > 0
         output_str = JSON.json(qn)
         output_dict = JSON.parse(output_str)
         orig_dict = JSON.parse(read(model_path, String))
@@ -207,8 +215,8 @@ end
             [Dict(k => v for (k, v) in var if k != "Formula") for var in variables]
         @test orig_variables_no_f == output_variables_no_f
 
-        @test haskey(model_dict, "relationships")
-        relationships = model_dict["relationships"]
+        @test haskey(model_dict, "Relationships")
+        relationships = model_dict["Relationships"]
         orig_relationships_no_id = [
             Dict(k => v for (k, v) in rel if k != "Id") for
             rel in orig_dict["Model"]["Relationships"]

@@ -12,7 +12,6 @@ TestEnv.activate() do
     runtests(
         GraphDynamicalSystems,
         name = r"^(?!Code).+$",
-        # name = r"Load from BMA",
         failfast = true,
         failures_first = true,
     )
