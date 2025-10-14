@@ -5,7 +5,7 @@ import StructUtils
 
 using AbstractTrees: Leaves, PostOrderDFS
 using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
-using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!
+using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!, ne
 using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
 using HerbCore: AbstractGrammar, RuleNode, get_rule
 using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
@@ -232,6 +232,7 @@ struct EntityIdName{S} <: EntityLabel
 end
 id(e::EntityIdName) = e.id
 name(e::EntityIdName) = e.name
+combined_name(e::EntityIdName) = Symbol("$(name(e))_$(id(e))")
 Base.:(==)(e::EntityIdName, e2::EntityIdName) = id(e) == id(e2) && name(e) == name(e2)
 
 struct Entity{I<:EntityLabel,D}
@@ -250,6 +251,10 @@ target_function(e::Entity) = e.target_function
 domain(e::Entity) = e.domain
 range_from(e::Entity) = first(domain(e))
 range_to(e::Entity) = last(domain(e))
+
+function get_used_entities(fn, entities_in_model::Vector{<:Entity{<:EntityIdName}})
+    filter(in(combined_name.(label.(entities_in_model))), collect(Leaves(fn)))
+end
 
 function get_used_entities(fn, entities_in_model)
     filter(in(name.(entities_in_model)), collect(Leaves(fn)))
@@ -341,50 +346,20 @@ Systems that include the model semantics wrap around this struct with an
 from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/). See
 [`create_qn_system`](@ref) for an example.
 """
-struct QualitativeNetwork{
-    N,
-    Schedule,
-    M<:MetaGraph,
-    # EntityLabelType,
-    # EntityData{EntityLabelType},
-    # EdgeDataType,
-} <: GraphDynamicalSystem{N,Schedule}
+struct QualitativeNetwork{N,Schedule,M<:MetaGraph} <: GraphDynamicalSystem{N,Schedule}
     "Graph containing the topology and target functions of the network"
-    graph::M #MetaGraph{
-    #     Int,
-    #     SimpleDiGraph{Int},
-    #     EntityLabelType,
-    #     EntityData{EntityLabelType},
-    #     EdgeDataType,
-    # } # {Code, Graph type, vert. label, vert data, edge data}
+    graph::M
     "State of the network"
     state::MVector{N,Int}
 
-    function QualitativeNetwork(
-        graph, #::MetaGraph{
-        #     Int,
-        #     SimpleDiGraph{Int},
-        #     EntityLabelType,
-        #     EntityDataType{EntityLabelType},
-        #     EdgeDataType,
-        # },
-        state;
-        schedule = Synchronous,
-    ) #where {EntityLabelType,EntityDataType,EdgeDataType}
+    function QualitativeNetwork(graph, state; schedule = Synchronous)
         N = nv(graph)
         if N != length(state)
             error("""The number of entities in the model ($N) must match the \
                   length of the provided state vector ($(length(state))).""")
         end
 
-        return new{
-            N,
-            schedule(),
-            typeof(graph),
-            # EntityLabelType,
-            # EntityDataType{EntityLabelType},
-            # EdgeDataType,
-        }(graph, state)
+        return new{N,schedule(),typeof(graph)}(graph, state)
     end
 end
 
@@ -683,10 +658,13 @@ function bma_dict_to_qn(bma_model::JSONModel)
     end
 
     foreach(bma_relationships) do r
+        if from(r) ∉ labels(mg) || to(r) ∉ labels(mg)
+            error("Either the source or destination of the edge is not in the graph.")
+        end
         added = add_edge!(mg, from(r), to(r), type(r))
         if !added
             @warn """
-            Encountered a duplicate relationship between entities (from: \
+            Could not create an edge between entities (from: \
             #$(from(r)); to: #$(to(r))) while constructing \
             the QN.
             """
@@ -744,18 +722,12 @@ function classify_activators_inhibitors(d::AbstractDict)
 end
 
 function remove_ids_from_entities_in_target_fn(ex)
-    # Main.@infiltrate
     @match ex begin
         ::Symbol => Symbol(first(rsplit(string(ex), "_"; limit = 2)))
         Expr(:call, op, children...) =>
             Expr(:call, op, remove_ids_from_entities_in_target_fn.(children)...)
         _ => ex
     end
-
-    # postwalk.(
-    #     x -> @capture(x, e_Symbol) ? :($(Symbol(first(split(string(e), "_"))))) : x,
-    #     functions,
-    # )
 end
 
 """
@@ -818,58 +790,7 @@ function nested_dicts_keys_to_lowercase(d)
         return d
     end
 end
-#
-# function bma_dict_to_qn(bma_dict::AbstractDict)
-#     bma_dict = nested_dicts_keys_to_lowercase(bma_dict)
-#     model = bma_dict["model"]
-#     variables = model["variables"]
-#     relationships = model["relationships"]
-#
-#     id_to_name = Dict([v["id"] => v["name"] for v in variables])
-#     names = [Symbol("$(v["name"])_$(v["id"])") for v in variables]
-#     mg = MetaGraph(SimpleDiGraph(), Int, Union{Expr,Integer,Symbol}, String)
-#
-#     foreach(variables) do v
-#         id = v["id"]
-#         name = v["name"]
-#         # adding an empty expression: :()
-#         # because we need to construct the interaction graph
-#         # first before parsing the functions correctly
-#         added = add_vertex!(mg, id, :())
-#         if !added
-#             error(
-#                 """
-#                 Failed to add the entity (\"$name\", id: #$id) from the input file while \
-#                 constructing the QN. Check that there is only one entity in the model with \
-#                 the id #$id.
-#                 """,
-#             )
-#         end
-#     end
-#
-#     foreach(relationships) do r
-#         from = to_from_variable_id(r, "from")
-#         to = to_from_variable_id(r, "to")
-#         type_of_edge = r["type"]
-#         added = add_edge!(mg, from, to, type_of_edge)
-#         if !added
-#             @warn """
-#             Encountered a duplicate relationship between entities (from: \
-#             $(id_to_name[from]), #$from; to: $(id_to_name[to]), #$to) while constructing \
-#             the QN.
-#             """
-#         end
-#     end
-#
-#     formulas = Union{Expr,Integer,Symbol}[
-#         create_target_function(v, collect(inneighbor_labels(mg, v["id"])), id_to_name, mg) for v in variables
-#     ]
-#
-#     domains = [v["rangefrom"]:v["rangeto"] for v in variables]
-#
-#     return QualitativeNetwork(names, formulas, domains; schedule = Asynchronous)
-# end
-#
+
 function sanitize_formula(f)
     # surround variable names with quotes
     return replace(f, r"var\(([^\)]+)\)" => s"var(\"\1\")")
@@ -939,19 +860,3 @@ function create_target_function(
         )
     end
 end
-#
-# function to_from_variable_id(r, from_to)
-#     k = "$(from_to)variable"
-#     k_w_id = k * "id"
-#
-#     if haskey(r, k)
-#         return r[k]
-#     elseif haskey(r, k_w_id)
-#         return r[k_w_id]
-#     else
-#         error("""
-#               Neither alternative key was found to retrieve the edge variable id. The \
-#               model file is not using the expected structure for BMA models.
-#               """)
-#     end
-# end

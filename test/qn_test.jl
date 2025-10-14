@@ -192,6 +192,7 @@ end
         qn = QN(model_path)
         @test length(labels(get_graph(qn))) > 0
         @test length(edge_labels(get_graph(qn))) > 0
+
         output_str = JSON.json(qn)
         output_dict = JSON.parse(output_str)
         orig_dict = JSON.parse(read(model_path, String))
