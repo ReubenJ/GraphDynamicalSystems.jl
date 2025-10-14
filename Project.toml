@@ -5,6 +5,7 @@ version = "0.0.5"
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+AutoHashEquals = "15f4f7f2-30c1-5605-9d31-71845cf9641f"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
@@ -23,6 +24,7 @@ StructUtils = "ec057cc2-7a8d-4b58-b3b3-92acb9f63b42"
 
 [compat]
 AbstractTrees = "0.4.5"
+AutoHashEquals = "2.2.0"
 DocStringExtensions = "0.9.3"
 DynamicalSystemsBase = "3.13.2"
 Graphs = "1.12"

@@ -4,6 +4,7 @@ import SciMLBase
 import StructUtils
 
 using AbstractTrees: Leaves, PostOrderDFS
+using AutoHashEquals: @auto_hash_equals
 using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
 using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!, ne
 using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
@@ -226,14 +227,31 @@ struct EntityName{S} <: EntityLabel
 end
 name(e::EntityName) = e.name
 
-struct EntityIdName{S} <: EntityLabel
+@auto_hash_equals struct EntityIdName{S} <: EntityLabel
     id::Int
     name::S
+end
+function EntityIdName(en::EntityName)
+    en_str = string(name(en))
+    name_id_str_split = rsplit(en_str, "_"; limit = 2)
+    if length(name_id_str_split) != 2
+        error("""Failed to convert the EntityName $en to an EntityIdName. \
+              Expecting an EntityName with a name in the form of "Name_00".""")
+    end
+    (name_str, id_str) = name_id_str_split
+
+    id_val = tryparse(Int, id_str)
+    if isnothing(id_val)
+        error("""Entity name ($(name(en))) contained an underscore but the \
+              content after the underscore ($id_str) could not be parsed as \
+              an integer to convert it to an ID.""")
+    end
+
+    return EntityIdName(id_val, string(name_str))
 end
 id(e::EntityIdName) = e.id
 name(e::EntityIdName) = e.name
 combined_name(e::EntityIdName) = Symbol("$(name(e))_$(id(e))")
-Base.:(==)(e::EntityIdName, e2::EntityIdName) = id(e) == id(e2) && name(e) == name(e2)
 
 struct Entity{I<:EntityLabel,D}
     label::I
@@ -293,14 +311,15 @@ function update_functions_to_interaction_graph(
 
     for dst in entities_in_model
         input_entities = get_used_entities(target_function(dst), entities_in_model)
-        for src in EntityName.(input_entities)
+        for src in EntityIdName.(EntityName.(input_entities))
+            dst_label = label(dst)
             l = collect(labels(graph))
-            if !(src ∈ l && label(dst) ∈ l)
+            if !(src ∈ l && dst_label ∈ l)
                 error(
-                    """Could not add edge from $src to $(label(dst)). The vertex labels in the graph are currently $(collect(labels(graph))).""",
+                    """Could not add edge from $src to $(dst_label). The vertex labels in the graph are currently $(collect(labels(graph))).""",
                 )
             end
-            add_edge!(graph, src, label(dst))
+            add_edge!(graph, src, dst_label)
         end
     end
 
@@ -759,12 +778,14 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
             "Name" => n,
         ) for (d, i, n, f) in zip(lower_upper, ids, entity_names, functions)
     ]
+    Main.@infiltrate
     relationships = [
         Dict(
             "Id" => i,
-            "FromVariable" => tryparse(Int, last(split(string(src), '_'))),
-            "ToVariable" => tryparse(Int, last(split(string(dst), '_'))),
+            "FromVariable" => id(src),
+            "ToVariable" => id(dst),
             "Type" => let (activators, inhibitors) = activator_inhibitor_pairs[dst]
+                Main.@infiltrate
                 if src in activators
                     "Activator"
                 elseif src in inhibitors
