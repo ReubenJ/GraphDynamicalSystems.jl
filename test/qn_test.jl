@@ -64,12 +64,6 @@ end
     @test_throws r"max" set_state!(qn, :A, 6)
 end
 
-@testitem "QN Construction" setup = [RandomSetup, ExampleQN] begin
-    initial_state_beyond_domain = [5, 5, 5]
-
-    # @test_throws r"<=" set_state!(qn, en
-end
-
 @testitem "Target Function" setup = [RandomSetup, ExampleQN] begin
     using DynamicalSystemsBase: step!, get_state, set_state!
     set_state!(qn, :A, 1)
@@ -177,11 +171,10 @@ end
 
     bad_models = joinpath(bma_models_path, "error_examples")
 
-    # @test_throws "Neither alternative" QN(joinpath(bad_models, "bad_edge_key.json"))
-    # @test_throws "Failed to add" QN(joinpath(bad_models, "duplicate_entity_ids.json"))
-    # @test_throws "Error while constructing name for entity" QN(
-    #     joinpath(bad_models, "multiple_incoming_edges_same_name.json"),
-    # )
+    @test_throws "Failed to add" QN(joinpath(bad_models, "duplicate_entity_ids.json"))
+    @test_throws "Error while constructing name for entity" QN(
+        joinpath(bad_models, "multiple_incoming_edges_same_name.json"),
+    )
 end
 
 @testitem "Save to BMA" begin
