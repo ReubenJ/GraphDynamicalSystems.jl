@@ -741,11 +741,12 @@ function classify_activators_inhibitors(d::AbstractDict)
     return Dict(e => classify_activators_inhibitors(fn) for (e, fn) in d)
 end
 
-function remove_ids_from_entities_in_target_fn(ex)
+function swap_entity_names_to_var_ids(ex)
     @match ex begin
-        ::Symbol => Symbol(first(rsplit(string(ex), "_"; limit = 2)))
+        ::Symbol && if (ex ∉ [:+, :-, :/, :*, :min, :max, :ceil, :floor])
+        end => :(var($(parse(Int, last(rsplit(string(ex), "_"; limit = 2))))))
         Expr(:call, op, children...) =>
-            Expr(:call, op, remove_ids_from_entities_in_target_fn.(children)...)
+            Expr(:call, op, swap_entity_names_to_var_ids.(children)...)
         _ => ex
     end
 end
@@ -763,7 +764,7 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
     entity_names = name.(entities(qn))
     functions = [target_functions(qn)[e] for e in entities(qn)]
     activator_inhibitor_pairs = classify_activators_inhibitors(target_functions(qn))
-    functions = remove_ids_from_entities_in_target_fn.(functions)
+    functions = swap_entity_names_to_var_ids.(functions)
 
     variables = [
         Dict(
@@ -796,7 +797,10 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
     ]
     output_dict = Dict(
         "Model" => Dict("Variables" => variables, "Relationships" => relationships),
-        "Layout" => Dict(),
+        "Layout" => Dict(
+            "Variables" =>
+                [Dict("Id" => v["Id"], "Name" => v["Name"]) for v in variables],
+        ),
     )
 
     return output_dict
