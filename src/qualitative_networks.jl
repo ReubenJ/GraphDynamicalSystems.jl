@@ -799,8 +799,10 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
             end,
         ) for (i, (src, dst)) in enumerate(edge_labels(get_graph(qn)))
     ]
-    output_dict =
-        Dict("Model" => Dict("Variables" => variables, "Relationships" => relationships))
+    output_dict = Dict(
+        "Model" => Dict("Variables" => variables, "Relationships" => relationships),
+        "Layout" => Dict(),
+    )
 
     return output_dict
 end
