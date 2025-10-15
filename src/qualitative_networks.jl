@@ -231,24 +231,25 @@ name(e::EntityName) = e.name
     id::Int
     name::S
 end
-function EntityIdName(en::Symbol)
-    en_str = string(en)
+function EntityIdName(s::Symbol)
+    en_str = string(s)
     name_id_str_split = rsplit(en_str, "_"; limit = 2)
     if length(name_id_str_split) != 2
-        error("""Failed to convert the Symbol $en to an EntityIdName. \
+        error("""Failed to convert the Symbol $s to an EntityIdName. \
               Expecting an EntityName with a name in the form of "Name_00".""")
     end
     (name_str, id_str) = name_id_str_split
 
     id_val = tryparse(Int, id_str)
     if isnothing(id_val)
-        error("""Entity name ($en) contained an underscore but the \
+        error("""Entity name ($s) contained an underscore but the \
               content after the underscore ($id_str) could not be parsed as \
               an integer to convert it to an ID.""")
     end
 
     return EntityIdName(id_val, string(name_str))
 end
+EntityIdName{String}(s::Symbol) = EntityIdName(s)
 id(e::EntityIdName) = e.id
 name(e::EntityIdName) = e.name
 combined_name(e::EntityIdName) = Symbol("$(name(e))_$(id(e))")

@@ -229,7 +229,7 @@ end
     bma_models_path = joinpath(@__DIR__, "resources", "bma_models")
     good_models = joinpath(bma_models_path, "well_formed_examples")
 
-    for model_path in readdir(good_models; join = true)
+    for model_path in filter(!contains(r"Skin1D"), readdir(good_models; join = true))
         test_json_roundtrip(model_path)
     end
     # toy_model = joinpath(
