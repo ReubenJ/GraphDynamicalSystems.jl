@@ -107,23 +107,23 @@ end
 
 end
 
-# @testitem "Get attractors" setup = [RandomSetup, ExampleQN] begin
-#     using Attractors: AttractorsViaRecurrences, basins_of_attraction
-#     qn_size = 3
-#     max_eq_depth = 3
-#     N = 3
-#     domains = [1:N for _ = 1:qn_size]
-#
-#     async_qn =
-#         sample_qualitative_network(qn_size, domains, max_eq_depth; schedule = Asynchronous)
-#     async_qn_system = create_qn_system(async_qn)
-#
-#     grid = Tuple(range(0, 1) for _ = 1:qn_size)
-#
-#     mapper = AttractorsViaRecurrences(async_qn_system, grid)
-#
-#     basins = basins_of_attraction(mapper, grid)
-# end
+@testitem "Get attractors" setup = [RandomSetup, ExampleQN] begin
+    using Attractors: AttractorsViaRecurrences, basins_of_attraction
+    qn_size = 3
+    max_eq_depth = 3
+    N = 3
+    domains = [1:N for _ = 1:qn_size]
+
+    async_qn =
+        sample_qualitative_network(qn_size, domains, max_eq_depth; schedule = Asynchronous)
+    async_qn_system = create_qn_system(async_qn)
+
+    grid = Tuple(range(0, 1) for _ = 1:qn_size)
+
+    mapper = AttractorsViaRecurrences(async_qn_system, grid)
+
+    basins = basins_of_attraction(mapper, grid)
+end
 
 @testitem "Construct default target functions" begin
     lower_bound = 0
