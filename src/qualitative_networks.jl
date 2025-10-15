@@ -775,7 +775,7 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
             "RangeFrom" => d[1],
             "RangeTo" => d[2],
             "Id" => i,
-            "Formula" => f,
+            "Formula" => string(f),
             "Name" => n,
         ) for (d, i, n, f) in zip(lower_upper, ids, entity_names, functions)
     ]
