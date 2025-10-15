@@ -12,7 +12,7 @@ TestEnv.activate() do
     runtests(
         GraphDynamicalSystems,
         name = r"^(?!Code).+$",
-        # failfast = true,
+        failfast = true,
         failures_first = true,
     )
 end

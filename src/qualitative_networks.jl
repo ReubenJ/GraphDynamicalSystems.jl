@@ -231,18 +231,18 @@ name(e::EntityName) = e.name
     id::Int
     name::S
 end
-function EntityIdName(en::EntityName)
-    en_str = string(name(en))
+function EntityIdName(en::Symbol)
+    en_str = string(en)
     name_id_str_split = rsplit(en_str, "_"; limit = 2)
     if length(name_id_str_split) != 2
-        error("""Failed to convert the EntityName $en to an EntityIdName. \
+        error("""Failed to convert the Symbol $en to an EntityIdName. \
               Expecting an EntityName with a name in the form of "Name_00".""")
     end
     (name_str, id_str) = name_id_str_split
 
     id_val = tryparse(Int, id_str)
     if isnothing(id_val)
-        error("""Entity name ($(name(en))) contained an underscore but the \
+        error("""Entity name ($en) contained an underscore but the \
               content after the underscore ($id_str) could not be parsed as \
               an integer to convert it to an ID.""")
     end
@@ -284,10 +284,10 @@ end
 function update_functions_to_interaction_graph(
     entities_in_model::AbstractVector{<:E},
     schedule = Synchronous,
-) where {I,E<:Entity{I}}
+) where {EntityLabelType,E<:Entity{EntityLabelType}}
     graph = MetaGraph(
         SimpleDiGraph();
-        label_type = I,
+        label_type = EntityLabelType,
         vertex_data_type = E,
         graph_data = schedule,
     )
@@ -311,7 +311,7 @@ function update_functions_to_interaction_graph(
 
     for dst in entities_in_model
         input_entities = get_used_entities(target_function(dst), entities_in_model)
-        for src in EntityIdName.(EntityName.(input_entities))
+        for src in EntityLabelType.(input_entities)
             dst_label = label(dst)
             l = collect(labels(graph))
             if !(src ∈ l && dst_label ∈ l)
@@ -737,7 +737,7 @@ function classify_activators_inhibitors(ex, activators = [], inhibitors = [])
 end
 
 function classify_activators_inhibitors(d::AbstractDict)
-    return Dict(e => fn for (e, fn) in d)
+    return Dict(e => classify_activators_inhibitors(fn) for (e, fn) in d)
 end
 
 function remove_ids_from_entities_in_target_fn(ex)
@@ -767,7 +767,7 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
     ids = id.(entities(qn))
     entity_names = name.(entities(qn))
     functions = [target_functions(qn)[e] for e in entities(qn)]
-    activator_inhibitor_pairs = classify_activators_inhibitors(functions)
+    activator_inhibitor_pairs = classify_activators_inhibitors(target_functions(qn))
     functions = remove_ids_from_entities_in_target_fn.(functions)
     variables = [
         Dict(
@@ -778,20 +778,22 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
             "Name" => n,
         ) for (d, i, n, f) in zip(lower_upper, ids, entity_names, functions)
     ]
-    Main.@infiltrate
     relationships = [
         Dict(
             "Id" => i,
             "FromVariable" => id(src),
             "ToVariable" => id(dst),
             "Type" => let (activators, inhibitors) = activator_inhibitor_pairs[dst]
-                Main.@infiltrate
-                if src in activators
+                activators_transformed = EntityIdName.(activators)
+                inhibitors_transformed = EntityIdName.(inhibitors)
+                if src in activators_transformed
                     "Activator"
-                elseif src in inhibitors
+                elseif src in inhibitors_transformed
                     "Inhibitor"
                 else
-                    error("Malformed edge")
+                    error(
+                        "Malformed edge. $src not found in activators ($activators_transformed) or inhibitors ($inhibitors_transformed).",
+                    )
                 end
             end,
         ) for (i, (src, dst)) in enumerate(edge_labels(get_graph(qn)))
