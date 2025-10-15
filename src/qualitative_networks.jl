@@ -460,6 +460,8 @@ end
 function JSON.json(qn::QualitativeNetwork)
     return JSON.json(qn_to_bma_dict(qn); omit_empty = false)
 end
+JSON.json(io_or_filename, qn::QualitativeNetwork) =
+    JSON.json(io_or_filename, qn_to_bma_dict(qn); omit_empty = false)
 
 """
     $(TYPEDSIGNATURES)
