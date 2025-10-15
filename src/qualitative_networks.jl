@@ -458,7 +458,7 @@ function QualitativeNetwork(bma_file_path::AbstractString)
 end
 
 function JSON.json(qn::QualitativeNetwork)
-    return JSON.json(qn_to_bma_dict(qn))
+    return JSON.json(qn_to_bma_dict(qn); omit_empty = false)
 end
 
 """
@@ -759,17 +759,12 @@ Use `JSON.json(qn)` directly to convert to JSON.
 """
 function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGraph{C,G,L}}
     lower_upper = extrema.(get_domain(qn))
-    # names_and_ids = rsplit.(string.(entities(qn)), ('_',); limit = 2)
-    # id_to_name = Dict(parse(Int, id) .=> name for (name, id) in names_and_ids)
-    # name_to_id = Dict(name .=> parse(Int, id) for (name, id) in names_and_ids)
-
-
-    # fns = Dict(id_to_name[id] => fn for fn in target_functions(qn))
     ids = id.(entities(qn))
     entity_names = name.(entities(qn))
     functions = [target_functions(qn)[e] for e in entities(qn)]
     activator_inhibitor_pairs = classify_activators_inhibitors(target_functions(qn))
     functions = remove_ids_from_entities_in_target_fn.(functions)
+
     variables = [
         Dict(
             "RangeFrom" => d[1],
