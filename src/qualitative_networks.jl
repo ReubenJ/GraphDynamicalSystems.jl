@@ -598,12 +598,7 @@ function limit_change(
     return limited_value
 end
 
-"""
-    $(TYPEDSIGNATURES)
-"""
-function async_qn_step!(qn::QN)
-    entity_labels = entities(qn)
-    entity = rand(entity_labels)
+function _compute_next_state!(qn::QN, entity)
     (min_level, max_level) = extrema(get_domain(qn, entity))
     t = target_functions(qn)[entity]
     old_state = get_state(qn, entity)
@@ -611,14 +606,24 @@ function async_qn_step!(qn::QN)
     new_state = isnan(new_state) ? min_level : new_state
     new_state = isinf(new_state) ? max_level : new_state
     limited_state = limit_change(old_state, floor(Int, new_state), min_level, max_level)
-    set_state!(qn, entity, limited_state)
+end
+
+"""
+    $(TYPEDSIGNATURES)
+"""
+function async_qn_step!(qn::QN)
+    entity_labels = entities(qn)
+    entity = rand(entity_labels)
+    next_state = _compute_next_state!(qn, entity)
+    set_state!(qn, entity, next_state)
 end
 
 """
     $(TYPEDSIGNATURES)
 """
 function sync_qn_step!(qn::QN)
-    throw(ErrorException("Synchronous step function not yet implemented"))
+    next_states = _compute_next_state!.((qn,), entities(qn))
+    set_state!.((qn,), entities(qn), next_states)
 end
 
 extract_state(model::QN) = model.state
@@ -706,7 +711,7 @@ function bma_dict_to_qn(bma_model::JSONModel)
         ) for e in bma_entities
     ]
 
-    return QualitativeNetwork(entities_with_functions; schedule = Asynchronous)
+    return QualitativeNetwork(entities_with_functions; schedule = Synchronous)
 end
 
 """
@@ -754,6 +759,47 @@ function swap_entity_names_to_var_ids(ex)
 end
 
 """
+    stringify_fn(ex, lower_bound, upper_bound)
+
+Take an `ex` and if it's of the form of a default function, return "".
+"""
+function stringify_fn(ex, lower_bound, upper_bound)
+    if is_default_function(ex, lower_bound, upper_bound)
+        return ""
+    else
+        string(ex)
+    end
+end
+
+function is_default_function(ex, lower_bound, upper_bound)
+    @match ex begin
+        # single activator
+        :(var($id)) => true
+
+        # multiple activators
+        Expr(:call, :/, Expr(:call, :+, vars...), denom) && (
+            if length(vars) == denom
+            end
+        ) => true
+
+        # only inhibitor(s)
+        :($bound - $inh) && (
+            if bound == upper_bound
+            end
+        ) => is_default_function(inh, lower_bound, upper_bound)
+
+        # both inhibitor(s) and activator(s)
+        :(max($bound, $act - $inh)) && (
+            if bound == lower_bound
+            end
+        ) =>
+            is_default_function(@show(act), lower_bound, upper_bound) &&
+            is_default_function(@show(inh), lower_bound, upper_bound)
+        _ => false
+    end
+end
+
+"""
     $(SIGNATURES)
 
 Write QN to a dictionary to output as JSON.
@@ -767,13 +813,14 @@ function qn_to_bma_dict(qn::QN{N,S,M}) where {N,S,C,G,L<:EntityIdName,M<:MetaGra
     functions = [target_functions(qn)[e] for e in entities(qn)]
     activator_inhibitor_pairs = classify_activators_inhibitors(target_functions(qn))
     functions = swap_entity_names_to_var_ids.(functions)
+    functions = stringify_fn.(functions, first.(lower_upper), last.(lower_upper))
 
     variables = [
         Dict(
             "RangeFrom" => d[1],
             "RangeTo" => d[2],
             "Id" => i,
-            "Formula" => string(f),
+            "Formula" => f,
             "Name" => n,
         ) for (d, i, n, f) in zip(lower_upper, ids, entity_names, functions)
     ]

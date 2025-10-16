@@ -179,6 +179,7 @@ end
 
 @testitem "Save to BMA" begin
     import MetaGraphsNext: edge_labels, labels
+    import GraphDynamicalSystems: is_default_function
     using JSON
 
     function test_json_roundtrip(model_path::AbstractString)
@@ -201,6 +202,16 @@ end
 
         @test haskey(model_dict, "Variables")
         variables = model_dict["Variables"]
+        for (orig_v, v) in zip(orig_dict["Model"]["Variables"], variables)
+            orig_f = Meta.parse(orig_v["Formula"])
+            f = Meta.parse(v["Formula"])
+
+            if is_default_function(orig_f, orig_v["RangeFrom"], orig_v["RangeTo"])
+                @test isnothing(f)
+            else
+                @test orig_f == f
+            end
+        end
         orig_variables_no_f = [
             Dict(k => v for (k, v) in var if k != "Formula") for
             var in orig_dict["Model"]["Variables"]
@@ -222,15 +233,27 @@ end
     bma_models_path = joinpath(@__DIR__, "resources", "bma_models")
     good_models = joinpath(bma_models_path, "well_formed_examples")
 
+    # just another reminder that the "Skin1D" example isn't working with this test
+    @test_broken false
+
     for model_path in filter(!contains(r"Skin1D"), readdir(good_models; join = true))
         test_json_roundtrip(model_path)
     end
-    # toy_model = joinpath(
-    #     @__DIR__,
-    #     "resources",
-    #     "bma_models",
-    #     "well_formed_examples",
-    #     "ToyModelStable.json",
-    # )
+end
 
+@testitem "is default function" begin
+    import IterTools: subsets
+    import GraphDynamicalSystems:
+        is_default_function, default_target_function, swap_entity_names_to_var_ids
+    combinations = Iterators.filter(
+        x -> !all(isempty.(x)),
+        Iterators.product(subsets([:A_1, :B_2, :X_5, :Y_6]), subsets([:C_3, :D_4, :Z_7])),
+    )
+    activators = first.(combinations)
+    inhibitors = last.(combinations)
+
+    fns = default_target_function.(0, 4, activators, inhibitors)
+    for f in swap_entity_names_to_var_ids.(fns)
+        @test is_default_function(f, 0, 4)
+    end
 end
