@@ -419,12 +419,12 @@ from(r::JSONRelationship) = r.from
 to(r::JSONRelationship) = r.to
 type(r::JSONRelationship) = r.type
 
-StructUtils.@tags struct JSONEntity
+StructUtils.@defaults struct JSONEntity
     target_function::Any & (json = (name = "formula",),)
     id::Int & (json = (name = "id",),)
     range_from::Int & (json = (name = "rangefrom",),)
     range_to::Int & (json = (name = "rangeto",),)
-    name::String & (json = (name = "name",),)
+    name::String = "" & (json = (name = "name",),)
 end
 id(e::JSONEntity) = e.id
 target_function(e::JSONEntity) = e.target_function
@@ -725,22 +725,43 @@ Classify all symbols in `ex` as activators or inhibitors.
 
 
 """
-function classify_activators_inhibitors(ex, activators = [], inhibitors = [])
+function classify_activators_inhibitors(ex, sign = 1, activators = [], inhibitors = [])
     (activators, inhibitors) = @match ex begin
-        :($e) && if e isa Symbol
-        end => (union(activators, [e]), inhibitors)
-        (:($e + $other) || :($other + $e)) && if e isa Symbol
-        end => classify_activators_inhibitors(other, union(activators, [e]), inhibitors)
-        :(-$e) && if e isa Symbol
-        end => (activators, union(inhibitors, [e]))
-        :($other - $e) && if e isa Symbol
-        end => classify_activators_inhibitors(other, activators, union(inhibitors, [e]))
-        :($fn($(args...))) =>
-            let a_i_pairs =
-                    classify_activators_inhibitors.(args, (activators,), (inhibitors,))
-                (union(first.(a_i_pairs)...), union(last.(a_i_pairs)...))
+        ::Symbol => if sign == 1
+            (push!(activators, ex), inhibitors)
+        else
+            (activators, push!(inhibitors, ex))
+        end
+        ::Int => (activators, inhibitors)
+        Expr(:call, :(-), child) =>
+            classify_activators_inhibitors(child, -sign, activators, inhibitors)
+        Expr(:call, :(-), left_child, right_child) => begin
+            (activators, inhibitors) = classify_activators_inhibitors(
+                left_child,
+                sign,
+                activators,
+                inhibitors,
+            )
+            (activators, inhibitors) = classify_activators_inhibitors(
+                right_child,
+                -sign,
+                activators,
+                inhibitors,
+            )
+            (activators, inhibitors)
+        end
+        Expr(:call, f, children...) => begin
+            for child in children
+                (activators, inhibitors) = classify_activators_inhibitors(
+                    child,
+                    sign,
+                    activators,
+                    inhibitors,
+                )
             end
-        _ => (activators, inhibitors)
+            (activators, inhibitors)
+        end
+        Expr(expr_type, _...) => error("Can't classify expression of type $expr_type")
     end
 
     return activators, inhibitors
@@ -775,6 +796,8 @@ end
 
 function is_default_function(ex, lower_bound, upper_bound)
     @match ex begin
+        # no inputs
+        -1 => true
         # single activator
         :(var($id)) => true
 
@@ -795,8 +818,8 @@ function is_default_function(ex, lower_bound, upper_bound)
             if bound == lower_bound
             end
         ) =>
-            is_default_function(@show(act), lower_bound, upper_bound) &&
-            is_default_function(@show(inh), lower_bound, upper_bound)
+            is_default_function(act, lower_bound, upper_bound) &&
+            is_default_function(inh, lower_bound, upper_bound)
         _ => false
     end
 end
@@ -909,8 +932,8 @@ function create_target_function(
 
     if isnothing(formula) # default target function
         if length(in_neighbor_ids) == 0
-            @warn "$(name(variable)) has no inputs, defaulting formula to lowest value ($(range_from(variable)))."
-            return range_from(variable)
+            @warn "$(name(variable)) has no inputs, defaulting formula to -1"
+            return -1
         else
             activators = [
                 Symbol("$(name)_$id") for
