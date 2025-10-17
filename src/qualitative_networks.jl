@@ -1,11 +1,11 @@
-import DynamicalSystemsBase: get_state, set_state!
+import DynamicalSystemsBase: get_state, set_state!, current_parameters
 import JSON
 import SciMLBase
 import StructUtils
 
 using AbstractTrees: Leaves, PostOrderDFS
 using AutoHashEquals: @auto_hash_equals
-using DynamicalSystemsBase: ArbitrarySteppable, current_parameters, initial_state
+using DynamicalSystemsBase: ArbitrarySteppable, initial_state
 using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!, ne
 using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
 using HerbCore: AbstractGrammar, RuleNode, get_rule
@@ -555,6 +555,10 @@ function set_state!(qn::QN, entity::Symbol, value::Integer)
     set_state!(qn, EntityName(entity), value)
 end
 
+function set_state!(qn::QN, values)
+    set_state!.((qn,), entities(qn), values)
+end
+
 """
     $(TYPEDSIGNATURES)
 
@@ -630,6 +634,7 @@ end
 
 extract_state(model::QN) = model.state
 extract_parameters(model::QN) = model.graph
+current_parameters(model::QN) = model.graph
 reset_model!(model::QN, u, _) = model.state .= u
 
 function SciMLBase.reinit!(
@@ -658,7 +663,7 @@ function create_qn_system(qn::QN)
         extract_state,
         extract_parameters,
         reset_model!,
-        isdeterministic = false,
+        isdeterministic = get_schedule(qn) == Synchronous(),
     )
 end
 

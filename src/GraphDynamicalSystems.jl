@@ -25,6 +25,8 @@ export QualitativeNetwork,
     target_functions,
     interpret,
     create_qn_system,
-    default_target_function
+    default_target_function,
+    set_state!,
+    current_parameters
 
 end
