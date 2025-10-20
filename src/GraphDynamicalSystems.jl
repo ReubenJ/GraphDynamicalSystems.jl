@@ -29,4 +29,6 @@ export QualitativeNetwork,
     set_state!,
     current_parameters
 
+include("io/bma.jl")
+
 end
