@@ -364,7 +364,11 @@ Systems that include the model semantics wrap around this struct with an
 from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/). See
 [`create_qn_system`](@ref) for an example.
 """
-struct QualitativeNetwork{N,Schedule,M<:MetaGraph} <: GraphDynamicalSystem{N,Schedule}
+struct QualitativeNetwork{
+    N,
+    Schedule,
+    M<:MetaGraph{Int,<:SimpleDiGraph,<:EntityLabel,<:Entity},
+} <: GraphDynamicalSystem{N,Schedule}
     "Graph containing the topology and target functions of the network"
     graph::M
     "State of the network"
