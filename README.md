@@ -8,7 +8,7 @@
 [![Docs workflow Status](https://github.com/ReubenJ/GraphDynamicalSystems.jl/actions/workflows/Docs.yml/badge.svg?branch=main)](https://github.com/ReubenJ/GraphDynamicalSystems.jl/actions/workflows/Docs.yml?query=branch%3Amain)
 
 [![Coverage](https://codecov.io/gh/ReubenJ/GraphDynamicalSystems.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/ReubenJ/GraphDynamicalSystems.jl)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17185992.svg)](https://doi.org/10.5281/zenodo.17185992)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17255890.svg)](https://doi.org/10.5281/zenodo.17255890)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![All Contributors](https://img.shields.io/github/all-contributors/ReubenJ/GraphDynamicalSystems.jl?labelColor=5e1ec7&color=c0ffee&style=flat-square)](#contributors)
 
