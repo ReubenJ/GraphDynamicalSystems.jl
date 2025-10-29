@@ -5,5 +5,7 @@ end
 
 @testitem "Code linting (JET.jl)" begin
     using JET
-    JET.test_package(GraphDynamicalSystems; target_defined_modules = true)
+    if VERSION ≥ v"1.12"
+        JET.test_package(GraphDynamicalSystems; target_defined_modules = true)
+    end
 end
