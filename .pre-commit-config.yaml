@@ -1,3 +1,4 @@
+exclude: ^test/resources/
 repos:
     - repo: local
       hooks:
