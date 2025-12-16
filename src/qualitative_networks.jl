@@ -1,612 +1,170 @@
-import AutoHashEquals: @auto_hash_equals
-import DynamicalSystemsBase: current_parameters, get_state, set_state!
-import JSON
+import MetaGraphsNext as MG
+import Graphs
+import AbstractTrees as AT
+import TermInterface as TI
+import DynamicalSystemsBase as DSB
+import MLStyle
 import SciMLBase
 
-using AbstractTrees: Leaves, PostOrderDFS
-using DynamicalSystemsBase: ArbitrarySteppable, initial_state
-using Graphs: AbstractGraph, SimpleDiGraph, add_edge!, add_vertex!, ne
-using HerbConstraints: DomainRuleNode, Forbidden, Ordered, Unique, VarNode, addconstraint!
-using HerbCore: AbstractGrammar, RuleNode, get_rule
-using HerbGrammar: @csgrammar, add_rule!, rulenode2expr
-using HerbSearch: rand
-using MLStyle: @match
-using MetaGraphsNext: MetaGraph, add_edge!, edge_labels, inneighbor_labels, labels, nv
-using StaticArrays: MVector, SVector
-
-const base_qn_grammar = @csgrammar begin
-    Val = Val + Val
-    Val = Val - Val
-    Val = Val / Val
-    Val = Val * Val
-    Val = min(Val, Val)
-    Val = max(Val, Val)
-    Val = ceil(Val)
-    Val = floor(Val)
-end
-
-const default_qn_constants = [0, 1, 2]
-
-"""
-    $(TYPEDSIGNATURES)
-
-Builds a grammar based on the base QN grammar adding `entity_names` and `constants`
-to the grammar.
-
-The following constraints are currently included
-
-1. removing symmetry due to commutativity of `+`/`*`/`min`/`max`
-2. forbidding same arguments of two argument functions
-3. forbidding constant arguments to 2-argument functions
-4. forbidding constant arguments to 1-argument functions
-5. using each of the entities only once per function
-6. forbidding adding or subtracting zero
-7. forbidding multiplication and division by 1 or 0
-8. forcing the first operator inside `ceil` and `floor` to be `÷`
-9. forbidding `max(□, X)` and `min(□, X)` where X is either the max or min
-constant in the grammar.
-
-"""
-function build_qn_grammar(
-    entity_names,
-    constants = default_qn_constants;
-    unique_constr = true,
-)
-    g = deepcopy(base_qn_grammar)
-
-    for e in entity_names
-        add_rule!(g, :(Val = $e))
-    end
-
-    for c in constants
-        add_rule!(g, :(Val = $c))
-    end
-
-    add_rule!(g, :(Start = Val))
-
-    # +, *, min, max, are all commutative
-    domain = BitVector(zeros(length(g.rules)))
-    @. domain[[1, 4:6...]] = true
-    template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:b)])
-    order = [:a, :b]
-
-    addconstraint!(g, Ordered(deepcopy(template_tree), order))
-
-    # Forbid same arguments for 2-argument functions
-    domain = BitVector(zeros(length(g.rules)))
-    @. domain[length(g.childtypes)==2] = true
-    template_tree = DomainRuleNode(domain, [VarNode(:a), VarNode(:a)])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    # Forbid constant arguments for 2-argument functions
-    domain = falses(length(g.rules))
-    @. domain[length(g.childtypes)==2] = true
-    consts_domain = falses(length(g.rules))
-    consts_domain[findall(x -> x isa Int, g.rules)] .= true
-    consts_domain_rn = DomainRuleNode(consts_domain)
-    template_tree = DomainRuleNode(domain, [consts_domain_rn, consts_domain_rn])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    # Forbid constant arguments for 1-argument functions
-    domain = falses(length(g.rules))
-    @. domain[[7, 8]] = true
-    consts_domain = falses(length(g.rules))
-    consts_domain[findall(x -> x isa Int, g.rules)] .= true
-    consts_domain_rn = DomainRuleNode(consts_domain)
-    template_tree = DomainRuleNode(domain, [consts_domain_rn])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    n_original_rules = length(base_qn_grammar.rules)
-
-    # Only use each of the entities once per function
-    n_consts = length(constants)
-    entities = (n_original_rules+1):(length(g.rules)-n_consts)
-
-    if unique_constr
-        addconstraint!.((g,), Unique.(entities))
-    end
-
-    # Forbid □ + 0, □ - 0
-    plus_or_minus = falses(length(g.rules))
-    plus_or_minus[[1, 2]] .= true
-    zero_rule = findfirst(==(0), g.rules)
-    if !isnothing(zero_rule)
-        template_tree = DomainRuleNode(plus_or_minus, [VarNode(:a), RuleNode(zero_rule)])
-
-        addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-        # Both orderings, but only for plus. Allow 0 - □
-        plus_or_minus[2] = false
-        template_tree = DomainRuleNode(plus_or_minus, [RuleNode(zero_rule), VarNode(:a)])
-        addconstraint!(g, Forbidden(deepcopy(template_tree)))
-    end
-
-    # Forbid □ * 1, □ / 1, □ * 0, □ / 0
-    mult_or_div = falses(length(g.rules))
-    mult_or_div[[3, 4]] .= true
-    one_zero_domain = falses(length(g.rules))
-    one_zero_domain[findfirst(==(1), g.rules)] = true
-    if !isnothing(findfirst(==(0), g.rules))
-        one_zero_domain[findfirst(==(0), g.rules)] = true
-    end
-
-    template_tree =
-        DomainRuleNode(mult_or_div, [VarNode(:a), DomainRuleNode(one_zero_domain)])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    # Forbid ceil(X) and floor(X) unless X = □ ÷ □
-    ceil_or_floor = BitVector(zeros(length(g.rules)))
-    ceil_or_floor[[7, 8]] .= true
-    all_except_div = trues(length(g.rules))
-    all_except_div[3] = false
-    template_tree = DomainRuleNode(ceil_or_floor, [DomainRuleNode(all_except_div)])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    # Forbid max(□, X) and min(□, X) where X is either the largest or smallest constant in the grammar
-    min_max_rules = falses(length(g.rules))
-    min_max_rules[[5, 6]] .= true
-    (min_const, max_const) = extrema(filter(x -> isa(x, Int), g.rules))
-    extrema_domain = falses(length(g.rules))
-    extrema_domain[findall(x -> x == min_const || x == max_const, g.rules)] .= true
-    rule_extrema_consts = DomainRuleNode(extrema_domain)
-    template_tree = DomainRuleNode(min_max_rules, [VarNode(:a), rule_extrema_consts])
-
-    addconstraint!(g, Forbidden(deepcopy(template_tree)))
-
-    return g
-end
-
-"""
-    $TYPEDSIGNATURES
-
-Construct a default target function for an entity in a QN from a list of
-`activators` and `inhibitors`.
-
-Follows the definition given in Eq. 3 of ["Qualitative networks: a symbolic
-approach to analyze biological signaling
-networks"](https://doi.org/10.1186/1752-0509-1-4).
-
-## Examples
-
-Say we have a component `X` and it has an lower bound on its state value of 0,
-an upper bound of 4, activators `A`, `B`, `C`, and inhibitors `D`, `E`, `F`,
-then the following example constructs an expression for its default target
-function.
-
-```jldoctest
-julia> default_target_function(0, 4, [:A, :B, :C], [:D, :E, :F])
-:(max(0, (A + B + C) / 3 - (D + E + F) / 3))
-```
-
-"""
-function default_target_function(
-    lower_bound::Integer,
-    upper_bound::Integer,
-    activators::AbstractVector = [],
-    inhibitors::AbstractVector = [],
-)
-    sum_only_or_nothing = x -> if length(x) == 0
-        nothing
-    elseif length(x) == 1
-        :($(only(x)))
-    elseif length(x) > 1
-        :($(Expr(:call, :+, x...)) / $(length(x)))
-    end
-
-    expr_activators = sum_only_or_nothing(activators)
-    expr_inhibitors = sum_only_or_nothing(inhibitors)
-
-    if isnothing(expr_activators) && isnothing(expr_inhibitors)
-        error("Constructing a default target function for a QN with no \
-              activators or inhibitors.")
-    elseif isnothing(expr_activators) # no activators, special case mentioned in paper
-        return :($upper_bound - $expr_inhibitors)
-    elseif isnothing(expr_inhibitors)
-        return :($expr_activators)
-    else
-        return :(max($lower_bound, $expr_activators - $expr_inhibitors))
-    end
-end
-
-abstract type EntityLabel end
-
-struct EntityId <: EntityLabel
-    id::Int
-end
-id(e::EntityId) = e.id
-
-struct EntityName{S} <: EntityLabel
-    name::S
-end
-name(e::EntityName) = e.name
-
-@auto_hash_equals struct EntityIdName{S} <: EntityLabel
-    id::Int
-    name::S
-end
-function EntityIdName(s::Symbol)
-    en_str = string(s)
-    name_id_str_split = rsplit(en_str, "_"; limit = 2)
-    if length(name_id_str_split) != 2
-        error("""Failed to convert the Symbol $s to an EntityIdName. \
-              Expecting an EntityName with a name in the form of "Name_00".""")
-    end
-    (name_str, id_str) = name_id_str_split
-
-    id_val = tryparse(Int, id_str)
-    if isnothing(id_val)
-        error("""Entity name ($s) contained an underscore but the \
-              content after the underscore ($id_str) could not be parsed as \
-              an integer to convert it to an ID.""")
-    end
-
-    return EntityIdName(id_val, string(name_str))
-end
-EntityIdName{String}(s::Symbol) = EntityIdName(s)
-id(e::EntityIdName) = e.id
-name(e::EntityIdName) = e.name
-combined_name(e::EntityIdName) = Symbol("$(name(e))_$(id(e))")
-
-struct Entity{I<:EntityLabel,D}
-    label::I
-    target_function::Any
-    domain::UnitRange{D}
-end
-Entity(name::Symbol, args...) = Entity(EntityName(name), args...)
-Entity(id::Int, args...) = Entity(EntityId(id), args...)
-Entity((id, name), args...) = Entity(EntityIdName(id, name), args...)
-
-label(e::Entity) = e.label
-id(e::Entity) = id(label(e))
-name(e::Entity) = name(label(e))
-target_function(e::Entity) = e.target_function
-domain(e::Entity) = e.domain
-range_from(e::Entity) = first(domain(e))
-range_to(e::Entity) = last(domain(e))
-
-function get_used_entities(fn, entities_in_model::Vector{<:Entity{<:EntityIdName}})
-    filter(in(combined_name.(label.(entities_in_model))), collect(Leaves(fn)))
-end
-
-function get_used_entities(fn, entities_in_model)
-    filter(in(name.(entities_in_model)), collect(Leaves(fn)))
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function update_functions_to_interaction_graph(
-    entities_in_model::AbstractVector{<:E},
-    schedule = Synchronous,
-) where {EntityLabelType,E<:Entity{EntityLabelType}}
-    graph = MetaGraph(
-        SimpleDiGraph();
-        label_type = EntityLabelType,
-        vertex_data_type = E,
-        graph_data = schedule,
-    )
-    if !allunique(label.(entities_in_model))
-        val_counts = Dict()
-        for e in entities_in_model
-            val_counts[name(e)] = append!(get(val_counts, name(e), []), [e])
-        end
-        duplicates = [v for v in values(val_counts) if length(v) > 1]
-        error("""The QN implementation only supports models with unique \
-              entity name/id combinations.
-
-              Duplicates:
-
-              $duplicates""")
-    end
-
-    for entity in entities_in_model
-        graph[label(entity)] = entity
-    end
-
-    for dst in entities_in_model
-        input_entities = get_used_entities(target_function(dst), entities_in_model)
-        for src in EntityLabelType.(input_entities)
-            dst_label = label(dst)
-            l = collect(labels(graph))
-            if !(src ∈ l && dst_label ∈ l)
-                error(
-                    """Could not add edge from $src to $(dst_label). The vertex labels in the graph are currently $(collect(labels(graph))).""",
-                )
-            end
-            add_edge!(graph, src, dst_label)
-        end
-    end
-
-    return graph
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function sample_qualitative_network(
-    entities::AbstractVector{Symbol},
-    domains::AbstractVector{UnitRange{Int}},
-    max_eq_depth::Int;
-    schedule = Synchronous,
-)
-    g = build_qn_grammar(entities, default_qn_constants)
-    update_fns = Union{Expr,Integer,Symbol}[
-        rulenode2expr(rand(RuleNode, g, :Val, max_eq_depth), g) for _ in entities
-    ]
-
-    qn = QualitativeNetwork(Entity.(entities, update_fns, domains); schedule = schedule)
-
-    return qn
-end
-
-sample_qualitative_network(N::Int, args...; kwargs...) =
-    sample_qualitative_network(Symbol.(('A':'Z')[1:N]), args...; kwargs...)
+public QualitativeNetwork, QN, interpret
 
 """
     $(TYPEDEF)
 
-A qualitative network model as described in ["Qualitative networks: a symbolic approach to
-analyze biological signaling networks"](https://doi.org/10.1186/1752-0509-1-4).
-
-This implementation encompasses both the synchronous and asynchonous cases. In the paper, it
-is assumed that the synchronous case is used. As such, the default constructor uses a
-synchronous schedule.
-
-$(FIELDS)
-
-Systems that include the model semantics wrap around this struct with an
-[`ArbitrarySteppable`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/tutorial/#DynamicalSystemsBase.ArbitrarySteppable)
-from [`DynamicalSystems`](https://juliadynamics.github.io/DynamicalSystems.jl/stable/). See
-[`create_qn_system`](@ref) for an example.
+A graph dynamical system with a finite domain. State values of each entity are
+limited to change by at most 1 per time step.
 """
-struct QualitativeNetwork{
-    N,
-    Schedule,
-    M<:MetaGraph{Int,<:SimpleDiGraph,<:EntityLabel,<:Entity},
-} <: GraphDynamicalSystem{N,Schedule}
-    "Graph containing the topology and target functions of the network"
-    graph::M
-    "State of the network"
-    state::MVector{N,Int}
-
-    function QualitativeNetwork(graph, state; schedule = Synchronous)
-        N = nv(graph)
-        if N != length(state)
-            error("""The number of entities in the model ($N) must match the \
-                  length of the provided state vector ($(length(state))).""")
-        end
-
-        return new{N,schedule(),typeof(graph)}(graph, state)
-    end
+struct QualitativeNetwork{N_Entities,Schedule,Graph<:MG.MetaGraph} <:
+       GraphDynamicalSystem{N_Entities,Schedule}
+    graph::Graph
 end
 
-function QualitativeNetwork(
-    entities::AbstractVector{<:Entity};
-    state = nothing,
-    schedule = Synchronous,
-)
-    graph = update_functions_to_interaction_graph(entities, schedule)
-
-    if isnothing(state)
-        state = rand.(domain.(entities))
-    end
-
-    return QualitativeNetwork(graph, state; schedule)
-end
-
-QualitativeNetwork(entities::AbstractVector{<:AbstractString}, args...; kwargs...) =
-    QualitativeNetwork(Symbol.(entities), args...; kwargs...)
-
 """
-    $(TYPEDSIGNATURES)
+    $(TYPEDEF)
 
-Shorthand for [`QualitativeNetwork`](@ref).
+Alias for a [`QualitativeNetwork`](@ref).
 """
 const QN = QualitativeNetwork
 
-"""
-    $(TYPEDSIGNATURES)
+DSB.isinplace(::QualitativeNetwork) = true
+DSB.dynamic_rule(qn::QualitativeNetwork) = get_fn(qn)
+DSB.current_parameters(qn::QualitativeNetwork) = ()
+DSB.current_time(::QualitativeNetwork) = 0
+DSB.reinit!(qn::QN, state::AbstractVector) = DSB.set_state!(qn, Int.(state))
 
-Get the domain of the entity `entity_label` in `qn`.
-"""
-function get_domain(qn::QN, entity_label)
-    graph = get_graph(qn)
-    entity = graph[entity_label]
 
-    return domain(entity)
+mutable struct QNEntity{F,S,D} <: AbstractEntity
+    fn::F
+    state::S
+    domain::D
 end
 
-"""
-    $(TYPEDSIGNATURES)
-
-Get all of the domains of the entities in `qn`.
-"""
-function get_domain(qn::QN)
-    return get_domain.((qn,), labels(get_graph(qn)))
-end
-
-function _get_entity_index(qn::QN, entity)
-    # Ugly, we shouldn't pass entities around as Symbols anymore
-    # but this works for now
-    # actually, doesn't because there are sometimes variables with underscores... time to rewrite more
-    entity_proc = if entity isa EntityName
-        split_res = rsplit(String(name(entity)), "_"; limit = 2)
-        entity_proc = if length(split_res) == 2
-            (entity_str, id_str) = split_res
-            id_val = tryparse(Int, id_str)
-            if !isnothing(id_val)
-                EntityIdName(id_val, entity_str)
-            else
-                entity
-            end
-        else
-            entity
-        end
-    else
-        entity
-    end
-    i = findfirst(isequal(entity_proc), entities(qn))
-    if isnothing(i)
-        error("""Tried to get the state of $entity_proc but could not retrieve it. \
-              The entities in the model are $(entities(qn))""")
-    end
-    return i
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function target_functions(qn::QN)
-    return Dict([
-        c => target_function(entity) for (c, (_, entity)) in get_graph(qn).vertex_properties
-    ])
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function get_state(qn::QN, entity)
-    i = _get_entity_index(qn, entity)
-    return qn.state[i]
-end
-get_state(qn::QN, entity::Symbol) = get_state(qn, EntityName(entity))
-
-function _set_state!(qn::QN, entity, value::Integer)
-    i = _get_entity_index(qn::QN, entity)
-    qn.state[i] = value
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function set_state!(qn::QN, entity, value::Integer)
-    max_for_entity = maximum(get_domain(qn, entity))
-    if value > max_for_entity
+get_fn(qne::QNEntity) = qne.fn
+DSB.current_state(qne::QNEntity) = qne.state
+function DSB.set_state!(qne::QNEntity, s)
+    domain = get_domain(qne)
+    if s < minimum(domain) || s > maximum(domain)
         error(
-            "Value ($value) cannot be larger than the maximum level for $entity ($(max_for_entity))",
+            "New state value for entity must be within its domain (domain: $domain, new state: $s)",
         )
     end
+    qne.state = s
+end
+get_domain(qne::QNEntity) = qne.domain
 
-    _set_state!(qn, entity, value)
+function QualitativeNetwork(graph::G) where {G<:Graphs.AbstractGraph}
+    QualitativeNetwork{Graphs.nv(graph),Synchronous(),G}(graph)
 end
 
-function set_state!(qn::QN, entity::Symbol, value::Integer)
-    set_state!(qn, EntityName(entity), value)
-end
-
-function set_state!(qn::QN, values)
-    set_state!.((qn,), entities(qn), values)
-end
-
-"""
-    $(TYPEDSIGNATURES)
-
-Interpret target functions from a [`QualitativeNetwork`](@ref).
-"""
-function interpret(e::Union{Expr,Symbol,Int}, qn::QN)
-    @match e begin
-        ::Symbol => get_state(qn, e)
-        ::Int => e
-        :($v1 + $v2) => interpret(v1, qn) + interpret(v2, qn)
-        :($v1 - $v2) => interpret(v1, qn) - interpret(v2, qn)
-        :($v1 / $v2) => interpret(v1, qn) / interpret(v2, qn)
-        :($v1 * $v2) => interpret(v1, qn) * interpret(v2, qn)
-        :(min($v1, $v2)) => min(interpret(v1, qn), interpret(v2, qn))
-        :(max($v1, $v2)) => max(interpret(v1, qn), interpret(v2, qn))
-        :(ceil($v)) => ceil(interpret(v, qn))
-        :(floor($v)) => floor(interpret(v, qn))
-        _ => error("Unhandled Expr in `interpret`: $e")
-    end
+function QualitativeNetwork(update_functions::AbstractDict, domains)
+    QualitativeNetwork{Graphs.SimpleDiGraph}(update_functions, domains)
 end
 
 """
     $(TYPEDSIGNATURES)
 
-Returns the limited value of `next_value` which is at most 1 different than `prev_value`.
+Create a [`QualitativeNetwork`](@ref) from the dictionary `update_functions` which should map from entities (`E`) to their functions (`F`)
 
-It is also never negative, or larger than `N`.
+The entity names (`E` in the signature) can be anything, while the functions (`F`) are required to either
+
+- be a numerical constant (like `1`), or a reference to a single entity (like `A`)
+- implement the `TermInterface.jl` interface. Any terminal nodes in the functions must be numerical constants or reference an entity.
 """
-function limit_change(
-    prev_value::Integer,
-    next_value::Integer,
-    min_level::Integer,
-    max_level::Integer,
-)
-    if next_value > prev_value
-        limited_value = min(prev_value + 1, max_level)
-    elseif next_value < prev_value
-        limited_value = max(prev_value - 1, min_level)
-    else
-        limited_value = next_value
-    end
+function QualitativeNetwork{GraphType}(
+    update_functions::AbstractDict{E,F},
+    domains,
+)::QualitativeNetwork where {E,F,GraphType<:Graphs.AbstractGraph}
+    entity_keys = collect(keys(update_functions))
+    entity_fns = getindex.((update_functions,), entity_keys)
+    entity_domains = getindex.((domains,), entity_keys)
+    get_arguments_or_empty = x -> TI.isexpr(x) ? (x, TI.arguments(x)) : (x, ())
+    collect_arguments =
+        x ->
+            AT.treemap(get_arguments_or_empty, x) |>
+            AT.Leaves .|>
+            AT.nodevalue |>
+            filter(in(entity_keys))
 
-    return limited_value
-end
-
-function _compute_next_state!(qn::QN, entity)
-    (min_level, max_level) = extrema(get_domain(qn, entity))
-    t = target_functions(qn)[entity]
-    old_state = get_state(qn, entity)
-    new_state = interpret(t, qn)
-    new_state = isnan(new_state) ? min_level : new_state
-    new_state = isinf(new_state) ? max_level : new_state
-    limited_state = limit_change(old_state, floor(Int, new_state), min_level, max_level)
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function async_qn_step!(qn::QN)
-    entity_labels = entities(qn)
-    entity = rand(entity_labels)
-    next_state = _compute_next_state!(qn, entity)
-    set_state!(qn, entity, next_state)
-end
-
-"""
-    $(TYPEDSIGNATURES)
-"""
-function sync_qn_step!(qn::QN)
-    next_states = _compute_next_state!.((qn,), entities(qn))
-    set_state!.((qn,), entities(qn), next_states)
-end
-
-extract_state(model::QN) = model.state
-extract_parameters(model::QN) = model.graph
-current_parameters(model::QN) = model.graph
-reset_model!(model::QN, u, _) = model.state .= u
-
-function SciMLBase.reinit!(
-    ds::ArbitrarySteppable{<:AbstractVector{<:Real},<:QualitativeNetwork},
-    u::AbstractVector{<:Real} = initial_state(ds);
-    p = current_parameters(ds),
-    t0 = 0, # t0 is not used but required for downstream.
-)
-    ds.reinit(ds.model, u, p)
-    ds.t[] = 0
-    return ds
-end
-
-"""
-    $(TYPEDSIGNATURES)
-
-Construct an asynchronous [`QualitativeNetwork`](@ref) system using the
-[`async_qn_step!`](@ref) as a step function.
-"""
-function create_qn_system(qn::QN)
-    step_fn = get_schedule(qn) == Asynchronous() ? async_qn_step! : sync_qn_step!
-
-    return ArbitrarySteppable(
-        qn,
-        step_fn,
-        extract_state,
-        extract_parameters,
-        reset_model!,
-        isdeterministic = get_schedule(qn) == Synchronous(),
+    referenced_entities = union.(collect_arguments.(entity_fns))
+    referenced_indices =
+        map(ref_for_e -> findfirst.(.==(ref_for_e), (entity_keys,)), referenced_entities)
+    edges =
+        Iterators.flatten(
+            map(((j, idxs),) -> tuple.(idxs, (j,)), enumerate(referenced_indices)),
+        ) |> collect
+    graph = GraphType()
+    Graphs.add_vertices!(graph, length(entity_keys))
+    Graphs.add_edge!.((graph,), Graphs.Edge.(edges))
+    vertices_description = Pair{Symbol,QNEntity}[
+        (e => QNEntity(fn, 0, d)) for
+        (e, fn, d) in zip(entity_keys, entity_fns, entity_domains)
+    ]
+    edges_description = Pair{Tuple{E,E},Nothing}[
+        (entity_keys[s], entity_keys[d]) => nothing for (s, d) in edges
+    ]
+    return QualitativeNetwork(
+        MG.MetaGraph(graph, vertices_description, edges_description, nothing),
     )
 end
+
+function SciMLBase.step!(qn::QualitativeNetwork{N,S}) where {N,S}
+    SciMLBase.step!(S, qn)
+end
+SciMLBase.step!(qn::QN, n::Int, _...) = foreach(_ -> SciMLBase.step!(qn), 1:n)
+
+function limit_change(next, prev, lower, upper)
+    if next > prev
+        min(upper, prev + 1)
+    elseif next < prev
+        max(lower, prev - 1)
+    else
+        next
+    end
+end
+
+function DSB.set_state!(
+    qn::QN{N,S,M},
+    new_state::Int,
+    entity::L,
+) where {N,S,I,G,L,M<:MG.MetaGraph{I,G,L}}
+    g = get_graph(qn)
+    DSB.set_state!(g[entity], new_state)
+end
+
+function DSB.set_state!(qn::QN, new_state::AbstractVector)
+    g = get_graph(qn)
+
+    DSB.set_state!.((qn,), new_state, MG.labels(g))
+end
+
+function SciMLBase.step!(::Synchronous, qn::QualitativeNetwork)
+    l = MG.labels(get_graph(qn))
+    current_state = DSB.current_state(qn)
+    current_state_dict = Dict(l .=> current_state)
+    domains = get_domain(qn)
+    lower_bounds = minimum.(domains)
+    upper_bounds = maximum.(domains)
+    fns = get_fn(qn)
+    next_state_uncapped = interpret.(fns, (current_state_dict,))
+    next_state_capped =
+        limit_change.(next_state_uncapped, current_state, lower_bounds, upper_bounds)
+    DSB.set_state!(qn, next_state_capped)
+
+    return qn
+end
+
+function interpret(fn, state)
+    MLStyle.@match fn begin
+        ::Int => fn
+        ::Symbol => state[fn]
+        :($a + $b) => interpret(a, state) + interpret(b, state)
+        :($a - $b) => interpret(a, state) - interpret(b, state)
+        :($a / $b) => interpret(a, state) / interpret(b, state)
+        :(min($a, $b)) => min(interpret(a, state), interpret(b, state))
+        :(max($a, $b)) => max(interpret(a, state), interpret(b, state))
+        :(ceil($a)) => ceil(interpret(a, state))
+        :(floor($a)) => floor(interpret(a, state))
+        _ => error("Unhandled expression: $fn")
+    end
+end
+interpret(fn, qn::QN) = interpret(fn, Dict(entities(qn) .=> DSB.current_state(qn)))
