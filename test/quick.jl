@@ -8,11 +8,11 @@ using TestEnv
 using ReTestItems
 using GraphDynamicalSystems
 
-TestEnv.activate() do
-    runtests(
-        GraphDynamicalSystems,
-        name = r"^(?!Code).+$",
-        failfast = true,
-        failures_first = true,
-    )
-end
+TestEnv.activate()
+rt() = runtests(
+    GraphDynamicalSystems,
+    # name = r"^(?!Code).+$",
+    name = r"From a dict",
+    failfast = true,
+    failures_first = true,
+)

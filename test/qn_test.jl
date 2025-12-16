@@ -13,6 +13,27 @@ domains = [1:5, 1:5, 1:5]
 qn = sample_qualitative_network(qn_size, domains, max_eq_depth)
 end
 
+@testitem "From a dictionary of functions" begin
+    import Graphs
+    import SciMLBase
+    import GraphDynamicalSystems as GDS
+    import DynamicalSystemsBase as DSB
+
+    fns = Dict(:A => 1, :B => :A, :C => :(B - A))
+    d = Dict(k => 0:2 for k in keys(fns))
+    qn = GDS.QualitativeNetwork{Graphs.SimpleGraph}(fns, d)
+    SciMLBase.step!(qn)
+    @test GDS.get_state(qn) == [1, 0, 0]
+    GDS.set_state!(qn, [1, 2, 3])
+    @test GDS.get_state(qn) == [1, 2, 3]
+    SciMLBase.step!(qn)
+    @test GDS.get_state(qn) == [1, 1, 2]
+    SciMLBase.step!(qn)
+    @test GDS.get_state(qn) == [1, 1, 1]
+    SciMLBase.step!(qn)
+    @test GDS.get_state(qn) == [1, 1, 0]
+end
+
 @testitem "QN Grammar Creation" begin
     entities = [:a, :b, :c]
     constants = [i for i = 0:10]
