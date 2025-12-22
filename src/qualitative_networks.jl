@@ -32,8 +32,8 @@ function QualitativeNetwork(graph::G) where {G<:Graphs.AbstractGraph}
     QualitativeNetwork{Graphs.nv(graph),Synchronous(),G}(graph)
 end
 
-function QualitativeNetwork(update_functions::AbstractDict)
-    QualitativeNetwork{Graphs.SimpleDiGraph}(update_functions)
+function QualitativeNetwork(update_functions::AbstractDict, domains)
+    QualitativeNetwork{Graphs.SimpleDiGraph}(update_functions, domains)
 end
 
 """
@@ -127,4 +127,3 @@ function interpret(fn, state)
         _ => error(fn)
     end
 end
-
