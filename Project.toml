@@ -1,7 +1,7 @@
 name = "GraphDynamicalSystems"
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
-authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
 version = "0.0.6"
+authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
@@ -28,7 +28,7 @@ AutoHashEquals = "2.2.0"
 DocStringExtensions = "0.9.3"
 DynamicalSystemsBase = "3.10"
 Graphs = "1.12"
-HerbConstraints = "0.4"
+HerbConstraints = "0.4, 1"
 HerbCore = "0.3.4"
 HerbGrammar = "0.6"
 HerbSearch = "0.4.1"
