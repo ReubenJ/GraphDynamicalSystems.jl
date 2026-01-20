@@ -27,7 +27,7 @@ jobs:
             - name: Use Julia cache
               uses: julia-actions/cache@v2
             - name: Install JuliaFormatter.jl
-              run: julia -e 'using Pkg; pkg"add JuliaFormatter@1"'
+              run: julia -e 'using Pkg; pkg"add JuliaFormatter@2"'
             - name: Setup Python
               uses: actions/setup-python@v6
               with:
