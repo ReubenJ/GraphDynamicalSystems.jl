@@ -9,10 +9,4 @@ using ReTestItems
 using GraphDynamicalSystems
 
 TestEnv.activate()
-rt() = runtests(
-    GraphDynamicalSystems,
-    # name = r"^(?!Code).+$",
-    name = r"From a dict",
-    failfast = true,
-    failures_first = true,
-)
+rt() = runtests(GraphDynamicalSystems, failfast = true, failures_first = true)
