@@ -1,16 +1,17 @@
 import DynamicalSystemsBase as DSB
-using MetaGraphsNext: labels
+import MetaGraphsNext: labels
+import Compat: @compat
 
-public ScheduleStyle,
-    Asynchronous,
-    Synchronous,
-    GraphDynamicalSystem,
-    GDS,
-    get_n_entities,
-    get_schedule,
-    get_graph,
-    get_domain,
-    get_fn
+@compat public ScheduleStyle,
+Asynchronous,
+Synchronous,
+GraphDynamicalSystem,
+GDS,
+get_n_entities,
+get_schedule,
+get_graph,
+get_domain,
+get_fn
 
 abstract type ScheduleStyle end
 struct Asynchronous <: ScheduleStyle end

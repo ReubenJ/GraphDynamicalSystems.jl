@@ -5,6 +5,7 @@ authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
@@ -18,6 +19,7 @@ TermInterface = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
 
 [compat]
 AbstractTrees = "0.4.5"
+Compat = "4.18.1"
 DocStringExtensions = "0.9.3"
 DynamicalSystemsBase = "3.10"
 Graphs = "1.12"

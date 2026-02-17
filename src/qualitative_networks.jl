@@ -5,8 +5,9 @@ import TermInterface as TI
 import DynamicalSystemsBase as DSB
 import MLStyle
 import SciMLBase
+import Compat: @compat
 
-public QualitativeNetwork, QN, interpret
+@compat public QualitativeNetwork, QN, interpret
 
 """
     $(TYPEDEF)
