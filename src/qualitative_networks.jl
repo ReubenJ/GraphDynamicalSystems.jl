@@ -96,7 +96,7 @@ function QualitativeNetwork{GraphType}(
     graph = GraphType()
     Graphs.add_vertices!(graph, length(entity_keys))
     Graphs.add_edge!.((graph,), Graphs.Edge.(edges))
-    vertices_description = Pair{Symbol,QNEntity}[
+    vertices_description = Pair{E,QNEntity}[
         (e => QNEntity(fn, 0, d)) for
         (e, fn, d) in zip(entity_keys, entity_fns, entity_domains)
     ]
