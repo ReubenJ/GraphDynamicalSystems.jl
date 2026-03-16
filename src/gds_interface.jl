@@ -3,15 +3,15 @@ import MetaGraphsNext: labels
 import Compat: @compat
 
 @compat public ScheduleStyle,
-Asynchronous,
-Synchronous,
-GraphDynamicalSystem,
-GDS,
-get_n_entities,
-get_schedule,
-get_graph,
-get_domain,
-get_fn
+    Asynchronous,
+    Synchronous,
+    GraphDynamicalSystem,
+    GDS,
+    get_n_entities,
+    get_schedule,
+    get_graph,
+    get_domain,
+    get_fn
 
 abstract type ScheduleStyle end
 struct Asynchronous <: ScheduleStyle end
@@ -22,7 +22,7 @@ struct Synchronous <: ScheduleStyle end
 # include the ranges of each of the entities. The state of the system is just
 # the current value of each of the entities
 
-abstract type GraphDynamicalSystem{N,S} <: DSB.DiscreteTimeDynamicalSystem end
+abstract type GraphDynamicalSystem{N, S} <: DSB.DiscreteTimeDynamicalSystem end
 const GDS = GraphDynamicalSystem
 
 """
@@ -30,7 +30,7 @@ const GDS = GraphDynamicalSystem
 
 Get the number of entities `N` in the GDS.
 """
-function get_n_entities(::GDS{N,S}) where {N,S}
+function get_n_entities(::GDS{N, S}) where {N, S}
     return N
 end
 
@@ -39,7 +39,7 @@ end
 
 Get the schedule for the GDS.
 """
-function get_schedule(::GDS{N,S}) where {N,S}
+function get_schedule(::GDS{N, S}) where {N, S}
     return S
 end
 
