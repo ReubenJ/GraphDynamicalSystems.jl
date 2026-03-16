@@ -105,8 +105,8 @@ end
     qn_size = 3
     max_eq_depth = 3
 
-    for N = 2:5 # a few different levels of N
-        for _ = 1:100 # 100 different initializations
+    for N in 2:5 # a few different levels of N
+        for _ in 1:100 # 100 different initializations
             domains = Dict(e => 0:N for e in qn_entities)
             async_qn = QN(qn_fns, domains)
             step!(async_qn, 100)
@@ -120,7 +120,7 @@ end
     import GraphDynamicalSystems: Asynchronous
     using Attractors: AttractorsViaRecurrences, basins_of_attraction
 
-    grid = Tuple(range(0, 1) for _ = 1:qn_size)
+    grid = Tuple(range(0, 1) for _ in 1:qn_size)
 
     mapper = AttractorsViaRecurrences(qn, grid)
 
