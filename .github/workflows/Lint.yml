@@ -20,7 +20,7 @@ jobs:
         steps:
             - name: Clone
               uses: actions/checkout@v6
-            - uses: j178/prek-action@v1
+            - uses: j178/prek-action@v2
 
     link-checker:
         name: Link checker
