@@ -2,6 +2,7 @@
 Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
 Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
 DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
+GraphDynamicalSystems = "13529e2e-ed53-56b1-bd6f-420b01fca819"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 IterTools = "c8e1da08-722c-5040-9ed9-7db0dc04731e"
 JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
