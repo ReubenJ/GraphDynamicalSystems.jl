@@ -17,6 +17,9 @@ SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 TermInterface = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
 
+[workspace]
+projects = ["test"]
+
 [compat]
 AbstractTrees = "0.4.5"
 Compat = "4.18.1"
