@@ -28,4 +28,5 @@ jobs:
                     - ubuntu-latest
                     - macOS-latest
                     - windows-latest
+                arch: "default"
                 allow_failure: [false]
