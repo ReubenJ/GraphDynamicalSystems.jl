@@ -14,3 +14,4 @@ node_modules
 .vscode
 .CondaPkg
 LocalPreferences.toml
+.direnv
