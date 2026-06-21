@@ -81,8 +81,8 @@ function QualitativeNetwork{GraphType}(
     get_arguments_or_empty = x -> TI.isexpr(x) ? (x, TI.arguments(x)) : (x, ())
     collect_arguments =
         x ->
-    AT.treemap(get_arguments_or_empty, x) |>
-        AT.Leaves .|>
+        AT.treemap(get_arguments_or_empty, x) |>
+        (x -> AT.PreOrderDFS(x -> !(AT.nodevalue(x) in entity_keys), x)) .|>
         AT.nodevalue |>
         filter(in(entity_keys))
 
