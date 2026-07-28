@@ -1,7 +1,10 @@
 name = "GraphDynamicalSystems"
 uuid = "13529e2e-ed53-56b1-bd6f-420b01fca819"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
+
+[workspace]
+projects = ["test"]
 
 [deps]
 AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
@@ -12,13 +15,8 @@ Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 MLStyle = "d8e11817-5142-5d16-987a-aa16d5891078"
 MacroTools = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
 MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
-Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SciMLBase = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
-StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 TermInterface = "8ea1fca8-c5ef-4a55-8b96-4e9afe9c9a3c"
-
-[workspace]
-projects = ["test"]
 
 [compat]
 AbstractTrees = "0.4.5"
@@ -29,8 +27,6 @@ Graphs = "1.12"
 MLStyle = "0.4.17"
 MacroTools = "0.5.16"
 MetaGraphsNext = "0.7, 0.8"
-Random = "1.10"
 SciMLBase = "2.74.1"
-StaticArrays = "1.9.12"
 TermInterface = "2.0.0"
 julia = "1.10"
