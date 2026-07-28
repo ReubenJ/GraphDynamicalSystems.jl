@@ -126,3 +126,16 @@ end
 
     basins = basins_of_attraction(mapper, grid)
 end
+
+@testitem "Constructor with entity labels that are expressions" begin
+    import GraphDynamicalSystems as GDS
+    import Graphs: ne, nv
+
+    qn_entities = [:(var(1)), :(var(2)), :(var(3))]
+    qn_fns = Dict(:(var(1)) => 1, :(var(2)) => :(var(1)), :(var(3)) => :(var(2) - var(1)))
+    qn_domains = Dict(e => 0:5 for e in qn_entities)
+    qn = GDS.QN(qn_fns, qn_domains)
+    graph = GDS.get_graph(qn)
+    @test ne(graph) == 3
+    @test nv(graph) == 3
+end
