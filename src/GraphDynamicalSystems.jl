@@ -1,11 +1,25 @@
 module GraphDynamicalSystems
 
-using DocStringExtensions
+using Compat: @compat
+using DocStringExtensions: TYPEDSIGNATURES
 
-include("gds_interface.jl")
+include("interface.jl")
 
-include("qualitative_networks.jl")
+using .Interface: schedule_style, domain, update_function, get_state,
+    set_state!, vertices, edges
 
-# include("io/bma.jl")
+@compat public schedule_style,
+    domain,
+    update_function,
+    get_state,
+    set_state!,
+    vertices,
+    edges
+
+include("schedule.jl")
+
+using .Schedule: ScheduleStyle, Asynchronous, Synchronous, to_update
+
+@compat public ScheduleStyle, Asynchronous, Synchronous, to_update
 
 end
