@@ -4,7 +4,7 @@ version = "0.0.9"
 authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
 
 [workspace]
-projects = ["test"]
+projects = ["test", "implementations/QualitativeNetworks", "implementations/BooleanNetworks"]
 
 [deps]
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
