@@ -5,9 +5,7 @@ end
 
 @testitem "Code quality (JET.jl)" begin
     using JET
-    if VERSION ≥ v"1.12"
-        JET.test_package(GraphDynamicalSystems; target_modules = (GraphDynamicalSystems,))
-    end
+    JET.test_package(GraphDynamicalSystems; target_modules = (GraphDynamicalSystems,))
 end
 
 @testitem "Explicit imports" begin
