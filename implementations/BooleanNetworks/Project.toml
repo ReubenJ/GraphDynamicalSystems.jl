@@ -1,0 +1,20 @@
+name = "BooleanNetworks"
+uuid = "97f9906b-beee-4f75-a06a-7a05f392a141"
+version = "0.0.1"
+authors = ["Reuben Gardos Reid <5456207+ReubenJ@users.noreply.github.com>"]
+
+[workspace]
+projects = ["test"]
+
+[deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
+GraphDynamicalSystems = "13529e2e-ed53-56b1-bd6f-420b01fca819"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
+
+[compat]
+AbstractTrees = "0.4.5"
+Compat = "4.18.1"
+Graphs = "1.14.0"
+MetaGraphsNext = "0.8.0"
