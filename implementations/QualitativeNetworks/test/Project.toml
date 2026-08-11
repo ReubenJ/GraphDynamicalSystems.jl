@@ -1,0 +1,10 @@
+[deps]
+Attractors = "f3fd9213-ca85-4dba-9dfd-7fc91308fec7"
+DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
+ExplicitImports = "7d51a73a-1435-4ff3-83d9-f097790105c7"
+GraphDynamicalSystems = "13529e2e-ed53-56b1-bd6f-420b01fca819"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+MetaGraphsNext = "fa8bd995-216d-47f1-8a91-f3b68fbeb377"
+QualitativeNetworks = "ba61d19f-daf7-42ed-91ab-e8e04fc92a6d"
+ReTestItems = "817f1d60-ba6b-4fd5-9520-3cf149f6a823"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
