@@ -9,6 +9,19 @@ projects = ["test", "implementations/QualitativeNetworks", "implementations/Bool
 [deps]
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
 
+[weakdeps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+
+[extensions]
+AbstractTreesExt = "AbstractTrees"
+DynamicalSystemsBaseExt = "DynamicalSystemsBase"
+GraphsExt = "Graphs"
+
 [compat]
+AbstractTrees = "0.4.5"
 Compat = "3.47,4.10"
+DynamicalSystemsBase = "3.19.3"
+Graphs = "1.14.0"
 julia = "1.10"
