@@ -13,5 +13,11 @@ Pages = ["95-reference.md"]
 ```
 
 ```@autodocs
-Modules = [GraphDynamicalSystems]
+Modules = [
+    GraphDynamicalSystems,
+    GraphDynamicalSystems.Interface,
+    GraphDynamicalSystems.Schedule,
+    GraphDynamicalSystems.Conversions,
+    GraphDynamicalSystems.Constructors
+]
 ```
